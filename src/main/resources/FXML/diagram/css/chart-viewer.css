@@ -1,0 +1,3 @@
+.chart-control {
+   -fx-skin: "de.hs.mannheim.modUro.controller.diagram.fx.ChartViewerSkin";
+}

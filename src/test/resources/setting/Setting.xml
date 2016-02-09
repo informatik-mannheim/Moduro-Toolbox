@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+    <project>
+        <name>Project1</name>
+        <node>
+            <name>Project1Node1</name>
+            <path>C:\Users\adminM\Desktop\jUnitTestSimulation\Projekt1\node1</path>
+        </node>
+        <node>
+            <name>Project1Node2</name>
+            <path>C:\Users\adminM\Desktop\jUnitTestSimulation\Projekt1\node2</path>
+        </node>
+    </project>
+    <project>
+        <name>Project2</name>
+        <node>
+            <name>Project2Node1</name>
+            <path>C:\Users\adminM\Desktop\jUnitTestSimulation\Projekt2\node1</path>
+        </node>
+    </project>
+</root>

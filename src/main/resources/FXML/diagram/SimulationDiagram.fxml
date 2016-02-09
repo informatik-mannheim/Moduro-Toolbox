@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.chart.*?>
+
+<ScrollPane prefViewportHeight="318.0" prefViewportWidth="773.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController">
+   <content>
+      <GridPane layoutX="4.0" layoutY="13.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="2.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="147.0" minWidth="10.0" prefWidth="68.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="277.0" minWidth="10.0" prefWidth="277.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="147.0" minWidth="10.0" prefWidth="68.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="277.0" minWidth="10.0" prefWidth="277.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="17.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="22.0" minHeight="10.0" prefHeight="17.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="263.0" minHeight="10.0" prefHeight="263.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+          <Label layoutX="4.0" layoutY="17.0" text="Metrictype:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <ChoiceBox fx:id="rightMetricType" layoutX="581.0" layoutY="13.0" prefWidth="150.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+          <TitledPane fx:id="rightPane" layoutX="508.0" layoutY="91.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="350.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+          <Label layoutX="508.0" layoutY="17.0" text="Metrictype:" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+          <ChoiceBox fx:id="leftMetricType" layoutX="71.0" layoutY="13.0" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+          <TitledPane fx:id="leftPane" layoutX="4.0" layoutY="91.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="350.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+   </content>
+</ScrollPane>
