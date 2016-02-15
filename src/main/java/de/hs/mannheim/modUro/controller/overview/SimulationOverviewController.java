@@ -92,14 +92,17 @@ public class SimulationOverviewController {
     private void setImage() {
         List<File> imageFiles = simulationOverview.getImages();
 
-        Image image = new Image(imageFiles.get(0).toURI().toString());
-        firstImage.setImage(image);
+        if(imageFiles.size() != 0) {
+            Image image = new Image(imageFiles.get(0).toURI().toString());
+            firstImage.setImage(image);
 
-        Image image2 = new Image(imageFiles.get(1).toURI().toString());
-        secondImage.setImage(image2);
+            Image image2 = new Image(imageFiles.get(1).toURI().toString());
+            secondImage.setImage(image2);
 
-        Image image3 = new Image(imageFiles.get(2).toURI().toString());
-        thirdImage.setImage(image3);
+            Image image3 = new Image(imageFiles.get(2).toURI().toString());
+            thirdImage.setImage(image3);
+        }
+
     }
 
     /**
