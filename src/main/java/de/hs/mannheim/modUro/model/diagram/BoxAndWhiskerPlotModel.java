@@ -2,7 +2,6 @@ package de.hs.mannheim.modUro.model.diagram;
 
 
 import de.hs.mannheim.modUro.model.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

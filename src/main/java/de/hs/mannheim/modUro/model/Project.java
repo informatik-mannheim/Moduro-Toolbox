@@ -1,8 +1,5 @@
 package de.hs.mannheim.modUro.model;
 
-import de.hs.mannheim.modUro.model.ModelType;
-import de.hs.mannheim.modUro.model.Node;
-
 import java.util.List;
 
 /**

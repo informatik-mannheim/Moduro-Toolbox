@@ -3,7 +3,6 @@ package de.hs.mannheim.modUro.controller.overview;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.overview.SimulationOverview;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -60,7 +59,6 @@ public class SimulationOverviewController {
     @FXML
     private ImageView thirdImage;
 
-
     private ObservableList<MetricType> metricData;
 
 
@@ -89,6 +87,9 @@ public class SimulationOverviewController {
         this.metricType.setText(String.valueOf(simulationOverview.getMetricTypesName()));
     }
 
+    /**
+     * Set Imagepath to JavaFX Image-element
+     */
     private void setImage() {
         List<File> imageFiles = simulationOverview.getImages();
 
@@ -121,7 +122,6 @@ public class SimulationOverviewController {
         tableContent.getColumns().setAll(column1, column2, column3);
         tableContent.setItems(metricData);
     }
-
 
     /**
      * Handel HyperlinkClicked Event.

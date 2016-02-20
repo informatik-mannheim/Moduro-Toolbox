@@ -2,7 +2,6 @@ package de.hs.mannheim.modUro.model.diagram;
 
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
-
 import java.util.List;
 
 /**

@@ -5,7 +5,6 @@ import de.hs.mannheim.modUro.model.Node;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.dialog.SettingFile;
 import de.hs.mannheim.modUro.config.RegEx;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

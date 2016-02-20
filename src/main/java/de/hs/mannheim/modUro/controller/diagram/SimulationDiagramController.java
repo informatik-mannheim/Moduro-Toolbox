@@ -21,7 +21,6 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.HorizontalAlignment;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,6 @@ public class SimulationDiagramController {
 
     private static String leftLastSelectedMetrictypename;
     private static String rightLastSelectedMetrictypename;
-
 
     public void init(Simulation simulation){
         this.simulationDiagram = new SimulationDiagram(simulation);

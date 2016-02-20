@@ -5,11 +5,8 @@ import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class for Model Overview Model.

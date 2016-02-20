@@ -21,38 +21,6 @@ public class SettingModel {
         settings = new ArrayList<>();
 
         loadNodeDataFromFile();
-
-        /*
-        * Node node = new Node("Node1", new File("test"));
-        Node node2 = new Node("Node2", new File("test2"));
-        Node node3 = new Node("Node3", new File("test3"));
-
-        List<Node> nodelist = new ArrayList<>();
-        nodelist.add(0, node);
-        nodelist.add(1, node2);
-        nodelist.add(2, node3);
-
-        SettingFile s1 = new SettingFile();
-        s1.setName("Granada");
-        s1.setNode(nodelist);
-
-        SettingFile s2 = new SettingFile();
-        s2.setName("KrebsProjekt");
-        s2.setNodeName("Laufwerk");
-        s2.setPath("C:\\Mathu\\Laufwerk");
-
-
-        SettingFile s3 = new SettingFile();
-        s3.setName("Granada");
-        s3.setNodeName("Laufwerk");
-        s3.setPath("C:\\Mathu\\Laufwerk");
-
-        settings.add(0, s1);
-        settings.add(1,s2);
-        settings.add(2,s3);
-
-        saveNodeDataToFile();
-        * */
     }
 
     /**

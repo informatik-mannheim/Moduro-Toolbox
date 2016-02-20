@@ -3,11 +3,8 @@ package de.hs.mannheim.modUro.model.diagram;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class for ModeltypeDiagram Model.

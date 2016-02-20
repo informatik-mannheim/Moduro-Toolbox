@@ -152,7 +152,6 @@ public class MetricTypeCreator {
         return stdDev;
     }
 
-
     /**
      * Creates a MetricType Instance.
      */

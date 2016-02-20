@@ -1,7 +1,6 @@
 package de.hs.mannheim.modUro.model.dialog;
 
 import de.hs.mannheim.modUro.model.Node;
-
 import java.util.List;
 
 /**

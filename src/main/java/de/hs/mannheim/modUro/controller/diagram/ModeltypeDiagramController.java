@@ -14,17 +14,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TitledPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.HorizontalAlignment;
-
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -145,7 +141,6 @@ public class ModeltypeDiagramController {
         setRightChartContent(name.get(right));
     }
 
-
     /**
      * Sets Content of Choicebox.
      */
@@ -158,7 +153,6 @@ public class ModeltypeDiagramController {
         leftMetricType.getSelectionModel().select(leftLastSelectedIndex.intValue());
         rightMetricType.getSelectionModel().select(rightLastSelectedIndex.intValue());
     }
-
 
     /**
      * Sets left Chartcontent.
@@ -267,6 +261,4 @@ public class ModeltypeDiagramController {
         }
         return dataset;
     }
-
-
 }

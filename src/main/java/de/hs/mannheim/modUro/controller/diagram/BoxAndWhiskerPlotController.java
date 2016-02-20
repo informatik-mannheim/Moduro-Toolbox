@@ -6,7 +6,6 @@ import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.BoxAndWhiskerPlotModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.Pane;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -16,7 +15,6 @@ import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
-
 import java.awt.*;
 import java.util.*;
 
@@ -35,8 +33,9 @@ public class BoxAndWhiskerPlotController {
     private Set<String> models;
     private Map<String, StatisticValues> stats;
 
-
     public void init(Project project) {
+        boxWhiskerPane.setCollapsible(false);
+
         this.boxAndWhiskerPlotModel = new BoxAndWhiskerPlotModel(project);
         models = new HashSet<>(boxAndWhiskerPlotModel.getModelTypeName());
         stats = new HashMap<>();
@@ -45,6 +44,9 @@ public class BoxAndWhiskerPlotController {
         boxWhiskerPlot();
     }
 
+    /**
+     * Plots Data for Chart
+     */
     private void boxWhiskerPlot(){
         BoxAndWhiskerCategoryDataset dataset = createDataset();
         CategoryAxis xAxis = new CategoryAxis("Model");
@@ -82,36 +84,4 @@ public class BoxAndWhiskerPlotController {
         }
         return dataset;
     }
-    
-
-    /**
-     * Creates dataset for BoxWhiskerPlot.
-     * @return
-     */
-    private BoxAndWhiskerCategoryDataset createDataset1() {
-
-        final int seriesCount = 3;
-        final int categoryCount = 4;
-        final int entityCount = 22;
-
-       // BoxAndWhiskerCategoryDataset
-
-        DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
-        for (int i = 0; i < seriesCount; i++) {
-            for (int j = 0; j < categoryCount; j++) {
-                final ArrayList list = new ArrayList();
-                // add some values...
-                for (int k = 0; k < entityCount; k++) {
-                    final double value1 = 10.0 + Math.random() * 3;
-                    list.add(new Double(value1));
-                    final double value2 = 11.25 + Math.random(); // concentrate values in the middle
-                    list.add(new Double(value2));
-                }
-                dataset.add(list, "Series " + i, " Type " + j);
-            }
-        }
-
-        return dataset;
-    }
-
 }

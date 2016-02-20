@@ -1,7 +1,6 @@
 package de.hs.mannheim.modUro.model;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Model class for a Node.

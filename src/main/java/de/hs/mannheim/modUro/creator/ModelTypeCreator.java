@@ -4,14 +4,9 @@ import de.hs.mannheim.modUro.config.FileName;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.config.RegEx;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 /**
  * ModelTypeCreator helps to create a Modeltype by passing directories.

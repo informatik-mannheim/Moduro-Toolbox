@@ -3,7 +3,6 @@ package de.hs.mannheim.modUro.model.overview;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.Simulation;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -10,22 +10,17 @@ import de.hs.mannheim.modUro.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
+import javafx.scene.*;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.function.Predicate;
 
 /**
  * Controller controls the MainLayout.
@@ -36,17 +31,12 @@ public class MainController {
     @FXML
     private TreeView<String> projectTree;
     @FXML
-    private CheckBox completedCheckboxButton;
-    @FXML
-    private CheckBox inSteadyStateCheckButton;
-    @FXML
     private Tab overviewTab;
     @FXML
     private Tab diagramTab;
 
     // List with projectData
     private ObservableList<Project> projectData;
-    //List for filtering
 
     //References to other Controllers
     ProjectOverviewController projectOverviewController = new ProjectOverviewController();
@@ -80,7 +70,7 @@ public class MainController {
                     public void changed(
                             ObservableValue<? extends TreeItem<String>> observable,
                             TreeItem<String> old_val, TreeItem<String> new_val) {
-                        TreeItem<String> selectedItem = new_val;
+                            TreeItem<String> selectedItem = new_val;
 
                         //Checks if selected items is child from "ProjectRoot" TreeItem.
                         //If yes, then it is a project-selection.
@@ -100,10 +90,7 @@ public class MainController {
                         }
                     }
                 });
-
-
     }
-
 
     /**
      * Add View to Overview-Tab.
@@ -288,7 +275,11 @@ public class MainController {
     }
 
     public void handleRefreshButton(ActionEvent actionEvent) {
+        //get at first the selected Item in the tree
+        TreeItem<String> lastSelected = projectTree.getSelectionModel().getSelectedItem();
         this.projectData.clear();
         initialize();
+        //set after refresh the last selectedItem
+        projectTree.getSelectionModel().select(lastSelected);
     }
 }

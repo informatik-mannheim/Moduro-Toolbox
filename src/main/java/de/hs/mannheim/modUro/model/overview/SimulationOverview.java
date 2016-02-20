@@ -2,7 +2,6 @@ package de.hs.mannheim.modUro.model.overview;
 
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
-
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

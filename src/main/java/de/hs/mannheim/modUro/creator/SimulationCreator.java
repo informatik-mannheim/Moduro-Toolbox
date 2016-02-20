@@ -3,7 +3,6 @@ package de.hs.mannheim.modUro.creator;
 import de.hs.mannheim.modUro.config.*;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
-
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -181,7 +180,7 @@ public class SimulationCreator {
      * Creates List of Metrictypes of the simulation.
      * @return
      */
-    public List<MetricType> createMetricTypeList() {
+    private List<MetricType> createMetricTypeList() {
         File[] txtFiles = file.listFiles((parent, name) -> (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) && !name.equals(FileName.METRIC_DATA_FILE.getName())));
         List<MetricType> metricTypeList = new ArrayList<>();
 

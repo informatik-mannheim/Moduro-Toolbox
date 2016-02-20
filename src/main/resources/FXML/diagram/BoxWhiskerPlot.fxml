@@ -6,8 +6,14 @@
 <?import javafx.scene.chart.*?>
 
 
-<ScrollPane prefViewportHeight="26.0" prefViewportWidth="33.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController">
-   <content>
-            <TitledPane fx:id="boxWhiskerPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" />
-   </content>
-</ScrollPane>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+            <TitledPane fx:id="boxWhiskerPane" />
+   </children>
+</GridPane>

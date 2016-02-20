@@ -1,13 +1,8 @@
 package de.hs.mannheim.modUro.controller.overview;
 
-import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
-
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,9 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
-
-import java.util.Map;
 
 /**
  * ModeltypeOverviewController controls ModelOverviewView.
@@ -29,7 +21,6 @@ public class ModeltypeOverviewController {
     private ModeltypeOverview modeltypeOverview;
 
     private ObservableList<StatisticValues> metricData;
-
 
     @FXML
     private TableView<StatisticValues> metricDataTable;

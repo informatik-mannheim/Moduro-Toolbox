@@ -2,7 +2,6 @@ package de.hs.mannheim.modUro.controller.overview;
 
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.overview.ProjectOverview;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
