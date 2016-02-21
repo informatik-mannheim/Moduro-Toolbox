@@ -1,0 +1,18 @@
+--------------------------------------------------------------------------------
+jUnit Tests für ModuroToolbox
+**Die Pfade in setting.xml und in einingen Testfällen müssen angepasst werden**
+--------------------------------------------------------------------------------
+
+* Ausgangsdaten (in Setting.xml konfiguriert)
+> Projekt1 -> 2 Modellklassen + 3 Simulationen
+ > Node1 -> 2 Modellklassen + 2 Simulationen
+             CM-IN-DAE  : CM-IN-DAE_cc3d_01_15_2015_12_53_49
+             CM-NU-DAE  : CM-NU-DAE_cc3d_01_15_2015_10_05_02
+ > Node2 -> 1 Modellklasse + 1 Simulation
+             CM-IN-DAE  : CM-IN-DAE_cc3d_01_18_2015_17_30_26
+> Projekt2 -> 2 Modellklassen + 2 Simulationen
+             PAS-IN-DAE : PAS-IN-DAE_cc3d_01_15_2015_12_46_01
+             PAS-IN-RA:   PAS-IN-RA_cc3d_12_04_2014_11_03_08
+
+* In den einzelnen Testklassen wird anfangs (Klassen Dokumentation) erwähnt, welche Test Daten für die jeweilige
+Testklasse zum Testen genutzt wird.

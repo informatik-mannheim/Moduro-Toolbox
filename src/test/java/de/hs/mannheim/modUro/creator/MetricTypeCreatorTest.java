@@ -41,9 +41,10 @@ public class MetricTypeCreatorTest {
 
     @Test
     public void metricData() {
-        double[][] metricData = {
-                {0, 1},
-                {0, 2}
+        double[][] metricData = new double[][]{
+                { 0.5, 3.5 },
+                { 1.0, 0.5,},
+                { 1.5, 0.5}
         };
 
         Assert.assertArrayEquals("Metric data does not equals.", metricData, metricType.getMetricData());
@@ -51,12 +52,12 @@ public class MetricTypeCreatorTest {
 
     @Test
     public void meanOfSimulation() {
-        Assert.assertEquals("Mean of simulation should be 'x' and not: " + metricType.getMean(),0.859, metricType.getMean(), DELTA);
+        Assert.assertEquals("Mean of simulation should be '1.5' and not: " + metricType.getMean(),1.5, metricType.getMean(), DELTA);
     }
 
     @Test
     public void stdDevOfSimulation(){
-        Assert.assertEquals("Standard deviation of simulation should be 'x' and not: " + metricType.getDeviation(),0.859, metricType.getDeviation(), DELTA);
+        Assert.assertEquals("Standard deviation of simulation should be '1.7320508075688772' and not: " + metricType.getDeviation(),1.7320508075688772, metricType.getDeviation(), DELTA);
     }
 
 }

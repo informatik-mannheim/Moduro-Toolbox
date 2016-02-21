@@ -38,6 +38,6 @@ public class ProjectCreatorTest {
 
     @Test
     public void countModeltypes() {
-        Assert.assertEquals("Project should have '4' different Modeltypes and not: " + project.getModelTypeList().size(), 4, project.getModelTypeList().size());
+        Assert.assertEquals("Project should have '2' different Modeltypes and not: " + project.getModelTypeList().size(), 2, project.getModelTypeList().size());
     }
 }

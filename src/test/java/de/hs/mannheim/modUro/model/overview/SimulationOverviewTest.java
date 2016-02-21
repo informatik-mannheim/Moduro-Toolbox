@@ -56,7 +56,7 @@ public class SimulationOverviewTest {
     public void durationOfSimulation() {
         //?????
 
-        Assert.assertEquals("Duration of simulation should be '11.0' and not: " + simulationOverview.getDuration(), 11.0, simulationOverview.getDuration(), DELTA);
+        Assert.assertEquals("Duration of simulation should be '702.0' and not: " + simulationOverview.getDuration(), 702.0, simulationOverview.getDuration(), DELTA);
     }
 
     @Test
@@ -76,42 +76,42 @@ public class SimulationOverviewTest {
     }
 
     @Test
-    public void simulationIsNotCompleted() {
+    public void simulationIsCompleted() {
         //Def.
         //toTime == Fitnesplot[letzte Zeit], maxTime ==  700
         //isCompleted = toTime >= maxTime
 
-        //toTime of Simulation is = 11.0
-        //11.0 < 700 -> isCompleted == false
-        Assert.assertEquals("Simulation should 'not be completed'.", false, simulationOverview.isCompleted());
+        //toTime of Simulation is = 702.0
+        //702.0 < 700 -> isCompleted == true
+        Assert.assertEquals("Simulation should 'be completed'.", true, simulationOverview.isCompleted());
     }
 
     @Test
-    public void simulationIsNotInSteadyState() {
+    public void simulationIsInSteadyState() {
         //Def.
         //toTime == Fitnesplot[letzte Zeit], minTime == 40
         //isInSteadyState = toTime >= minTime
 
-        //toTime of Simulation is = 11.0
-        //11.0 < 40
-        Assert.assertEquals("Simulation should 'not be in steady state'.", false, simulationOverview.isInSteadyState());
+        //toTime of Simulation is = 702.0
+        //702.0 > 40
+        Assert.assertEquals("Simulation should 'be in steady state'.", true, simulationOverview.isInSteadyState());
     }
 
     @Test
-    public void simulationIsNotAborted() {
+    public void simulationIsAborted() {
         //Def.
         //lastFitness == Fitnesplot[letzte Fitness], isInSteadyState
         //isAborted = lastFitness < 0.05 && isInSteadyState
 
-        //lastFitness == 0.407548176606 , isInSteadyState == false
-        Assert.assertEquals("Simulation should 'not be aborted'.", false, simulationOverview.isAborted());
+        //lastFitness == 0.01 , isInSteadyState == true
+        Assert.assertEquals("Simulation should 'be aborted'.", true, simulationOverview.isAborted());
     }
 
     @Test
     public void imagesOfSimulation() {
-        File firstImageFile = new File("C:\\Users\\adminM\\Desktop\\jUnitTestSimulation\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0003200.png");
-        File secondImageFile = new File("C:\\Users\\adminM\\Desktop\\jUnitTestSimulation\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0008000.png");
-        File thirdImageFile = new File("C:\\Users\\adminM\\Desktop\\jUnitTestSimulation\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0012700.png");
+        File firstImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0009000.png");
+        File secondImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0009600.png");
+        File thirdImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0010100.png");
         List<File> imageFiles = new ArrayList<File>(){{add(firstImageFile); add(secondImageFile); add(thirdImageFile);}};
 
         Assert.assertEquals("Simulation Images are wrong.", imageFiles, simulationOverview.getImages());
@@ -119,7 +119,7 @@ public class SimulationOverviewTest {
 
     @Test
     public void filePathOfSimulation() {
-        File file = new File("C:\\Users\\adminM\\Desktop\\jUnitTestSimulation\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08");
+        File file = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08");
 
         Assert.assertEquals("Path of the Simulation should be " + file + " and not: " + simulationOverview.getDirectory(), file, simulationOverview.getDirectory());
     }

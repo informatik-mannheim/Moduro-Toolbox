@@ -35,7 +35,7 @@ public class ModeltypeCreatorTest {
 
     @Test
     public void countSimulationInSpecificModeltype() {
-        Assert.assertEquals("Modeltype should have '4' Simulations and not: " + modelType.getSimulations().size(), 4, modelType.getSimulations().size());
+        Assert.assertEquals("Modeltype should have '2' Simulations and not: " + modelType.getSimulations().size(), 2, modelType.getSimulations().size());
     }
 }
 

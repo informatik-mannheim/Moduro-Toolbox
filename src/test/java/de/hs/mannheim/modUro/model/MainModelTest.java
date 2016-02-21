@@ -21,7 +21,6 @@ public class MainModelTest {
     @Test
     public void countProject() {
         Assert.assertEquals(2, mainModel.getProjectData().size());
-
     }
 
 

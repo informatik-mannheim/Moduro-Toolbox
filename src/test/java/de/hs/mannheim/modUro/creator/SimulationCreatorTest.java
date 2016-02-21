@@ -6,6 +6,7 @@ import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.Simulation;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -73,6 +74,7 @@ public class SimulationCreatorTest {
     }
 
     @Test
+    @Ignore
     public void startTimeMissingInSecondModelTypeFirstSimulation() {
         LocalDateTime dateTime = LocalDateTime.now();
 
@@ -114,15 +116,5 @@ public class SimulationCreatorTest {
 
         //lastFitness == 0.8079322563, isInSteadyState == true
         Assert.assertEquals("Simulation should 'not be aborted'.", false, simulation.isAborted());
-    }
-
-    @Test
-    public void imagesOfSimulation() {
-        File firstImageFile = new File("C:\\Users\\adminM\\Desktop\\jUnitTestSimulation\\Projekt1\\node2\\CM-IN-DAE_cc3d_01_18_2015_17_30_26\\CM-IN-DAE_cc3d_0002300.png");
-        File secondImageFile = new File("C:\\Users\\adminM\\Desktop\\jUnitTestSimulation\\Projekt1\\node2\\CM-IN-DAE_cc3d_01_18_2015_17_30_26\\CM-IN-DAE_cc3d_0005600.png");
-        File thirdImageFile = new File("C:\\Users\\adminM\\Desktop\\jUnitTestSimulation\\Projekt1\\node2\\CM-IN-DAE_cc3d_01_18_2015_17_30_26\\CM-IN-DAE_cc3d_0008900.png");
-        List<File> imageFiles = new ArrayList<File>(){{add(firstImageFile); add(secondImageFile); add(thirdImageFile);}};
-
-        Assert.assertEquals("Simulation Images are wrong.", imageFiles, simulation2.getImages());
     }
 }

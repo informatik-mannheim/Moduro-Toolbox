@@ -36,7 +36,7 @@ public class ModeltypeOverviewTest {
 
     @Test
     public void numberOfSimulationsTest() {
-        Assert.assertEquals("Modeltype should have '6' simulations and not: " + modeltypeOverview.getNumberOfSimulations(),6, modeltypeOverview.getNumberOfSimulations());
+        Assert.assertEquals("Modeltype should have '1' simulations and not: " + modeltypeOverview.getNumberOfSimulations(),1, modeltypeOverview.getNumberOfSimulations());
     }
 
     @Test
@@ -44,12 +44,7 @@ public class ModeltypeOverviewTest {
         //Def.
         //minTime = 40
         //steadystate = toTime > minTime
-        //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> toTime:11.0 => notInSteadyState
-        //PAS-IN-RA_cc3d_12_04_2014_11_07_38 -> toTime:10.0 => notInSteadyState
-        //PAS-IN-RA_cc3d_12_04_2014_11_17_16 -> toTime:5.5  => notInSteadyState
-        //PAS-IN-RA_cc3d_12_04_2014_11_18_07 -> toTime:2.0  => notInSteadyState
-        //PAS-IN-RA_cc3d_12_04_2014_14_37_30 -> toTime:8.5  => notInSteadyState
-        //PAS-IN-RA_cc3d_12_07_2014_19_38_30 -> toTime:100  => inSteadyState     //manuell in der Datei geänderter toTime Wert
+        //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> toTime:702.0 => inSteadyState //manuell in der Datei geänderter toTime Wert
 
         Assert.assertEquals("Modeltype should have '1' in steady state simulations and not: " + modeltypeOverview.getNumberOfSteadyStateSimulation(),1, modeltypeOverview.getNumberOfSteadyStateSimulation());
     }
@@ -58,12 +53,7 @@ public class ModeltypeOverviewTest {
     public void numberOfAbortedSimulations() {
         //Def.
         //isAborted = lastFitness <0.05 && isInSteadyState
-        //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> notInSteadyState && lastFitness=0.407548176606 => isNotAborted
-        //PAS-IN-RA_cc3d_12_04_2014_11_07_38 -> notInSteadyState && lastFitness=0.42091454367  => isNotAborted
-        //PAS-IN-RA_cc3d_12_04_2014_11_17_16 -> notInSteadyState && lastFitness=0.343574898698 => isNotAborted
-        //PAS-IN-RA_cc3d_12_04_2014_11_18_07 -> notInSteadyState && lastFitness=0.279540750852 => isNotAborted
-        //PAS-IN-RA_cc3d_12_04_2014_14_37_30 -> notInSteadyState && lastFitness=0.747226637591 => isNotAborted
-        //PAS-IN-RA_cc3d_12_07_2014_19_38_30 -> inSteadyState    && lastFitness=0.01 => isAborted        //manuell in der Datei geänderter toTime und lastFitness
+        //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> notInSteadyState && lastFitness=0.407548176606 => isAborted     //manuell in der Datei geänderter toTime und lastFitness
 
         Assert.assertEquals("Modeltype should have '1' aborted simulations and not: " + modeltypeOverview.getNumberOfAbortedSimulations(),1, modeltypeOverview.getNumberOfAbortedSimulations());
     }
@@ -73,12 +63,7 @@ public class ModeltypeOverviewTest {
         //Def.
         //maxTime = 700
         //isCompleted = toTime >= maxTime
-        //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> toTime:11.0 => notCompleted
-        //PAS-IN-RA_cc3d_12_04_2014_11_07_38 -> toTime:10.0 => notCompleted
-        //PAS-IN-RA_cc3d_12_04_2014_11_17_16 -> toTime:5.5  => notCompleted
-        //PAS-IN-RA_cc3d_12_04_2014_11_18_07 -> toTime:2.0  => notCompleted
-        //PAS-IN-RA_cc3d_12_04_2014_14_37_30 -> toTime:8.5  => notCompleted
-        //PAS-IN-RA_cc3d_12_07_2014_19_38_30 -> toTime:100  => isCompleted
+        //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> toTime:11.0 => isCompleted
 
         Assert.assertEquals("Modeltype should have '1' completed simulations and not: " + modeltypeOverview.getNumberOfCompletedSimulations(),1, modeltypeOverview.getNumberOfCompletedSimulations());
     }
@@ -89,7 +74,7 @@ public class ModeltypeOverviewTest {
         String stdDev = f.format(modeltypeOverview.getStatisticValues().get(1).getStdDev());
 
         Assert.assertEquals("Name of Metrictype should be 'FitnessPlot' and not: " + modeltypeOverview.getStatisticValues().get(1).getMetricTypeName(), "FitnessPlot",modeltypeOverview.getStatisticValues().get(1).getMetricTypeName() );
-        Assert.assertEquals("Mean of FitnessPlot should be '0,37' and not: " + mean, "0,37" , mean);
-        Assert.assertEquals("Standard Deviation of FitnessPlot should be '0,05' and not: " + stdDev, "0,05" , stdDev);
+        Assert.assertEquals("Mean of FitnessPlot should be '0,37' and not: " + mean, "0,38" , mean);
+        Assert.assertEquals("Standard Deviation of FitnessPlot should be '0,00' and not: " + stdDev, "0,00" , stdDev);
     }
 }
