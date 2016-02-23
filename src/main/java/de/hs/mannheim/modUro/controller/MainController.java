@@ -18,6 +18,8 @@ import javafx.scene.*;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -37,6 +39,9 @@ public class MainController {
 
     // List with projectData
     private ObservableList<Project> projectData;
+
+    //RedIconForTreeItem
+    Image red = new Image(getClass().getResourceAsStream("/images/red.png"));
 
     //References to other Controllers
     ProjectOverviewController projectOverviewController = new ProjectOverviewController();
@@ -232,7 +237,12 @@ public class MainController {
                     //treeitem: simulation
                     for (Simulation simulationItem: modelTypeItem.getSimulations()) {
                          if(simulationItem.getSimulationName().contains(modelTypeItem.getName())) { //category check of simulation to its modeltype
-                            simulation = makeBranch(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
+                           if(simulationItem.isAborted()) {
+                               simulation = makeBranchWithIcon(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
+                           } else {
+                               simulation = makeBranch(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
+                           }
+
                         }
                     }
                 }
@@ -247,6 +257,20 @@ public class MainController {
      */
     private TreeItem<String> makeBranch(String title, TreeItem<String> parent) {
         TreeItem<String> item = new TreeItem<String>(title);
+        item.setExpanded(true);
+        parent.getChildren().add(item);
+        return item;
+    }
+
+    /**
+     * Makes a Branch with red Icon for aborted simulation.
+     * @param title
+     * @param parent
+     * @return
+     */
+    private TreeItem<String> makeBranchWithIcon(String title, TreeItem<String> parent) {
+
+        TreeItem<String> item = new TreeItem<String>(title, new ImageView(red));
         item.setExpanded(true);
         parent.getChildren().add(item);
         return item;

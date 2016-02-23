@@ -26,6 +26,9 @@
                   <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label text="Simulation-ID:" />
@@ -48,6 +51,7 @@
                   <Label text="in SteadyState:" GridPane.rowIndex="3" />
                   <Label fx:id="isInSteadyState" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                   <Hyperlink fx:id="directoryHyperlink" onAction="#handleHyperlinkOnlicked" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                  <Button mnemonicParsing="false" onAction="#handleImagesToVideo" text="ImagesToVideo" GridPane.columnIndex="2" GridPane.rowIndex="11" />
                </children>
             </GridPane>
             <TableView fx:id="tableContent" layoutX="3.0" layoutY="200.0" prefHeight="200.0" prefWidth="396.0" />

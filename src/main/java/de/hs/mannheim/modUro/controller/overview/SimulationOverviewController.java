@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -135,6 +136,21 @@ public class SimulationOverviewController {
             desktop.open(dirToOpen);
         } catch (IllegalArgumentException iae) {
             System.out.println("File Not Found");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * ImagesToVideo
+     * @param actionEvent
+     */
+    public void handleImagesToVideo(ActionEvent actionEvent) {
+        URL pathToImagesToVideoExe = getClass().getResource("/exe/ImagesToVideo.exe");
+        URL pathToConfigurationXML = getClass().getResource("/exe/Data/configuration.xml");
+        String sourceDir = simulationOverview.getDirectory().getAbsolutePath();
+        try {
+            Process process = new ProcessBuilder(pathToImagesToVideoExe.getPath(),"--config "+pathToConfigurationXML).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
