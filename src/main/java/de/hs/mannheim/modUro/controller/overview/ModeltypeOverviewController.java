@@ -3,6 +3,7 @@ package de.hs.mannheim.modUro.controller.overview;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -60,12 +61,14 @@ public class ModeltypeOverviewController {
         column1.setCellValueFactory(new PropertyValueFactory<StatisticValues, String>("metricTypeName"));
 
         TableColumn column2 = new TableColumn("Mean");
-        column2.setCellValueFactory(new PropertyValueFactory<StatisticValues, Double>("mean"));
+        column2.setCellValueFactory(new PropertyValueFactory<StatisticValues, Double>("meanAsString"));
 
         TableColumn column3 = new TableColumn("Standard Deviation");
-        column3.setCellValueFactory(new PropertyValueFactory<StatisticValues, Double>("stdDev"));
+        column3.setCellValueFactory(new PropertyValueFactory<StatisticValues, Double>("stdDevAsString"));
 
         metricDataTable.getColumns().setAll(column1, column2, column3);
         metricDataTable.setItems(metricData);
+        metricDataTable.setFixedCellSize(25);
+        metricDataTable.prefHeightProperty().bind(Bindings.size(metricDataTable.getItems()).multiply(metricDataTable.getFixedCellSize()).add(35));
     }
 }

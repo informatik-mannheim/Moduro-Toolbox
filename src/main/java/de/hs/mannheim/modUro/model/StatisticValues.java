@@ -77,4 +77,12 @@ public class StatisticValues {
     public double getMax() {
         return max;
     }
+
+    public String getMeanAsString() {
+        return String.format("%1$.2f", mean).toString();
+    }
+
+    public String getStdDevAsString() {
+        return String.format("%1$.2f", stdDev).toString();
+    }
 }

@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.BorderPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.XYPlot;
@@ -33,9 +34,9 @@ public class ModeltypeDiagramController {
     private ModeltypeDiagram modeltypeDiagram;
 
     @FXML
-    private TitledPane leftPane;
+    private BorderPane leftPane;
     @FXML
-    private TitledPane rightPane;
+    private BorderPane rightPane;
     @FXML
     private ChoiceBox leftMetricType;
     @FXML
@@ -159,14 +160,13 @@ public class ModeltypeDiagramController {
      * @param selectedItem
      */
     private void setLeftChartContent(String selectedItem){
-        leftPane.setCollapsible(false);
-
         XYDataset dataset = createDataset(modeltypeDiagram.getSimulationList(), selectedItem);
         JFreeChart chart = createChart(dataset, selectedItem);
         chart.removeLegend();
 
         ChartViewer viewer = new ChartViewer(chart);
-        leftPane.setContent(viewer);
+        leftPane.setCenter(viewer);
+        leftPane.layout();
     }
 
     /**
@@ -174,14 +174,13 @@ public class ModeltypeDiagramController {
      * @param selectedItem
      */
     private void setRightChartContent(String selectedItem){
-        rightPane.setCollapsible(false);
-
         XYDataset dataset = createDataset(modeltypeDiagram.getSimulationList(), selectedItem);
         JFreeChart chart = createChart(dataset, selectedItem);
         chart.removeLegend();
 
         ChartViewer viewer = new ChartViewer(chart);
-        rightPane.setContent(viewer);
+        rightPane.setCenter(viewer);
+        rightPane.layout();
     }
 
     /**

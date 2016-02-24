@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import java.lang.*?>
 <?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController">
-   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-   </rowConstraints>
-   <children>
-            <TitledPane fx:id="boxWhiskerPane" />
-   </children>
-</GridPane>
+<BorderPane fx:id="boxWhiskerPane" prefHeight="10.0" prefWidth="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController" />

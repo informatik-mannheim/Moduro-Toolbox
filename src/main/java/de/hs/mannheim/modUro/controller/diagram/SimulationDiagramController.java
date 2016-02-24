@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
@@ -35,9 +37,9 @@ public class SimulationDiagramController {
     private SimulationDiagram simulationDiagram;
 
     @FXML
-    private TitledPane leftPane;
+    private BorderPane leftPane;
     @FXML
-    private TitledPane rightPane;
+    private BorderPane rightPane;
     @FXML
     private ChoiceBox leftMetricType;
     @FXML
@@ -171,12 +173,11 @@ public class SimulationDiagramController {
      * @param selectedItemIndex
      */
     private void setLeftChartContent(int selectedItemIndex){
-        leftPane.setCollapsible(false);
-
         XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), simulationDiagram.getMetricTypes().get(selectedItemIndex).getMetricData());
         JFreeChart chart = createChart(dataset, simulationDiagram.getMetricTypes().get(selectedItemIndex).getName());
         ChartViewer viewer = new ChartViewer(chart);
-        leftPane.setContent(viewer);
+        leftPane.setCenter(viewer);
+        leftPane.layout();
     }
 
     /**
@@ -184,12 +185,11 @@ public class SimulationDiagramController {
      * @param selectedItemIndex
      */
     private void setRightChartContent(int selectedItemIndex){
-        rightPane.setCollapsible(false);
-
         XYDataset rightDataset = createDataset(simulationDiagram.getSimulationName(), simulationDiagram.getMetricTypes().get(selectedItemIndex).getMetricData());
         JFreeChart rightChart = createChart(rightDataset, simulationDiagram.getMetricTypes().get(selectedItemIndex).getName());
         ChartViewer rightViewer = new ChartViewer(rightChart);
-        rightPane.setContent(rightViewer);
+        rightPane.setCenter(rightViewer);
+        rightPane.layout();
     }
 
     /**

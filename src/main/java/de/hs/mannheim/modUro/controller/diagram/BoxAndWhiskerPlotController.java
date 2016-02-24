@@ -5,7 +5,7 @@ import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.BoxAndWhiskerPlotModel;
 import javafx.fxml.FXML;
-import javafx.scene.control.TitledPane;
+import javafx.scene.layout.BorderPane;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -15,6 +15,7 @@ import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
+
 import java.awt.*;
 import java.util.*;
 
@@ -28,14 +29,12 @@ public class BoxAndWhiskerPlotController {
     private BoxAndWhiskerPlotModel boxAndWhiskerPlotModel;
 
     @FXML
-    private TitledPane boxWhiskerPane;
+    private BorderPane boxWhiskerPane;
 
     private Set<String> models;
     private Map<String, StatisticValues> stats;
 
     public void init(Project project) {
-        boxWhiskerPane.setCollapsible(false);
-
         this.boxAndWhiskerPlotModel = new BoxAndWhiskerPlotModel(project);
         models = new HashSet<>(boxAndWhiskerPlotModel.getModelTypeName());
         stats = new HashMap<>();
@@ -65,8 +64,7 @@ public class BoxAndWhiskerPlotController {
         );
 
         ChartViewer viewer = new ChartViewer(chart);
-        boxWhiskerPane.setContent(viewer);
-
+        boxWhiskerPane.setCenter(viewer);
     }
 
     /**
