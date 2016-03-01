@@ -55,30 +55,32 @@ import org.jfree.chart.util.ParamChecks;
 
 /**
  * A default skin for the {@link ChartViewer} control.
- * 
+ * <p>
  * <p>THE API FOR THIS CLASS IS SUBJECT TO CHANGE IN FUTURE RELEASES.  This is
- * so that we can incorporate feedback on the (new) JavaFX support in 
+ * so that we can incorporate feedback on the (new) JavaFX support in
  * JFreeChart.</p>
- * 
+ *
  * @since 1.0.18
  */
-public class ChartViewerSkin extends SkinBase<ChartViewer>  {
+public class ChartViewerSkin extends SkinBase<ChartViewer> {
 
-    /** The chart canvas. */
+    /**
+     * The chart canvas.
+     */
     private ChartCanvas canvas;
-    
-    /** 
+
+    /**
      * The zoom rectangle is used to display the zooming region when
      * doing a drag-zoom with the mouse.  Most of the time this rectangle
      * is not visible.
      */
     private Rectangle zoomRectangle;
-    
+
     /**
      * Creates a new instance.
-     * 
-     * @param control  the control ({@code null} not permitted). 
-     */    
+     *
+     * @param control the control ({@code null} not permitted).
+     */
     public ChartViewerSkin(ChartViewer control) {
         super(control);
         getChildren().add(createNode(control));
@@ -87,12 +89,11 @@ public class ChartViewerSkin extends SkinBase<ChartViewer>  {
         this.zoomRectangle.setVisible(false);
         getChildren().add(this.zoomRectangle);
     }
-    
+
     /**
      * Returns the rendering info from the most recent drawing of the chart.
-     * 
+     *
      * @return The rendering info (possibly {@code null}).
-     * 
      * @since 1.0.19
      */
     public ChartRenderingInfo getRenderingInfo() {
@@ -101,40 +102,40 @@ public class ChartViewerSkin extends SkinBase<ChartViewer>  {
 
     /**
      * Sets the chart displayed by this control.
-     * 
-     * @param chart  the chart ({@code null} not permitted). 
+     *
+     * @param chart the chart ({@code null} not permitted).
      */
     public void setChart(JFreeChart chart) {
         this.canvas.setChart(chart);
     }
-    
+
     public void setTooltipEnabled(boolean enabled) {
-        this.canvas.setTooltipEnabled(enabled);        
+        this.canvas.setTooltipEnabled(enabled);
     }
-    
+
     /**
      * Returns the current fill paint for the zoom rectangle.
-     * 
+     *
      * @return The fill paint.
      */
     public Paint getZoomFillPaint() {
         return this.zoomRectangle.getFill();
     }
-    
+
     /**
      * Sets the fill paint for the zoom rectangle.
-     * 
-     * @param paint  the new paint. 
+     *
+     * @param paint the new paint.
      */
     public void setZoomFillPaint(Paint paint) {
         this.zoomRectangle.setFill(paint);
     }
-    
+
     /**
      * Registers a listener to receive {@link ChartMouseEvent} notifications
      * from the chart viewer.
      *
-     * @param listener  the listener ({@code null} not permitted).
+     * @param listener the listener ({@code null} not permitted).
      */
     public void addChartMouseListener(ChartMouseListenerFX listener) {
         ParamChecks.nullNotPermitted(listener, "listener");
@@ -145,29 +146,29 @@ public class ChartViewerSkin extends SkinBase<ChartViewer>  {
      * Removes a listener from the list of objects listening for chart mouse
      * events.
      *
-     * @param listener  the listener.
+     * @param listener the listener.
      */
     public void removeChartMouseListener(ChartMouseListenerFX listener) {
         this.canvas.removeChartMouseListener(listener);
     }
-    
+
     /**
      * Sets the visibility of the zoom rectangle.
-     * 
-     * @param visible  the new flag value.
+     *
+     * @param visible the new flag value.
      */
     public void setZoomRectangleVisible(boolean visible) {
         this.zoomRectangle.setVisible(visible);
     }
-    
+
     /**
      * Sets the location and size of the zoom rectangle and makes it visible
      * if it is not already visible.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param w  the width.
-     * @param h  the height.
+     *
+     * @param x the x-coordinate.
+     * @param y the y-coordinate.
+     * @param w the width.
+     * @param h the height.
      */
     public void showZoomRectangle(double x, double y, double w, double h) {
         this.zoomRectangle.setX(x);
@@ -177,9 +178,9 @@ public class ChartViewerSkin extends SkinBase<ChartViewer>  {
         this.zoomRectangle.setVisible(true);
     }
 
-    /** 
+    /**
      * Creates the node representing this control.
-     * 
+     *
      * @return The node.
      */
     private BorderPane createNode(ChartViewer control) {
@@ -193,12 +194,12 @@ public class ChartViewerSkin extends SkinBase<ChartViewer>  {
         this.canvas.addChartMouseListener(control);
         this.canvas.widthProperty().bind(sp.widthProperty());
         this.canvas.heightProperty().bind(sp.heightProperty());
- 
+
         this.canvas.addMouseHandler(new ZoomHandlerFX("zoom", control));
         sp.getChildren().add(this.canvas);
-        
+
         borderPane.setCenter(sp);
         return borderPane;
     }
-    
+
 }

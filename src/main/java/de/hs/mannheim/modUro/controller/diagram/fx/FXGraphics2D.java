@@ -85,6 +85,7 @@ import java.text.AttributedCharacterIterator;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -102,57 +103,67 @@ import javafx.scene.text.FontWeight;
  * A {@link Graphics2D} implementation that writes to a JavaFX {@link Canvas}.
  * This class is copied directly from the FXGraphics2D project, we keep a local
  * copy to avoid having a dependency to manage.
- * 
+ *
  * @since 1.0.18
  */
 public class FXGraphics2D extends Graphics2D {
-    
-    /** The graphics context for the JavaFX canvas. */
+
+    /**
+     * The graphics context for the JavaFX canvas.
+     */
     private final GraphicsContext gc;
-    
-    /** The number of times the graphics state has been saved. */
+
+    /**
+     * The number of times the graphics state has been saved.
+     */
     private int saveCount = 0;
-    
-    /** A flag to permit clipping to be disabled (since it is buggy). */
+
+    /**
+     * A flag to permit clipping to be disabled (since it is buggy).
+     */
     private boolean clippingDisabled = false;
-    
-    /** Rendering hints. */
+
+    /**
+     * Rendering hints.
+     */
     private final RenderingHints hints;
-    
+
     private Shape clip;
-    
+
     private Paint paint = Color.BLACK;
-    
+
     private Color awtColor = Color.BLACK;
-    
+
     private Composite composite = AlphaComposite.getInstance(
             AlphaComposite.SRC_OVER, 1.0f);
-    
+
     private Stroke stroke = new BasicStroke(1.0f);
-    
-    /** 
+
+    /**
      * The width of the stroke to use when the user supplies a
      * BasicStroke with a width of 0.0 (in this case the Java specification
-     * says "If width is set to 0.0f, the stroke is rendered as the thinnest 
+     * says "If width is set to 0.0f, the stroke is rendered as the thinnest
      * possible line for the target device and the antialias hint setting.")
      */
     private double zeroStrokeWidth;
-    
+
     private Font font = new Font("SansSerif", Font.PLAIN, 12);
-    
+
     private AffineTransform transform = new AffineTransform();
 
-    /** The background color, presently ignored. */
+    /**
+     * The background color, presently ignored.
+     */
     private Color background = Color.BLACK;
 
     /**
-     * An instance that is lazily instantiated in drawLine and then 
+     * An instance that is lazily instantiated in drawLine and then
      * subsequently reused to avoid creating a lot of garbage.
      */
     private Line2D line;
-    
+
     /**
-     * An instance that is lazily instantiated in fillRect and then 
+     * An instance that is lazily instantiated in fillRect and then
      * subsequently reused to avoid creating a lot of garbage.
      */
     Rectangle2D rect;
@@ -162,71 +173,73 @@ public class FXGraphics2D extends Graphics2D {
      * subsequently reused to avoid creating a lot of garbage.
      */
     private RoundRectangle2D roundRect;
-    
-     /**
+
+    /**
      * An instance that is lazily instantiated in draw/fillOval and then
      * subsequently reused to avoid creating a lot of garbage.
      */
-   private Ellipse2D oval;
-    
+    private Ellipse2D oval;
+
     /**
      * An instance that is lazily instantiated in draw/fillArc and then
      * subsequently reused to avoid creating a lot of garbage.
      */
     private Arc2D arc;
-    
-    /** A hidden image used for font metrics. */
-    private final BufferedImage fmImage = new BufferedImage(10, 10, 
+
+    /**
+     * A hidden image used for font metrics.
+     */
+    private final BufferedImage fmImage = new BufferedImage(10, 10,
             BufferedImage.TYPE_INT_RGB);
 
     /**
      * Throws an {@code IllegalArgumentException} if {@code arg} is
      * {@code null}.
-     * 
+     *
      * @param arg  the argument to check.
-     * @param name  the name of the
+     * @param name the name of the
      */
     private static void nullNotPermitted(Object arg, String name) {
         if (arg == null) {
             throw new IllegalArgumentException("Null '" + name + "' argument.");
-        }    
+        }
     }
-    
+
     /**
      * Creates a new instance that will render to the specified JavaFX
      * {@code GraphicsContext}.
-     * 
-     * @param gc  the graphics context ({@code null} not permitted). 
+     *
+     * @param gc the graphics context ({@code null} not permitted).
      */
     public FXGraphics2D(GraphicsContext gc) {
         nullNotPermitted(gc, "gc");
         this.gc = gc;
         this.zeroStrokeWidth = 0.5;
-        this.hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, 
+        this.hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_DEFAULT);
     }
-    
+
     /**
      * Returns the width to use for the stroke when the AWT stroke
-     * specified has a zero width (the default value is {@code 0.5}).  
-     * <p>In the Java specification for {@code BasicStroke} it states "If width 
-     * is set to 0.0f, the stroke is rendered as the thinnest possible 
-     * line for the target device and the antialias hint setting."  We don't 
+     * specified has a zero width (the default value is {@code 0.5}).
+     * <p>In the Java specification for {@code BasicStroke} it states "If width
+     * is set to 0.0f, the stroke is rendered as the thinnest possible
+     * line for the target device and the antialias hint setting."  We don't
      * have a means to implement that accurately since we must specify a fixed
-     * width to the JavaFX canvas - this attribute is the width that is 
+     * width to the JavaFX canvas - this attribute is the width that is
      * used.</p>
-     * 
+     *
      * @return The width.
      */
     public double getZeroStrokeWidth() {
         return this.zeroStrokeWidth;
     }
-    
+
     /**
      * Sets the width to use for the stroke when the current AWT stroke
      * has a width of {@code 0.0}.
-     * 
-     * @param width  the new width (must be 0 or greater).
+     *
+     * @param width the new width (must be 0 or greater).
      */
     public void setZeroStrokeWidth(double width) {
         if (width < 0.0) {
@@ -234,37 +247,36 @@ public class FXGraphics2D extends Graphics2D {
         }
         this.zeroStrokeWidth = width;
     }
- 
+
     /**
-     * Returns the flag that controls whether or not clipping is actually 
-     * applied to the JavaFX canvas.  The default value is currently 
+     * Returns the flag that controls whether or not clipping is actually
+     * applied to the JavaFX canvas.  The default value is currently
      * {@code false} (the clipping is ENABLED) but since it does not always
-     * work correctly you have the option to disable it.  See 
+     * work correctly you have the option to disable it.  See
      * <a href="https://javafx-jira.kenai.com/browse/RT-36891">
-     * https://javafx-jira.kenai.com/browse/RT-36891</a> for details (requires 
+     * https://javafx-jira.kenai.com/browse/RT-36891</a> for details (requires
      * an account).
-     * 
+     *
      * @return A boolean.
-     * 
-     * @see #setClippingDisabled(boolean) 
+     * @see #setClippingDisabled(boolean)
      */
     public boolean isClippingDisabled() {
         return this.clippingDisabled;
     }
-    
+
     /**
      * Sets the flag that controls whether or not clipping is disabled.
-     * 
-     * @param disabled  the new flag value.
-     * 
-     * @see #isClippingDisabled() 
+     *
+     * @param disabled the new flag value.
+     * @see #isClippingDisabled()
      */
     public void setClippingDisabled(boolean disabled) {
-        this.clippingDisabled = disabled;    
+        this.clippingDisabled = disabled;
     }
-    
+
     /**
      * This method is not implemented yet.
+     *
      * @return {@code null}.
      */
     @Override
@@ -275,7 +287,7 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Creates a new graphics object that is a copy of this graphics object.
-     * 
+     *
      * @return A new graphics object.
      */
     @Override
@@ -294,12 +306,11 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Returns the paint used to draw or fill shapes (or text).  The default 
+     * Returns the paint used to draw or fill shapes (or text).  The default
      * value is {@link Color#BLACK}.
-     * 
-     * @return The paint (never {@code null}). 
-     * 
-     * @see #setPaint(java.awt.Paint) 
+     *
+     * @return The paint (never {@code null}).
+     * @see #setPaint(java.awt.Paint)
      */
     @Override
     public Paint getPaint() {
@@ -307,20 +318,19 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Sets the paint used to draw or fill shapes (or text).  If 
+     * Sets the paint used to draw or fill shapes (or text).  If
      * {@code paint} is an instance of {@code Color}, this method will
-     * also update the current color attribute (see {@link #getColor()}). If 
-     * you pass {@code null} to this method, it does nothing (in 
+     * also update the current color attribute (see {@link #getColor()}). If
+     * you pass {@code null} to this method, it does nothing (in
      * accordance with the JDK specification).
      * <br><br>
-     * Note that this implementation will map {@link Color}, 
-     * {@link GradientPaint}, {@link LinearGradientPaint} and 
-     * {@link RadialGradientPaint}, other paint implementations are not 
+     * Note that this implementation will map {@link Color},
+     * {@link GradientPaint}, {@link LinearGradientPaint} and
+     * {@link RadialGradientPaint}, other paint implementations are not
      * handled.
-     * 
-     * @param paint  the paint ({@code null} is permitted but ignored).
-     * 
-     * @see #getPaint() 
+     *
+     * @param paint the paint ({@code null} is permitted but ignored).
+     * @see #getPaint()
      */
     @Override
     public void setPaint(Paint paint) {
@@ -332,12 +342,12 @@ public class FXGraphics2D extends Graphics2D {
             setColor((Color) paint);
         } else if (paint instanceof GradientPaint) {
             GradientPaint gp = (GradientPaint) paint;
-            Stop[] stops = new Stop[] { new Stop(0, 
-                    awtColorToJavaFX(gp.getColor1())), 
-                    new Stop(1, awtColorToJavaFX(gp.getColor2())) };
+            Stop[] stops = new Stop[]{new Stop(0,
+                    awtColorToJavaFX(gp.getColor1())),
+                    new Stop(1, awtColorToJavaFX(gp.getColor2()))};
             Point2D p1 = gp.getPoint1();
             Point2D p2 = gp.getPoint2();
-            LinearGradient lg = new LinearGradient(p1.getX(), p1.getY(), 
+            LinearGradient lg = new LinearGradient(p1.getX(), p1.getY(),
                     p2.getX(), p2.getY(), false, CycleMethod.NO_CYCLE, stops);
             this.gc.setStroke(lg);
             this.gc.setFill(lg);
@@ -353,17 +363,17 @@ public class FXGraphics2D extends Graphics2D {
             if (paint instanceof RadialGradientPaint) {
                 RadialGradientPaint rgp = (RadialGradientPaint) paint;
                 Point2D center = rgp.getCenterPoint();
-                Point2D focus = rgp.getFocusPoint();           
+                Point2D focus = rgp.getFocusPoint();
                 double focusDistance = focus.distance(center);
                 double focusAngle = 0.0;
                 if (!focus.equals(center)) {
-                    focusAngle = Math.atan2(focus.getY() - center.getY(), 
-                        focus.getX() - center.getX());
+                    focusAngle = Math.atan2(focus.getY() - center.getY(),
+                            focus.getX() - center.getX());
                 }
                 double radius = rgp.getRadius();
                 RadialGradient rg = new RadialGradient(
-                        focusAngle * Math.PI / 180, focusDistance, 
-                        center.getX(), center.getY(), radius, false, 
+                        focusAngle * Math.PI / 180, focusDistance,
+                        center.getX(), center.getY(), radius, false,
                         CycleMethod.NO_CYCLE, stops);
                 this.gc.setStroke(rg);
                 this.gc.setFill(rg);
@@ -371,8 +381,8 @@ public class FXGraphics2D extends Graphics2D {
                 LinearGradientPaint lgp = (LinearGradientPaint) paint;
                 Point2D start = lgp.getStartPoint();
                 Point2D end = lgp.getEndPoint();
-                LinearGradient lg = new LinearGradient(start.getX(), 
-                        start.getY(), end.getX(), end.getY(), false, 
+                LinearGradient lg = new LinearGradient(start.getX(),
+                        start.getY(), end.getX(), end.getY(), false,
                         CycleMethod.NO_CYCLE, stops);
                 this.gc.setStroke(lg);
                 this.gc.setFill(lg);
@@ -385,10 +395,9 @@ public class FXGraphics2D extends Graphics2D {
     /**
      * Returns the foreground color.  This method exists for backwards
      * compatibility in AWT, you should use the {@link #getPaint()} method.
-     * 
+     *
      * @return The foreground color (never {@code null}).
-     * 
-     * @see #getPaint() 
+     * @see #getPaint()
      */
     @Override
     public Color getColor() {
@@ -396,13 +405,12 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Sets the foreground color.  This method exists for backwards 
-     * compatibility in AWT, you should use the 
+     * Sets the foreground color.  This method exists for backwards
+     * compatibility in AWT, you should use the
      * {@link #setPaint(java.awt.Paint)} method.
-     * 
-     * @param c  the color ({@code null} permitted but ignored). 
-     * 
-     * @see #setPaint(java.awt.Paint) 
+     *
+     * @param c the color ({@code null} permitted but ignored).
+     * @see #setPaint(java.awt.Paint)
      */
     @Override
     public void setColor(Color c) {
@@ -418,24 +426,22 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Returns a JavaFX color that is equivalent to the specified AWT color.
-     * 
-     * @param c  the color ({@code null} not permitted).
-     * 
-     * @return A JavaFX color. 
+     *
+     * @param c the color ({@code null} not permitted).
+     * @return A JavaFX color.
      */
     private javafx.scene.paint.Color awtColorToJavaFX(Color c) {
-        return javafx.scene.paint.Color.rgb(c.getRed(), c.getGreen(), 
+        return javafx.scene.paint.Color.rgb(c.getRed(), c.getGreen(),
                 c.getBlue(), c.getAlpha() / 255.0);
     }
-    
+
     /**
      * Returns the background color (the default value is {@link Color#BLACK}).
-     * This attribute is used by the {@link #clearRect(int, int, int, int)} 
+     * This attribute is used by the {@link #clearRect(int, int, int, int)}
      * method.
-     * 
-     * @return The background color (possibly {@code null}). 
-     * 
-     * @see #setBackground(java.awt.Color) 
+     *
+     * @return The background color (possibly {@code null}).
+     * @see #setBackground(java.awt.Color)
      */
     @Override
     public Color getBackground() {
@@ -443,15 +449,14 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Sets the background color.  This attribute is used by the 
-     * {@link #clearRect(int, int, int, int)} method.  The reference 
+     * Sets the background color.  This attribute is used by the
+     * {@link #clearRect(int, int, int, int)} method.  The reference
      * implementation allows {@code null} for the background color so
-     * we allow that too (but for that case, the {@link #clearRect(int, int, int, int)} 
+     * we allow that too (but for that case, the {@link #clearRect(int, int, int, int)}
      * method will do nothing).
-     * 
-     * @param color  the color ({@code null} permitted).
-     * 
-     * @see #getBackground() 
+     *
+     * @param color the color ({@code null} permitted).
+     * @see #getBackground()
      */
     @Override
     public void setBackground(Color color) {
@@ -460,22 +465,20 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Returns the current composite.
-     * 
+     *
      * @return The current composite (never {@code null}).
-     * 
-     * @see #setComposite(java.awt.Composite) 
+     * @see #setComposite(java.awt.Composite)
      */
     @Override
     public Composite getComposite() {
         return this.composite;
     }
-    
+
     /**
      * Sets the composite (only {@code AlphaComposite} is handled).
-     * 
-     * @param comp  the composite ({@code null} not permitted).
-     * 
-     * @see #getComposite() 
+     *
+     * @param comp the composite ({@code null} not permitted).
+     * @see #getComposite()
      */
     @Override
     public void setComposite(Composite comp) {
@@ -484,11 +487,10 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Returns the current stroke (this attribute is used when drawing shapes). 
-     * 
-     * @return The current stroke (never {@code null}). 
-     * 
-     * @see #setStroke(java.awt.Stroke) 
+     * Returns the current stroke (this attribute is used when drawing shapes).
+     *
+     * @return The current stroke (never {@code null}).
+     * @see #setStroke(java.awt.Stroke)
      */
     @Override
     public Stroke getStroke() {
@@ -497,10 +499,9 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Sets the stroke that will be used to draw shapes.
-     * 
-     * @param s  the stroke ({@code null} not permitted).
-     * 
-     * @see #getStroke() 
+     *
+     * @param s the stroke ({@code null} not permitted).
+     * @see #getStroke()
      */
     @Override
     public void setStroke(Stroke s) {
@@ -518,14 +519,13 @@ public class FXGraphics2D extends Graphics2D {
             this.gc.setMiterLimit(bs.getMiterLimit());
         }
     }
-    
+
     /**
      * Maps a line cap code from AWT to the corresponding JavaFX StrokeLineCap
      * enum value.
-     * 
-     * @param c  the line cap code.
-     * 
-     * @return A JavaFX line cap value. 
+     *
+     * @param c the line cap code.
+     * @return A JavaFX line cap value.
      */
     private StrokeLineCap awtToJavaFXLineCap(int c) {
         if (c == BasicStroke.CAP_BUTT) {
@@ -540,12 +540,11 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Maps a line join code from AWT to the corresponding JavaFX 
+     * Maps a line join code from AWT to the corresponding JavaFX
      * StrokeLineJoin enum value.
-     * 
-     * @param c  the line join code.
-     * 
-     * @return A JavaFX line join value. 
+     *
+     * @param c the line join code.
+     * @return A JavaFX line join value.
      */
     private StrokeLineJoin awtToJavaFXLineJoin(int j) {
         if (j == BasicStroke.JOIN_BEVEL) {
@@ -555,21 +554,19 @@ public class FXGraphics2D extends Graphics2D {
         } else if (j == BasicStroke.JOIN_ROUND) {
             return StrokeLineJoin.ROUND;
         } else {
-            throw new IllegalArgumentException("Unrecognised join code: " + j);            
+            throw new IllegalArgumentException("Unrecognised join code: " + j);
         }
     }
-    
+
     /**
      * Returns the current value for the specified hint.  Note that all hints
      * are currently ignored in this implementation.
-     * 
-     * @param hintKey  the hint key ({@code null} permitted, but the
-     *     result will be {@code null} also in that case).
-     * 
-     * @return The current value for the specified hint 
-     *     (possibly {@code null}).
-     * 
-     * @see #setRenderingHint(java.awt.RenderingHints.Key, java.lang.Object) 
+     *
+     * @param hintKey the hint key ({@code null} permitted, but the
+     *                result will be {@code null} also in that case).
+     * @return The current value for the specified hint
+     * (possibly {@code null}).
+     * @see #setRenderingHint(java.awt.RenderingHints.Key, java.lang.Object)
      */
     @Override
     public Object getRenderingHint(RenderingHints.Key hintKey) {
@@ -579,11 +576,10 @@ public class FXGraphics2D extends Graphics2D {
     /**
      * Sets the value for a hint.  Note that all hints are currently
      * ignored in this implementation.
-     * 
-     * @param hintKey  the hint key ({@code null} not permitted).
-     * @param hintValue  the hint value.
-     * 
-     * @see #getRenderingHint(java.awt.RenderingHints.Key) 
+     *
+     * @param hintKey   the hint key ({@code null} not permitted).
+     * @param hintValue the hint value.
+     * @see #getRenderingHint(java.awt.RenderingHints.Key)
      */
     @Override
     public void setRenderingHint(RenderingHints.Key hintKey, Object hintValue) {
@@ -592,12 +588,11 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Returns a copy of the rendering hints.  Modifying the returned copy
-     * will have no impact on the state of this {@code Graphics2D} 
+     * will have no impact on the state of this {@code Graphics2D}
      * instance.
-     * 
-     * @return The rendering hints (never {@code null}). 
-     * 
-     * @see #setRenderingHints(java.util.Map) 
+     *
+     * @return The rendering hints (never {@code null}).
+     * @see #setRenderingHints(java.util.Map)
      */
     @Override
     public RenderingHints getRenderingHints() {
@@ -606,10 +601,9 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Sets the rendering hints to the specified collection.
-     * 
-     * @param hints  the new set of hints ({@code null} not permitted).
-     * 
-     * @see #getRenderingHints() 
+     *
+     * @param hints the new set of hints ({@code null} not permitted).
+     * @see #getRenderingHints()
      */
     @Override
     public void setRenderingHints(Map<?, ?> hints) {
@@ -619,8 +613,8 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Adds all the supplied rendering hints.
-     * 
-     * @param hints  the hints ({@code null} not permitted).
+     *
+     * @param hints the hints ({@code null} not permitted).
      */
     @Override
     public void addRenderingHints(Map<?, ?> hints) {
@@ -628,15 +622,14 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Draws the specified shape with the current {@code paint} and 
-     * {@code stroke}.  There is direct handling for {@code Line2D}, 
-     * {@code Rectangle2D}, {@code Ellipse2D}, {@code Arc2D} and 
+     * Draws the specified shape with the current {@code paint} and
+     * {@code stroke}.  There is direct handling for {@code Line2D},
+     * {@code Rectangle2D}, {@code Ellipse2D}, {@code Arc2D} and
      * {@code Path2D}. All other shapes are mapped to a path outline and then
      * drawn.
-     * 
-     * @param s  the shape ({@code null} not permitted).
-     * 
-     * @see #fill(java.awt.Shape) 
+     *
+     * @param s the shape ({@code null} not permitted).
+     * @see #fill(java.awt.Shape)
      */
     @Override
     public void draw(Shape s) {
@@ -659,14 +652,14 @@ public class FXGraphics2D extends Graphics2D {
             this.gc.strokeLine(l.getX1(), l.getY1(), l.getX2(), l.getY2());
         } else if (s instanceof RoundRectangle2D) {
             RoundRectangle2D rr = (RoundRectangle2D) s;
-            this.gc.strokeRoundRect(rr.getX(), rr.getY(), rr.getWidth(), 
+            this.gc.strokeRoundRect(rr.getX(), rr.getY(), rr.getWidth(),
                     rr.getHeight(), rr.getArcWidth(), rr.getArcHeight());
         } else if (s instanceof Rectangle2D) {
             Rectangle2D r = (Rectangle2D) s;
             if (s instanceof Rectangle) {
                 // special case - if the underlying rectangle uses ints we
                 // need to create one that uses doubles
-                r = new Rectangle2D.Double(r.getX(), r.getY(), r.getWidth(), 
+                r = new Rectangle2D.Double(r.getX(), r.getY(), r.getWidth(),
                         r.getHeight());
             }
             Object hint = getRenderingHint(RenderingHints.KEY_STROKE_CONTROL);
@@ -683,8 +676,8 @@ public class FXGraphics2D extends Graphics2D {
             this.gc.strokeOval(e.getX(), e.getY(), e.getWidth(), e.getHeight());
         } else if (s instanceof Arc2D) {
             Arc2D a = (Arc2D) s;
-            this.gc.strokeArc(a.getX(), a.getY(), a.getWidth(), a.getHeight(), 
-                    a.getAngleStart(), a.getAngleExtent(), 
+            this.gc.strokeArc(a.getX(), a.getY(), a.getWidth(), a.getHeight(),
+                    a.getAngleStart(), a.getAngleExtent(),
                     intToArcType(a.getArcType()));
         } else {
             shapeToPath(s);
@@ -693,9 +686,9 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Maps a shape to a path in the graphics context. 
-     * 
-     * @param s  the shape ({@code null} not permitted).
+     * Maps a shape to a path in the graphics context.
+     *
+     * @param s the shape ({@code null} not permitted).
      */
     private void shapeToPath(Shape s) {
         double[] coords = new double[6];
@@ -711,24 +704,24 @@ public class FXGraphics2D extends Graphics2D {
                     this.gc.lineTo(coords[0], coords[1]);
                     break;
                 case PathIterator.SEG_QUADTO:
-                    this.gc.quadraticCurveTo(coords[0], coords[1], coords[2], 
+                    this.gc.quadraticCurveTo(coords[0], coords[1], coords[2],
                             coords[3]);
                     break;
                 case PathIterator.SEG_CUBICTO:
-                    this.gc.bezierCurveTo(coords[0], coords[1], coords[2], 
+                    this.gc.bezierCurveTo(coords[0], coords[1], coords[2],
                             coords[3], coords[4], coords[5]);
                     break;
                 case PathIterator.SEG_CLOSE:
                     this.gc.closePath();
                     break;
                 default:
-                    throw new RuntimeException("Unrecognised segment type " 
+                    throw new RuntimeException("Unrecognised segment type "
                             + segType);
             }
             iterator.next();
         }
     }
-    
+
     private ArcType intToArcType(int t) {
         if (t == Arc2D.CHORD) {
             return ArcType.CHORD;
@@ -739,22 +732,21 @@ public class FXGraphics2D extends Graphics2D {
         }
         throw new IllegalArgumentException("Unrecognised t: " + t);
     }
-    
+
     /**
      * Fills the specified shape with the current {@code paint}.  There is
-     * direct handling for {@code RoundRectangle2D}, 
-     * {@code Rectangle2D}, {@code Ellipse2D} and {@code Arc2D}.  
+     * direct handling for {@code RoundRectangle2D},
+     * {@code Rectangle2D}, {@code Ellipse2D} and {@code Arc2D}.
      * All other shapes are mapped to a path outline and then filled.
-     * 
-     * @param s  the shape ({@code null} not permitted). 
-     * 
-     * @see #draw(java.awt.Shape) 
+     *
+     * @param s the shape ({@code null} not permitted).
+     * @see #draw(java.awt.Shape)
      */
     @Override
     public void fill(Shape s) {
         if (s instanceof RoundRectangle2D) {
             RoundRectangle2D rr = (RoundRectangle2D) s;
-            this.gc.fillRoundRect(rr.getX(), rr.getY(), rr.getWidth(), 
+            this.gc.fillRoundRect(rr.getX(), rr.getY(), rr.getWidth(),
                     rr.getHeight(), rr.getArcWidth(), rr.getArcHeight());
         } else if (s instanceof Rectangle2D) {
             Rectangle2D r = (Rectangle2D) s;
@@ -764,8 +756,8 @@ public class FXGraphics2D extends Graphics2D {
             this.gc.fillOval(e.getX(), e.getY(), e.getWidth(), e.getHeight());
         } else if (s instanceof Arc2D) {
             Arc2D a = (Arc2D) s;
-            this.gc.fillArc(a.getX(), a.getY(), a.getWidth(), a.getHeight(), 
-                    a.getAngleStart(), a.getAngleExtent(), 
+            this.gc.fillArc(a.getX(), a.getY(), a.getWidth(), a.getHeight(),
+                    a.getAngleStart(), a.getAngleExtent(),
                     intToArcType(a.getArcType()));
         } else {
             shapeToPath(s);
@@ -775,10 +767,9 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Returns the current font used for drawing text.
-     * 
+     *
      * @return The current font (never {@code null}).
-     * 
-     * @see #setFont(java.awt.Font) 
+     * @see #setFont(java.awt.Font)
      */
     @Override
     public Font getFont() {
@@ -787,10 +778,9 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Sets the font to be used for drawing text.
-     * 
-     * @param font  the font ({@code null} is permitted but ignored).
-     * 
-     * @see #getFont() 
+     *
+     * @param font the font ({@code null} is permitted but ignored).
+     * @see #getFont()
      */
     @Override
     public void setFont(Font font) {
@@ -799,29 +789,28 @@ public class FXGraphics2D extends Graphics2D {
         }
         this.font = font;
         FontWeight weight = font.isBold() ? FontWeight.BOLD : FontWeight.NORMAL;
-        FontPosture posture = font.isItalic() 
+        FontPosture posture = font.isItalic()
                 ? FontPosture.ITALIC : FontPosture.REGULAR;
-        this.gc.setFont(javafx.scene.text.Font.font(font.getFamily(), 
+        this.gc.setFont(javafx.scene.text.Font.font(font.getFamily(),
                 weight, posture, font.getSize()));
     }
-    
+
     /**
      * Returns the font metrics for the specified font.
-     * 
-     * @param f  the font.
-     * 
-     * @return The font metrics. 
+     *
+     * @param f the font.
+     * @return The font metrics.
      */
     @Override
     public FontMetrics getFontMetrics(Font f) {
         return this.fmImage.createGraphics().getFontMetrics(f);
     }
-    
+
     /**
      * Returns the font render context.  The implementation here returns the
-     * {@code FontRenderContext} for an image that is maintained 
+     * {@code FontRenderContext} for an image that is maintained
      * internally (as for {@link #getFontMetrics}).
-     * 
+     *
      * @return The font render context.
      */
     @Override
@@ -832,12 +821,11 @@ public class FXGraphics2D extends Graphics2D {
     /**
      * Draws a string at {@code (x, y)}.  The start of the text at the
      * baseline level will be aligned with the {@code (x, y)} point.
-     * 
-     * @param str  the string ({@code null} not permitted).
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * 
-     * @see #drawString(java.lang.String, float, float) 
+     *
+     * @param str the string ({@code null} not permitted).
+     * @param x   the x-coordinate.
+     * @param y   the y-coordinate.
+     * @see #drawString(java.lang.String, float, float)
      */
     @Override
     public void drawString(String str, int x, int y) {
@@ -847,10 +835,10 @@ public class FXGraphics2D extends Graphics2D {
     /**
      * Draws a string at {@code (x, y)}. The start of the text at the
      * baseline level will be aligned with the {@code (x, y)} point.
-     * 
-     * @param str  the string ({@code null} not permitted).
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param str the string ({@code null} not permitted).
+     * @param x   the x-coordinate.
+     * @param y   the y-coordinate.
      */
     @Override
     public void drawString(String str, float x, float y) {
@@ -861,41 +849,41 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Draws a string of attributed characters at {@code (x, y)}.  The 
-     * call is delegated to 
-     * {@link #drawString(AttributedCharacterIterator, float, float)}. 
-     * 
-     * @param iterator  an iterator for the characters.
-     * @param x  the x-coordinate.
-     * @param y  the x-coordinate.
+     * Draws a string of attributed characters at {@code (x, y)}.  The
+     * call is delegated to
+     * {@link #drawString(AttributedCharacterIterator, float, float)}.
+     *
+     * @param iterator an iterator for the characters.
+     * @param x        the x-coordinate.
+     * @param y        the x-coordinate.
      */
     @Override
     public void drawString(AttributedCharacterIterator iterator, int x, int y) {
-        drawString(iterator, (float) x, (float) y); 
+        drawString(iterator, (float) x, (float) y);
     }
 
     /**
-     * Draws a string of attributed characters at {@code (x, y)}. 
-     * 
-     * @param iterator  an iterator over the characters ({@code null} not 
-     *     permitted).
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     * Draws a string of attributed characters at {@code (x, y)}.
+     *
+     * @param iterator an iterator over the characters ({@code null} not
+     *                 permitted).
+     * @param x        the x-coordinate.
+     * @param y        the y-coordinate.
      */
     @Override
-    public void drawString(AttributedCharacterIterator iterator, float x, 
-            float y) {
-        Set<AttributedCharacterIterator.Attribute> 
+    public void drawString(AttributedCharacterIterator iterator, float x,
+                           float y) {
+        Set<AttributedCharacterIterator.Attribute>
                 s = iterator.getAllAttributeKeys();
         if (!s.isEmpty()) {
-            TextLayout layout = new TextLayout(iterator, 
+            TextLayout layout = new TextLayout(iterator,
                     getFontRenderContext());
             layout.draw(this, x, y);
         } else {
             StringBuilder strb = new StringBuilder();
             iterator.first();
-            for (int i = iterator.getBeginIndex(); i < iterator.getEndIndex(); 
-                    i++) {
+            for (int i = iterator.getBeginIndex(); i < iterator.getEndIndex();
+                 i++) {
                 strb.append(iterator.current());
                 iterator.next();
             }
@@ -905,10 +893,10 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Draws the specified glyph vector at the location {@code (x, y)}.
-     * 
-     * @param g  the glyph vector ({@code null} not permitted).
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param g the glyph vector ({@code null} not permitted).
+     * @param x the x-coordinate.
+     * @param y the y-coordinate.
      */
     @Override
     public void drawGlyphVector(GlyphVector g, float x, float y) {
@@ -916,13 +904,12 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Applies the translation {@code (tx, ty)}.  This call is delegated 
+     * Applies the translation {@code (tx, ty)}.  This call is delegated
      * to {@link #translate(double, double)}.
-     * 
-     * @param tx  the x-translation.
-     * @param ty  the y-translation.
-     * 
-     * @see #translate(double, double) 
+     *
+     * @param tx the x-translation.
+     * @param ty the y-translation.
+     * @see #translate(double, double)
      */
     @Override
     public void translate(int tx, int ty) {
@@ -931,9 +918,9 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Applies the translation {@code (tx, ty)}.
-     * 
-     * @param tx  the x-translation.
-     * @param ty  the y-translation.
+     *
+     * @param tx the x-translation.
+     * @param ty the y-translation.
      */
     @Override
     public void translate(double tx, double ty) {
@@ -943,8 +930,8 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Applies a rotation (anti-clockwise) about {@code (0, 0)}.
-     * 
-     * @param theta  the rotation angle (in radians). 
+     *
+     * @param theta the rotation angle (in radians).
      */
     @Override
     public void rotate(double theta) {
@@ -954,10 +941,10 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Applies a rotation (anti-clockwise) about {@code (x, y)}.
-     * 
-     * @param theta  the rotation angle (in radians).
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param theta the rotation angle (in radians).
+     * @param x     the x-coordinate.
+     * @param y     the y-coordinate.
      */
     @Override
     public void rotate(double theta, double x, double y) {
@@ -968,9 +955,9 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Applies a scale transformation.
-     * 
-     * @param sx  the x-scaling factor.
-     * @param sy  the y-scaling factor.
+     *
+     * @param sx the x-scaling factor.
+     * @param sy the y-scaling factor.
      */
     @Override
     public void scale(double sx, double sy) {
@@ -979,15 +966,15 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Applies a shear transformation. This is equivalent to the following 
+     * Applies a shear transformation. This is equivalent to the following
      * call to the {@code transform} method:
      * <br><br>
      * <ul><li>
      * {@code transform(AffineTransform.getShearInstance(shx, shy));}
      * </ul>
-     * 
-     * @param shx  the x-shear factor.
-     * @param shy  the y-shear factor.
+     *
+     * @param shx the x-shear factor.
+     * @param shy the y-shear factor.
      */
     @Override
     public void shear(double shx, double shy) {
@@ -996,8 +983,8 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Applies this transform to the existing transform by concatenating it.
-     * 
-     * @param t  the transform ({@code null} not permitted). 
+     *
+     * @param t the transform ({@code null} not permitted).
      */
     @Override
     public void transform(AffineTransform t) {
@@ -1008,10 +995,9 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Returns a copy of the current transform.
-     * 
+     *
      * @return A copy of the current transform (never {@code null}).
-     * 
-     * @see #setTransform(java.awt.geom.AffineTransform) 
+     * @see #setTransform(java.awt.geom.AffineTransform)
      */
     @Override
     public AffineTransform getTransform() {
@@ -1020,11 +1006,10 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Sets the transform.
-     * 
-     * @param t  the new transform ({@code null} permitted, resets to the
-     *     identity transform).
-     * 
-     * @see #getTransform() 
+     *
+     * @param t the new transform ({@code null} permitted, resets to the
+     *          identity transform).
+     * @see #getTransform()
      */
     @Override
     public void setTransform(AffineTransform t) {
@@ -1034,20 +1019,19 @@ public class FXGraphics2D extends Graphics2D {
         } else {
             this.transform = new AffineTransform(t);
         }
-        this.gc.setTransform(t.getScaleX(), t.getShearY(), t.getShearX(), 
+        this.gc.setTransform(t.getScaleX(), t.getShearY(), t.getShearX(),
                 t.getScaleY(), t.getTranslateX(), t.getTranslateY());
     }
 
     /**
      * Returns {@code true} if the rectangle (in device space) intersects
-     * with the shape (the interior, if {@code onStroke} is false, 
+     * with the shape (the interior, if {@code onStroke} is false,
      * otherwise the stroked outline of the shape).
-     * 
-     * @param rect  a rectangle (in device space).
-     * @param s the shape.
-     * @param onStroke  test the stroked outline only?
-     * 
-     * @return A boolean. 
+     *
+     * @param rect     a rectangle (in device space).
+     * @param s        the shape.
+     * @param onStroke test the stroked outline only?
+     * @return A boolean.
      */
     @Override
     public boolean hit(Rectangle rect, Shape s, boolean onStroke) {
@@ -1085,10 +1069,9 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Returns the bounds of the user clipping region.
-     * 
-     * @return The clip bounds (possibly {@code null}). 
-     * 
-     * @see #getClip() 
+     *
+     * @return The clip bounds (possibly {@code null}).
+     * @see #getClip()
      */
     @Override
     public Rectangle getClipBounds() {
@@ -1099,11 +1082,10 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Returns the user clipping region.  The initial default value is 
+     * Returns the user clipping region.  The initial default value is
      * {@code null}.
-     * 
+     *
      * @return The user clipping region (possibly {@code null}).
-     * 
      * @see #setClip(java.awt.Shape)
      */
     @Override
@@ -1122,9 +1104,8 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Sets the user clipping region.
-     * 
-     * @param shape  the new user clipping region ({@code null} permitted).
-     * 
+     *
+     * @param shape the new user clipping region ({@code null} permitted).
      * @see #getClip()
      */
     @Override
@@ -1141,13 +1122,13 @@ public class FXGraphics2D extends Graphics2D {
         // null is handled fine here...
         this.clip = this.transform.createTransformedShape(shape);
         if (clip != null) {
-            this.gc.save(); 
+            this.gc.save();
             this.saveCount++;
             shapeToPath(shape);
             this.gc.clip();
-        } 
+        }
     }
-    
+
     private void reapplyAttributes() {
         setPaint(this.paint);
         setBackground(this.background);
@@ -1155,21 +1136,21 @@ public class FXGraphics2D extends Graphics2D {
         setFont(this.font);
         setTransform(this.transform);
     }
-    
+
     /**
      * Clips to the intersection of the current clipping region and the
-     * specified shape. 
-     * 
-     * According to the Oracle API specification, this method will accept a 
-     * {@code null} argument, but there is an open bug report (since 2004) 
+     * specified shape.
+     * <p>
+     * According to the Oracle API specification, this method will accept a
+     * {@code null} argument, but there is an open bug report (since 2004)
      * that suggests this is wrong:
      * <p>
      * <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6206189">
      * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6206189</a>
-     * 
+     * <p>
      * In this implementation, a {@code null} argument is not permitted.
-     * 
-     * @param s  the clip shape ({@code null} not permitted). 
+     *
+     * @param s the clip shape ({@code null} not permitted).
      */
     @Override
     public void clip(Shape s) {
@@ -1197,13 +1178,13 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Clips to the intersection of the current clipping region and the 
+     * Clips to the intersection of the current clipping region and the
      * specified rectangle.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the width.
-     * @param height  the height.
+     * @param height the height.
      */
     @Override
     public void clipRect(int x, int y, int width, int height) {
@@ -1213,13 +1194,12 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Sets the user clipping region to the specified rectangle.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the width.
-     * @param height  the height.
-     * 
-     * @see #getClip() 
+     * @param height the height.
+     * @see #getClip()
      */
     @Override
     public void setClip(int x, int y, int width, int height) {
@@ -1228,13 +1208,13 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Draws a line from {@code (x1, y1)} to {@code (x2, y2)} using 
+     * Draws a line from {@code (x1, y1)} to {@code (x2, y2)} using
      * the current {@code paint} and {@code stroke}.
-     * 
-     * @param x1  the x-coordinate of the start point.
-     * @param y1  the y-coordinate of the start point.
-     * @param x2  the x-coordinate of the end point.
-     * @param y2  the x-coordinate of the end point.
+     *
+     * @param x1 the x-coordinate of the start point.
+     * @param y1 the y-coordinate of the start point.
+     * @param x2 the x-coordinate of the end point.
+     * @param y2 the x-coordinate of the end point.
      */
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
@@ -1248,11 +1228,11 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Fills the specified rectangle with the current {@code paint}.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the rectangle width.
-     * @param height  the rectangle height.
+     * @param height the rectangle height.
      */
     @Override
     public void fillRect(int x, int y, int width, int height) {
@@ -1261,16 +1241,15 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Clears the specified rectangle by filling it with the current 
+     * Clears the specified rectangle by filling it with the current
      * background color.  If the background color is {@code null}, this
      * method will do nothing.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the width.
-     * @param height  the height.
-     * 
-     * @see #getBackground() 
+     * @param height the height.
+     * @see #getBackground()
      */
     @Override
     public void clearRect(int x, int y, int width, int height) {
@@ -1282,56 +1261,53 @@ public class FXGraphics2D extends Graphics2D {
         fillRect(x, y, width, height);
         setPaint(saved);
     }
-    
+
     /**
-     * Draws a rectangle with rounded corners using the current 
+     * Draws a rectangle with rounded corners using the current
      * {@code paint} and {@code stroke}.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param width  the width.
-     * @param height  the height.
+     *
+     * @param x         the x-coordinate.
+     * @param y         the y-coordinate.
+     * @param width     the width.
+     * @param height    the height.
      * @param arcWidth  the arc-width.
-     * @param arcHeight  the arc-height.
-     * 
-     * @see #fillRoundRect(int, int, int, int, int, int) 
+     * @param arcHeight the arc-height.
+     * @see #fillRoundRect(int, int, int, int, int, int)
      */
     @Override
-    public void drawRoundRect(int x, int y, int width, int height, 
-            int arcWidth, int arcHeight) {
+    public void drawRoundRect(int x, int y, int width, int height,
+                              int arcWidth, int arcHeight) {
         setRoundRect(x, y, width, height, arcWidth, arcHeight);
         draw(this.roundRect);
     }
 
     /**
      * Fills a rectangle with rounded corners using the current {@code paint}.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param width  the width.
-     * @param height  the height.
+     *
+     * @param x         the x-coordinate.
+     * @param y         the y-coordinate.
+     * @param width     the width.
+     * @param height    the height.
      * @param arcWidth  the arc-width.
-     * @param arcHeight  the arc-height.
-     * 
-     * @see #drawRoundRect(int, int, int, int, int, int) 
+     * @param arcHeight the arc-height.
+     * @see #drawRoundRect(int, int, int, int, int, int)
      */
     @Override
-    public void fillRoundRect(int x, int y, int width, int height, 
-            int arcWidth, int arcHeight) {
+    public void fillRoundRect(int x, int y, int width, int height,
+                              int arcWidth, int arcHeight) {
         setRoundRect(x, y, width, height, arcWidth, arcHeight);
         fill(this.roundRect);
     }
-    
+
     /**
      * Draws an oval framed by the rectangle {@code (x, y, width, height)}
      * using the current {@code paint} and {@code stroke}.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the width.
-     * @param height  the height.
-     * 
-     * @see #fillOval(int, int, int, int) 
+     * @param height the height.
+     * @see #fillOval(int, int, int, int)
      */
     @Override
     public void drawOval(int x, int y, int width, int height) {
@@ -1341,13 +1317,12 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Fills an oval framed by the rectangle {@code (x, y, width, height)}.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the width.
-     * @param height  the height.
-     * 
-     * @see #drawOval(int, int, int, int) 
+     * @param height the height.
+     * @see #drawOval(int, int, int, int)
      */
     @Override
     public void fillOval(int x, int y, int width, int height) {
@@ -1356,56 +1331,54 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Draws an arc contained within the rectangle 
+     * Draws an arc contained within the rectangle
      * {@code (x, y, width, height)}, starting at {@code startAngle}
-     * and continuing through {@code arcAngle} degrees using 
+     * and continuing through {@code arcAngle} degrees using
      * the current {@code paint} and {@code stroke}.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param width  the width.
-     * @param height  the height.
-     * @param startAngle  the start angle in degrees, 0 = 3 o'clock.
-     * @param arcAngle  the angle (anticlockwise) in degrees.
-     * 
-     * @see #fillArc(int, int, int, int, int, int) 
+     *
+     * @param x          the x-coordinate.
+     * @param y          the y-coordinate.
+     * @param width      the width.
+     * @param height     the height.
+     * @param startAngle the start angle in degrees, 0 = 3 o'clock.
+     * @param arcAngle   the angle (anticlockwise) in degrees.
+     * @see #fillArc(int, int, int, int, int, int)
      */
     @Override
-    public void drawArc(int x, int y, int width, int height, int startAngle, 
-            int arcAngle) {
+    public void drawArc(int x, int y, int width, int height, int startAngle,
+                        int arcAngle) {
         setArc(x, y, width, height, startAngle, arcAngle);
         draw(this.arc);
     }
 
     /**
-     * Fills an arc contained within the rectangle 
+     * Fills an arc contained within the rectangle
      * {@code (x, y, width, height)}, starting at {@code startAngle}
-     * and continuing through {@code arcAngle} degrees, using 
+     * and continuing through {@code arcAngle} degrees, using
      * the current {@code paint}.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param width  the width.
-     * @param height  the height.
-     * @param startAngle  the start angle in degrees, 0 = 3 o'clock.
-     * @param arcAngle  the angle (anticlockwise) in degrees.
-     * 
-     * @see #drawArc(int, int, int, int, int, int) 
+     *
+     * @param x          the x-coordinate.
+     * @param y          the y-coordinate.
+     * @param width      the width.
+     * @param height     the height.
+     * @param startAngle the start angle in degrees, 0 = 3 o'clock.
+     * @param arcAngle   the angle (anticlockwise) in degrees.
+     * @see #drawArc(int, int, int, int, int, int)
      */
     @Override
-    public void fillArc(int x, int y, int width, int height, int startAngle, 
-            int arcAngle) {
+    public void fillArc(int x, int y, int width, int height, int startAngle,
+                        int arcAngle) {
         setArc(x, y, width, height, startAngle, arcAngle);
         fill(this.arc);
     }
 
     /**
-     * Draws the specified multi-segment line using the current 
+     * Draws the specified multi-segment line using the current
      * {@code paint} and {@code stroke}.
-     * 
-     * @param xPoints  the x-points.
-     * @param yPoints  the y-points.
-     * @param nPoints  the number of points to use for the polyline.
+     *
+     * @param xPoints the x-points.
+     * @param yPoints the y-points.
+     * @param nPoints the number of points to use for the polyline.
      */
     @Override
     public void drawPolyline(int[] xPoints, int[] yPoints, int nPoints) {
@@ -1414,14 +1387,14 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Draws the specified polygon using the current {@code paint} and 
+     * Draws the specified polygon using the current {@code paint} and
      * {@code stroke}.
-     * 
-     * @param xPoints  the x-points.
-     * @param yPoints  the y-points.
-     * @param nPoints  the number of points to use for the polygon.
-     * 
-     * @see #fillPolygon(int[], int[], int)      */
+     *
+     * @param xPoints the x-points.
+     * @param yPoints the y-points.
+     * @param nPoints the number of points to use for the polygon.
+     * @see #fillPolygon(int[], int[], int)
+     */
     @Override
     public void drawPolygon(int[] xPoints, int[] yPoints, int nPoints) {
         GeneralPath p = createPolygon(xPoints, yPoints, nPoints, true);
@@ -1430,12 +1403,11 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Fills the specified polygon using the current {@code paint}.
-     * 
-     * @param xPoints  the x-points.
-     * @param yPoints  the y-points.
-     * @param nPoints  the number of points to use for the polygon.
-     * 
-     * @see #drawPolygon(int[], int[], int) 
+     *
+     * @param xPoints the x-points.
+     * @param yPoints the y-points.
+     * @param nPoints the number of points to use for the polygon.
+     * @see #drawPolygon(int[], int[], int)
      */
     @Override
     public void fillPolygon(int[] xPoints, int[] yPoints, int nPoints) {
@@ -1444,18 +1416,17 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Creates a polygon from the specified {@code x} and 
+     * Creates a polygon from the specified {@code x} and
      * {@code y} coordinate arrays.
-     * 
-     * @param xPoints  the x-points.
-     * @param yPoints  the y-points.
-     * @param nPoints  the number of points to use for the polyline.
-     * @param close  closed?
-     * 
+     *
+     * @param xPoints the x-points.
+     * @param yPoints the y-points.
+     * @param nPoints the number of points to use for the polyline.
+     * @param close   closed?
      * @return A polygon.
      */
-    public GeneralPath createPolygon(int[] xPoints, int[] yPoints, 
-            int nPoints, boolean close) {
+    public GeneralPath createPolygon(int[] xPoints, int[] yPoints,
+                                     int nPoints, boolean close) {
         GeneralPath p = new GeneralPath();
         p.moveTo(xPoints[0], yPoints[0]);
         for (int i = 1; i < nPoints; i++) {
@@ -1466,17 +1437,16 @@ public class FXGraphics2D extends Graphics2D {
         }
         return p;
     }
-    
+
     /**
-     * Draws an image at the location {@code (x, y)}.  Note that the 
+     * Draws an image at the location {@code (x, y)}.  Note that the
      * {@code observer} is ignored.
-     * 
-     * @param img  the image.
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param observer  ignored.
-     * 
-     * @return {@code true} if the image is drawn. 
+     *
+     * @param img      the image.
+     * @param x        the x-coordinate.
+     * @param y        the y-coordinate.
+     * @param observer ignored.
+     * @return {@code true} if the image is drawn.
      */
     @Override
     public boolean drawImage(Image img, int x, int y, ImageObserver observer) {
@@ -1492,46 +1462,44 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Draws an image at the location {@code (x, y)}.  Note that the 
+     * Draws an image at the location {@code (x, y)}.  Note that the
      * {@code observer} is ignored.
-     * 
-     * @param img  the image.
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param width  the width of the target rectangle for the image.
-     * @param height  the height of the target rectangle for the image.
-     * @param observer  ignored.
-     * 
-     * @return {@code true} if the image is drawn. 
+     *
+     * @param img      the image.
+     * @param x        the x-coordinate.
+     * @param y        the y-coordinate.
+     * @param width    the width of the target rectangle for the image.
+     * @param height   the height of the target rectangle for the image.
+     * @param observer ignored.
+     * @return {@code true} if the image is drawn.
      */
     @Override
-    public boolean drawImage(Image img, int x, int y, int width, int height, 
-            ImageObserver observer) {
-        BufferedImage img2 = new BufferedImage(width, height, 
+    public boolean drawImage(Image img, int x, int y, int width, int height,
+                             ImageObserver observer) {
+        BufferedImage img2 = new BufferedImage(width, height,
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = img2.createGraphics();
         g2.drawImage(img, 0, 0, width, height, null);
-        javafx.scene.image.WritableImage fxImage = SwingFXUtils.toFXImage(img2, 
+        javafx.scene.image.WritableImage fxImage = SwingFXUtils.toFXImage(img2,
                 null);
         this.gc.drawImage(fxImage, x, y, width, height);
         return true;
     }
 
     /**
-     * Draws an image at the location {@code (x, y)}.  Note that the 
+     * Draws an image at the location {@code (x, y)}.  Note that the
      * {@code observer} is ignored.
-     * 
-     * @param img  the image ({@code null} not permitted).
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param img      the image ({@code null} not permitted).
+     * @param x        the x-coordinate.
+     * @param y        the y-coordinate.
      * @param bgcolor  the background color ({@code null} permitted).
-     * @param observer  ignored.
-     * 
-     * @return {@code true} if the image is drawn. 
+     * @param observer ignored.
+     * @return {@code true} if the image is drawn.
      */
     @Override
-    public boolean drawImage(Image img, int x, int y, Color bgcolor, 
-            ImageObserver observer) {
+    public boolean drawImage(Image img, int x, int y, Color bgcolor,
+                             ImageObserver observer) {
         int w = img.getWidth(null);
         if (w < 0) {
             return false;
@@ -1545,22 +1513,21 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Draws an image to the rectangle {@code (x, y, w, h)} (scaling it if
-     * required), first filling the background with the specified color.  Note 
+     * required), first filling the background with the specified color.  Note
      * that the {@code observer} is ignored.
-     * 
-     * @param img  the image.
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param w  the width.
-     * @param h  the height.
+     *
+     * @param img      the image.
+     * @param x        the x-coordinate.
+     * @param y        the y-coordinate.
+     * @param w        the width.
+     * @param h        the height.
      * @param bgcolor  the background color ({@code null} permitted).
-     * @param observer  ignored.
-     * 
-     * @return {@code true} if the image is drawn.      
+     * @param observer ignored.
+     * @return {@code true} if the image is drawn.
      */
     @Override
-    public boolean drawImage(Image img, int x, int y, int w, int h, 
-            Color bgcolor, ImageObserver observer) {
+    public boolean drawImage(Image img, int x, int y, int w, int h,
+                             Color bgcolor, ImageObserver observer) {
         Paint saved = getPaint();
         setPaint(bgcolor);
         fillRect(x, y, w, h);
@@ -1569,29 +1536,28 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Draws part of an image (defined by the source rectangle 
+     * Draws part of an image (defined by the source rectangle
      * {@code (sx1, sy1, sx2, sy2)}) into the destination rectangle
-     * {@code (dx1, dy1, dx2, dy2)}.  Note that the {@code observer} 
+     * {@code (dx1, dy1, dx2, dy2)}.  Note that the {@code observer}
      * is ignored.
-     * 
-     * @param img  the image.
-     * @param dx1  the x-coordinate for the top left of the destination.
-     * @param dy1  the y-coordinate for the top left of the destination.
-     * @param dx2  the x-coordinate for the bottom right of the destination.
-     * @param dy2  the y-coordinate for the bottom right of the destination.
+     *
+     * @param img the image.
+     * @param dx1 the x-coordinate for the top left of the destination.
+     * @param dy1 the y-coordinate for the top left of the destination.
+     * @param dx2 the x-coordinate for the bottom right of the destination.
+     * @param dy2 the y-coordinate for the bottom right of the destination.
      * @param sx1 the x-coordinate for the top left of the source.
      * @param sy1 the y-coordinate for the top left of the source.
      * @param sx2 the x-coordinate for the bottom right of the source.
      * @param sy2 the y-coordinate for the bottom right of the source.
-     * 
-     * @return {@code true} if the image is drawn. 
+     * @return {@code true} if the image is drawn.
      */
     @Override
-    public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, 
-            int sx1, int sy1, int sx2, int sy2, ImageObserver observer) {
+    public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2,
+                             int sx1, int sy1, int sx2, int sy2, ImageObserver observer) {
         int w = dx2 - dx1;
         int h = dy2 - dy1;
-        BufferedImage img2 = new BufferedImage(BufferedImage.TYPE_INT_ARGB, 
+        BufferedImage img2 = new BufferedImage(BufferedImage.TYPE_INT_ARGB,
                 w, h);
         Graphics2D g2 = img2.createGraphics();
         g2.drawImage(img, 0, 0, w, h, sx1, sy1, sx2, sy2, null);
@@ -1599,30 +1565,29 @@ public class FXGraphics2D extends Graphics2D {
     }
 
     /**
-     * Draws part of an image (defined by the source rectangle 
+     * Draws part of an image (defined by the source rectangle
      * {@code (sx1, sy1, sx2, sy2)}) into the destination rectangle
      * {@code (dx1, dy1, dx2, dy2)}.  The destination rectangle is first
      * cleared by filling it with the specified {@code bgcolor}. Note that
-     * the {@code observer} is ignored. 
-     * 
-     * @param img  the image.
-     * @param dx1  the x-coordinate for the top left of the destination.
-     * @param dy1  the y-coordinate for the top left of the destination.
-     * @param dx2  the x-coordinate for the bottom right of the destination.
-     * @param dy2  the y-coordinate for the bottom right of the destination.
-     * @param sx1 the x-coordinate for the top left of the source.
-     * @param sy1 the y-coordinate for the top left of the source.
-     * @param sx2 the x-coordinate for the bottom right of the source.
-     * @param sy2 the y-coordinate for the bottom right of the source.
+     * the {@code observer} is ignored.
+     *
+     * @param img      the image.
+     * @param dx1      the x-coordinate for the top left of the destination.
+     * @param dy1      the y-coordinate for the top left of the destination.
+     * @param dx2      the x-coordinate for the bottom right of the destination.
+     * @param dy2      the y-coordinate for the bottom right of the destination.
+     * @param sx1      the x-coordinate for the top left of the source.
+     * @param sy1      the y-coordinate for the top left of the source.
+     * @param sx2      the x-coordinate for the bottom right of the source.
+     * @param sy2      the y-coordinate for the bottom right of the source.
      * @param bgcolor  the background color ({@code null} permitted).
-     * @param observer  ignored.
-     * 
-     * @return {@code true} if the image is drawn. 
+     * @param observer ignored.
+     * @return {@code true} if the image is drawn.
      */
     @Override
-    public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, 
-            int sx1, int sy1, int sx2, int sy2, Color bgcolor, 
-            ImageObserver observer) {
+    public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2,
+                             int sx1, int sy1, int sx2, int sy2, Color bgcolor,
+                             ImageObserver observer) {
         Paint saved = getPaint();
         setPaint(bgcolor);
         fillRect(dx1, dy1, dx2 - dx1, dy2 - dy1);
@@ -1642,10 +1607,9 @@ public class FXGraphics2D extends Graphics2D {
      * <p>
      * <a href="http://www.jguru.com/faq/view.jsp?EID=114602">
      * http://www.jguru.com/faq/view.jsp?EID=114602</a>
-     * 
-     * @param img  the rendered image.
-     * 
-     * @return A buffered image. 
+     *
+     * @param img the rendered image.
+     * @return A buffered image.
      */
     private static BufferedImage convertRenderedImage(RenderedImage img) {
         if (img instanceof BufferedImage) {
@@ -1663,7 +1627,7 @@ public class FXGraphics2D extends Graphics2D {
                 properties.put(keys[i], img.getProperty(keys[i]));
             }
         }
-        BufferedImage result = new BufferedImage(cm, raster, 
+        BufferedImage result = new BufferedImage(cm, raster,
                 isAlphaPremultiplied, properties);
         img.copyData(raster);
         return result;
@@ -1671,30 +1635,29 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Draws the renderable image.
-     * 
-     * @param img  the renderable image.
-     * @param xform  the transform.
+     *
+     * @param img   the renderable image.
+     * @param xform the transform.
      */
     @Override
-    public void drawRenderableImage(RenderableImage img, 
-            AffineTransform xform) {
+    public void drawRenderableImage(RenderableImage img,
+                                    AffineTransform xform) {
         RenderedImage ri = img.createDefaultRendering();
         drawRenderedImage(ri, xform);
     }
 
     /**
-     * Draws an image with the specified transform. Note that the 
-     * {@code observer} is ignored.     
-     * 
-     * @param img  the image.
-     * @param xform  the transform.
-     * @param obs  the image observer (ignored).
-     * 
-     * @return {@code true} if the image is drawn. 
+     * Draws an image with the specified transform. Note that the
+     * {@code observer} is ignored.
+     *
+     * @param img   the image.
+     * @param xform the transform.
+     * @param obs   the image observer (ignored).
+     * @return {@code true} if the image is drawn.
      */
     @Override
-    public boolean drawImage(Image img, AffineTransform xform, 
-            ImageObserver obs) {
+    public boolean drawImage(Image img, AffineTransform xform,
+                             ImageObserver obs) {
         AffineTransform savedTransform = getTransform();
         transform(xform);
         boolean result = drawImage(img, 0, 0, obs);
@@ -1705,11 +1668,11 @@ public class FXGraphics2D extends Graphics2D {
     /**
      * Draws the image resulting from applying the {@code BufferedImageOp}
      * to the specified image at the location {@code (x, y)}.
-     * 
-     * @param img  the image.
+     *
+     * @param img the image.
      * @param op  the operation.
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     * @param x   the x-coordinate.
+     * @param y   the y-coordinate.
      */
     @Override
     public void drawImage(BufferedImage img, BufferedImageOp op, int x, int y) {
@@ -1719,13 +1682,13 @@ public class FXGraphics2D extends Graphics2D {
 
     /**
      * Not yet implemented.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the width of the area.
-     * @param height  the height of the area.
-     * @param dx  the delta x.
-     * @param dy  the delta y.
+     * @param height the height of the area.
+     * @param dx     the delta x.
+     * @param dy     the delta y.
      */
     @Override
     public void copyArea(int x, int y, int width, int height, int dx, int dy) {
@@ -1739,16 +1702,16 @@ public class FXGraphics2D extends Graphics2D {
     public void dispose() {
         // nothing to do
     }
- 
+
     /**
      * Sets the attributes of the reusable {@link Rectangle2D} object that is
-     * used by the {@link FXGraphics2D#drawRect(int, int, int, int)} and 
+     * used by the {@link FXGraphics2D#drawRect(int, int, int, int)} and
      * {@link FXGraphics2D#fillRect(int, int, int, int)} methods.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the width.
-     * @param height  the height.
+     * @param height the height.
      */
     private void setRect(int x, int y, int width, int height) {
         if (this.rect == null) {
@@ -1762,57 +1725,57 @@ public class FXGraphics2D extends Graphics2D {
      * Sets the attributes of the reusable {@link RoundRectangle2D} object that
      * is used by the {@link #drawRoundRect(int, int, int, int, int, int)} and
      * {@link #fillRoundRect(int, int, int, int, int, int)} methods.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param width  the width.
-     * @param height  the height.
+     *
+     * @param x         the x-coordinate.
+     * @param y         the y-coordinate.
+     * @param width     the width.
+     * @param height    the height.
      * @param arcWidth  the arc width.
-     * @param arcHeight  the arc height.
+     * @param arcHeight the arc height.
      */
-    private void setRoundRect(int x, int y, int width, int height, int arcWidth, 
-            int arcHeight) {
+    private void setRoundRect(int x, int y, int width, int height, int arcWidth,
+                              int arcHeight) {
         if (this.roundRect == null) {
-            this.roundRect = new RoundRectangle2D.Double(x, y, width, height, 
+            this.roundRect = new RoundRectangle2D.Double(x, y, width, height,
                     arcWidth, arcHeight);
         } else {
-            this.roundRect.setRoundRect(x, y, width, height, 
+            this.roundRect.setRoundRect(x, y, width, height,
                     arcWidth, arcHeight);
-        }        
+        }
     }
 
     /**
      * Sets the attributes of the reusable {@link Arc2D} object that is used by
-     * {@link #drawArc(int, int, int, int, int, int)} and 
+     * {@link #drawArc(int, int, int, int, int, int)} and
      * {@link #fillArc(int, int, int, int, int, int)} methods.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
-     * @param width  the width.
-     * @param height  the height.
-     * @param startAngle  the start angle in degrees, 0 = 3 o'clock.
-     * @param arcAngle  the angle (anticlockwise) in degrees.
+     *
+     * @param x          the x-coordinate.
+     * @param y          the y-coordinate.
+     * @param width      the width.
+     * @param height     the height.
+     * @param startAngle the start angle in degrees, 0 = 3 o'clock.
+     * @param arcAngle   the angle (anticlockwise) in degrees.
      */
-    private void setArc(int x, int y, int width, int height, int startAngle, 
-            int arcAngle) {
+    private void setArc(int x, int y, int width, int height, int startAngle,
+                        int arcAngle) {
         if (this.arc == null) {
-            this.arc = new Arc2D.Double(x, y, width, height, startAngle, 
+            this.arc = new Arc2D.Double(x, y, width, height, startAngle,
                     arcAngle, Arc2D.OPEN);
         } else {
-            this.arc.setArc(x, y, width, height, startAngle, arcAngle, 
+            this.arc.setArc(x, y, width, height, startAngle, arcAngle,
                     Arc2D.OPEN);
-        }        
+        }
     }
-            
+
     /**
-     * Sets the attributes of the reusable {@link Ellipse2D} object that is 
+     * Sets the attributes of the reusable {@link Ellipse2D} object that is
      * used by the {@link #drawOval(int, int, int, int)} and
      * {@link #fillOval(int, int, int, int)} methods.
-     * 
-     * @param x  the x-coordinate.
-     * @param y  the y-coordinate.
+     *
+     * @param x      the x-coordinate.
+     * @param y      the y-coordinate.
      * @param width  the width.
-     * @param height  the height.
+     * @param height the height.
      */
     private void setOval(int x, int y, int width, int height) {
         if (this.oval == null) {
@@ -1820,5 +1783,5 @@ public class FXGraphics2D extends Graphics2D {
         } else {
             this.oval.setFrame(x, y, width, height);
         }
-    }    
+    }
 }

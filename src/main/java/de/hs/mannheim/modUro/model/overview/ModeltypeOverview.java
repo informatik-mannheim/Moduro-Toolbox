@@ -1,3 +1,18 @@
+/*
+Copyright 2016 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package de.hs.mannheim.modUro.model.overview;
 
 import de.hs.mannheim.modUro.model.MetricType;
@@ -5,12 +20,14 @@ import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class for Model Overview Model.
- * @author  Mathuraa Pathmanathan (mathuraa@hotmail.de)
+ *
+ * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class ModeltypeOverview {
 
@@ -28,9 +45,10 @@ public class ModeltypeOverview {
 
     /**
      * Constructor.
+     *
      * @param modelType
      */
-    public ModeltypeOverview(ModelType modelType){
+    public ModeltypeOverview(ModelType modelType) {
         this.modelType = modelType;
         metricTypeName = new ArrayList<>();
         metricTypeName = listMetricTypeNames();
@@ -44,13 +62,14 @@ public class ModeltypeOverview {
 
     /**
      * Lists distinct names of metric type.
+     *
      * @return
      */
     private List<String> listMetricTypeNames() {
         List<String> metricTypeName = new ArrayList<>();
-        for (Simulation simulationItem: modelType.getSimulations()) {
-            for (MetricType metricTypeItem: simulationItem.getMetricType()) {
-                if(!metricTypeName.contains(metricTypeItem.getName())) {
+        for (Simulation simulationItem : modelType.getSimulations()) {
+            for (MetricType metricTypeItem : simulationItem.getMetricType()) {
+                if (!metricTypeName.contains(metricTypeItem.getName())) {
                     metricTypeName.add(metricTypeItem.getName());
                 }
             }
@@ -63,11 +82,11 @@ public class ModeltypeOverview {
      */
     private void countCompletedSimulations() {
         int count = 0;
-            for (Simulation simulationItem: modelType.getSimulations()) {
-                if(simulationItem.isCompleted()) {
-                    count++;
-                }
+        for (Simulation simulationItem : modelType.getSimulations()) {
+            if (simulationItem.isCompleted()) {
+                count++;
             }
+        }
         this.numberOfCompletedSimulations = count;
     }
 
@@ -76,11 +95,11 @@ public class ModeltypeOverview {
      */
     private void countAbortedSimulations() {
         int count = 0;
-            for (Simulation simulationItem: modelType.getSimulations()) {
-                if(simulationItem.isInSteadyState()) {
-                    count++;
-                }
+        for (Simulation simulationItem : modelType.getSimulations()) {
+            if (simulationItem.isInSteadyState()) {
+                count++;
             }
+        }
         this.numberOfSteadyStateSimulation = count;
     }
 
@@ -89,16 +108,17 @@ public class ModeltypeOverview {
      */
     private void countSteadyStateSimulation() {
         int count = 0;
-            for (Simulation simulationItem: modelType.getSimulations()) {
-                if(simulationItem.isAborted()) {
-                    count++;
-                }
+        for (Simulation simulationItem : modelType.getSimulations()) {
+            if (simulationItem.isAborted()) {
+                count++;
             }
+        }
         this.numberOfAbortedSimulations = count;
     }
 
     /**
      * Calculates Mean of all same metrictype
+     *
      * @param name
      * @return
      */
@@ -107,16 +127,16 @@ public class ModeltypeOverview {
 
         for (Simulation simulation : modelType.getSimulations()) {
             for (MetricType metricTypeItem : simulation.getMetricType()) {
-                if(metricTypeItem.getName().equals(name)) {
+                if (metricTypeItem.getName().equals(name)) {
                     mean.add(metricTypeItem.getMean());
                 }
             }
         }
 
         double[] meanArray = new double[mean.size()];
-        for(int i = 0; i < mean.size(); i++) meanArray[i] = mean.get(i);
+        for (int i = 0; i < mean.size(); i++) meanArray[i] = mean.get(i);
 
-        for( int i = 0; i < meanArray.length; i++) {
+        for (int i = 0; i < meanArray.length; i++) {
             stats.addValue(meanArray[i]);
         }
 
@@ -128,24 +148,25 @@ public class ModeltypeOverview {
 
     /**
      * Calculates stdDev of all same metrictype
+     *
      * @param name
      * @return
      */
     private double returnStdDev(String name) {
         List<Double> stdDev = new ArrayList<>();
 
-            for (Simulation simulation : modelType.getSimulations()) {
-                for (MetricType metricTypeItem : simulation.getMetricType()) {
-                    if(metricTypeItem.getName().equals(name)) {
-                        stdDev.add(metricTypeItem.getDeviation());
-                    }
+        for (Simulation simulation : modelType.getSimulations()) {
+            for (MetricType metricTypeItem : simulation.getMetricType()) {
+                if (metricTypeItem.getName().equals(name)) {
+                    stdDev.add(metricTypeItem.getDeviation());
                 }
             }
+        }
 
         double[] devArray = new double[stdDev.size()];
-        for(int i = 0; i < stdDev.size(); i++) devArray[i] = stdDev.get(i);
+        for (int i = 0; i < stdDev.size(); i++) devArray[i] = stdDev.get(i);
 
-        for( int i = 0; i < devArray.length; i++) {
+        for (int i = 0; i < devArray.length; i++) {
             stats.addValue(devArray[i]);
         }
 

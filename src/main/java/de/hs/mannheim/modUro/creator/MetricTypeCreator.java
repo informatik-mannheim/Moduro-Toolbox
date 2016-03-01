@@ -1,11 +1,28 @@
+/*
+Copyright 2016 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package de.hs.mannheim.modUro.creator;
 
 import de.hs.mannheim.modUro.model.MetricType;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import java.io.*;
 
 /**
  * MetricTypeCreator helps to create a MetricType by passing a file txt.
+ *
  * @author Mathuraa Pathmanathan
  */
 public class MetricTypeCreator {
@@ -22,32 +39,36 @@ public class MetricTypeCreator {
     /**
      * Constructor
      */
-    public MetricTypeCreator () {}
+    public MetricTypeCreator() {
+    }
 
     /**
      * Parses name of MetricType.
+     *
      * @return
      */
     private String nameOfMetricType() {
         String name = null;
         int pos = file.getName().lastIndexOf(".");  //searches the pos of last index of "."
-        if(pos != -1) {
-         name = file.getName().substring(0, pos);   //substring the Filename at the last "."
+        if (pos != -1) {
+            name = file.getName().substring(0, pos);   //substring the Filename at the last "."
         }
         return name;
     }
 
     /**
      * Counts the line in a txt file.
+     *
      * @return
      * @throws IOException
      */
-    private int countLines()  {
+    private int countLines() {
         int cnt = 0;
         try {
-            LineNumberReader  reader = new LineNumberReader(new FileReader(file.getAbsolutePath()));
+            LineNumberReader reader = new LineNumberReader(new FileReader(file.getAbsolutePath()));
             String lineRead = "";
-            while ((lineRead = reader.readLine()) != null) {}
+            while ((lineRead = reader.readLine()) != null) {
+            }
             cnt = reader.getLineNumber();
             reader.close();
         } catch (IOException e) {
@@ -67,8 +88,8 @@ public class MetricTypeCreator {
 
         String line;
         int row = 0;
-        int col1=0;
-        int col2=1;
+        int col1 = 0;
+        int col2 = 1;
 
         BufferedReader buffer = null;
         try {
@@ -90,13 +111,14 @@ public class MetricTypeCreator {
 
     /**
      * Calculates mean of metric data.
+     *
      * @return
      */
     private double calculateMean() {
         double[] value = getMetricValues();
 
         // Add the data from the array
-        for( int i = 0; i < value.length; i++) {
+        for (int i = 0; i < value.length; i++) {
             stats.addValue(value[i]);
         }
 
@@ -108,6 +130,7 @@ public class MetricTypeCreator {
 
     /**
      * Read only the values of Metric data.
+     *
      * @return
      */
     private double[] getMetricValues() {
@@ -136,13 +159,14 @@ public class MetricTypeCreator {
 
     /**
      * Calculates deviation of metric data.
+     *
      * @return
      */
-    private double calculateDeviation(){
+    private double calculateDeviation() {
         double[] value = getMetricValues();
 
         // Add the data from the array
-        for( int i = 0; i < value.length; i++) {
+        for (int i = 0; i < value.length; i++) {
             stats.addValue(value[i]);
         }
 
@@ -156,20 +180,28 @@ public class MetricTypeCreator {
      * Creates a MetricType Instance.
      */
     public void createMetricType() {
-        this.metricType = new MetricType (nameOfMetricType(), readMetricData(), calculateMean(), calculateDeviation());
+        this.metricType = new MetricType(nameOfMetricType(), readMetricData(), calculateMean(), calculateDeviation());
     }
 
-    public File getFile() { return file;}
+    public File getFile() {
+        return file;
+    }
 
     /**
      * Sets a txt file of a MetricType.
+     *
      * @param file
      */
-    public void setFile(File file) { this.file = file; }
+    public void setFile(File file) {
+        this.file = file;
+    }
 
     /**
      * Returns created MetricType.
+     *
      * @return
      */
-    public MetricType getMetricType() { return metricType;}
+    public MetricType getMetricType() {
+        return metricType;
+    }
 }

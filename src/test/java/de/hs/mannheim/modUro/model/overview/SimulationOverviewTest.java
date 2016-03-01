@@ -1,3 +1,18 @@
+/*
+Copyright 2016 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package de.hs.mannheim.modUro.model.overview;
 
 import de.hs.mannheim.modUro.model.MainModel;
@@ -17,6 +32,7 @@ import java.util.List;
 /**
  * JUnit Test for SimulationOverviewTest.
  * Test data: 2nd project (Project2)-> 2nd Modeltype (PAS-IN-RA)-> first simulation (PAS-IN-RA_cc3d_12_04_2014_11_03_08)
+ *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class SimulationOverviewTest {
@@ -65,12 +81,16 @@ public class SimulationOverviewTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime simulationTime = LocalDateTime.parse(dateInString, formatter);
 
-        Assert.assertEquals("Starttime of Simulation should be '" + simulationTime +"' and not: " + simulationOverview.getStartTime(), simulationTime, simulationOverview.getStartTime());
+        Assert.assertEquals("Starttime of Simulation should be '" + simulationTime + "' and not: " + simulationOverview.getStartTime(), simulationTime, simulationOverview.getStartTime());
     }
 
     @Test
     public void listOfMetricTypesInSimulation() {
-        List<String> metricTypeList = new ArrayList<String>(){{add("FitnessArrangement"); add("FitnessPlot"); add("FitnessVolume");}};
+        List<String> metricTypeList = new ArrayList<String>() {{
+            add("FitnessArrangement");
+            add("FitnessPlot");
+            add("FitnessVolume");
+        }};
 
         Assert.assertEquals("Simulation should have other MetricType names.", metricTypeList, simulationOverview.getMetricTypesName());
     }
@@ -112,7 +132,11 @@ public class SimulationOverviewTest {
         File firstImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0009000.png");
         File secondImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0009600.png");
         File thirdImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0010100.png");
-        List<File> imageFiles = new ArrayList<File>(){{add(firstImageFile); add(secondImageFile); add(thirdImageFile);}};
+        List<File> imageFiles = new ArrayList<File>() {{
+            add(firstImageFile);
+            add(secondImageFile);
+            add(thirdImageFile);
+        }};
 
         Assert.assertEquals("Simulation Images are wrong.", imageFiles, simulationOverview.getImages());
     }

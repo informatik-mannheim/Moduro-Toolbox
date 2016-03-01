@@ -1,3 +1,18 @@
+/*
+Copyright 2016 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package de.hs.mannheim.modUro.controller.diagram;
 
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
@@ -21,11 +36,13 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+
 import java.awt.*;
 import java.util.List;
 
 /**
  * ModeltypeDiagramController controls ModelDiagramView.
+ *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class ModeltypeDiagramController {
@@ -49,13 +66,13 @@ public class ModeltypeDiagramController {
     private static String rightLastSelectedMetrictypename;
 
 
-    public void init(ModelType modeltype){
+    public void init(ModelType modeltype) {
         this.modeltypeDiagram = new ModeltypeDiagram(modeltype);
 
-        if(leftLastSelectedIndex == null || rightLastSelectedIndex == null) {
+        if (leftLastSelectedIndex == null || rightLastSelectedIndex == null) {
             initializeChoiceboxContent();
         } else {
-            if(simulationContainsMetricType()) {
+            if (simulationContainsMetricType()) {
                 setChoiceBoxContent();
                 setLeftChartContent(modeltypeDiagram.getMetricTypeName().get(leftLastSelectedIndex));
                 setRightChartContent(modeltypeDiagram.getMetricTypeName().get(rightLastSelectedIndex));
@@ -94,13 +111,14 @@ public class ModeltypeDiagramController {
 
     /**
      * Checks if simultion has the last selected Metrictype from another simultion.
+     *
      * @return
      */
     private boolean simulationContainsMetricType() {
         boolean containsMetricType = false;
         List<String> name = modeltypeDiagram.getMetricTypeName();
 
-        if(name.contains(leftLastSelectedMetrictypename) && name.contains(rightLastSelectedMetrictypename)) {
+        if (name.contains(leftLastSelectedMetrictypename) && name.contains(rightLastSelectedMetrictypename)) {
             containsMetricType = true;
         }
 
@@ -116,12 +134,12 @@ public class ModeltypeDiagramController {
         int left = 0;
         int right = 0;
 
-        for (String val: name) {
-            if(val.equals("FitnessArrangement")) {
+        for (String val : name) {
+            if (val.equals("FitnessArrangement")) {
                 left = name.indexOf("FitnessArrangement");
             }
 
-            if(val.equals("FitnessVolume")) {
+            if (val.equals("FitnessVolume")) {
                 right = name.indexOf("FitnessVolume");
             }
         }
@@ -145,7 +163,7 @@ public class ModeltypeDiagramController {
     /**
      * Sets Content of Choicebox.
      */
-    private void setChoiceBoxContent(){
+    private void setChoiceBoxContent() {
         List<String> name = modeltypeDiagram.getMetricTypeName();
 
         leftMetricType.setItems(FXCollections.observableArrayList(name));
@@ -157,9 +175,10 @@ public class ModeltypeDiagramController {
 
     /**
      * Sets left Chartcontent.
+     *
      * @param selectedItem
      */
-    private void setLeftChartContent(String selectedItem){
+    private void setLeftChartContent(String selectedItem) {
         XYDataset dataset = createDataset(modeltypeDiagram.getSimulationList(), selectedItem);
         JFreeChart chart = createChart(dataset, selectedItem);
         chart.removeLegend();
@@ -171,9 +190,10 @@ public class ModeltypeDiagramController {
 
     /**
      * Sets right Chartcontent.
+     *
      * @param selectedItem
      */
-    private void setRightChartContent(String selectedItem){
+    private void setRightChartContent(String selectedItem) {
         XYDataset dataset = createDataset(modeltypeDiagram.getSimulationList(), selectedItem);
         JFreeChart chart = createChart(dataset, selectedItem);
         chart.removeLegend();
@@ -185,6 +205,7 @@ public class ModeltypeDiagramController {
 
     /**
      * Creates JFreeChart. XYLineDiagram.
+     *
      * @param dataset
      * @return
      */
@@ -234,25 +255,26 @@ public class ModeltypeDiagramController {
 
     /**
      * Creates Dataset.
+     *
      * @return
      */
     private static XYDataset createDataset(List<Simulation> simulationList, String selectedItem) {
 
         XYSeriesCollection dataset = new XYSeriesCollection();
 
-        for (Simulation simualtionItem:simulationList) {
+        for (Simulation simualtionItem : simulationList) {
             XYSeries xySerie = new XYSeries(simualtionItem.getSimulationName());
 
-            for (MetricType metricTypeItem: simualtionItem.getMetricType()) {
-                if(metricTypeItem.getName().equals(selectedItem)) {
+            for (MetricType metricTypeItem : simualtionItem.getMetricType()) {
+                if (metricTypeItem.getName().equals(selectedItem)) {
                     double x;
                     double y;
                     double[][] fitnessArray = metricTypeItem.getMetricData();
 
-                    for(int i = 0; i<fitnessArray.length; i++) {
-                        x =  fitnessArray[i][0];
-                        y =  fitnessArray[i][1];
-                        xySerie.add(x,y);
+                    for (int i = 0; i < fitnessArray.length; i++) {
+                        x = fitnessArray[i][0];
+                        y = fitnessArray[i][1];
+                        xySerie.add(x, y);
                     }
                 }
             }

@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
@@ -61,46 +62,54 @@ import org.jfree.chart.util.ExportUtils;
 import org.jfree.chart.util.ParamChecks;
 
 /**
- * A control for displaying a {@link JFreeChart} in JavaFX (embeds a 
+ * A control for displaying a {@link JFreeChart} in JavaFX (embeds a
  * {@link ChartCanvas}, adds drag zooming and provides a popup menu for export
- * to PNG/JPG/SVG and PDF formats).  Many behaviours(tooltips, zooming etc) are 
+ * to PNG/JPG/SVG and PDF formats).  Many behaviours(tooltips, zooming etc) are
  * provided directly by the canvas.
- * 
+ * <p>
  * <p>THE API FOR THIS CLASS IS SUBJECT TO CHANGE IN FUTURE RELEASES.  This is
- * so that we can incorporate feedback on the (new) JavaFX support in 
+ * so that we can incorporate feedback on the (new) JavaFX support in
  * JFreeChart.</p>
- * 
+ *
  * @since 1.0.18
  */
-public class ChartViewer extends Control implements Skinnable, 
+public class ChartViewer extends Control implements Skinnable,
         ChartMouseListenerFX {
-    
-    /** The chart to display. */
+
+    /**
+     * The chart to display.
+     */
     private JFreeChart chart;
-    
-    /** The context menu that will be attached to the canvas. */
+
+    /**
+     * The context menu that will be attached to the canvas.
+     */
     private ContextMenu contextMenu;
 
-    /** Does the viewer show tooltips from the chart? */
+    /**
+     * Does the viewer show tooltips from the chart?
+     */
     private boolean tooltipEnabled;
-    
-    /** Storage for registered chart mouse listeners. */
+
+    /**
+     * Storage for registered chart mouse listeners.
+     */
     private transient List<ChartMouseListenerFX> chartMouseListeners;
 
     /**
      * Creates a new viewer to display the supplied chart in JavaFX.
-     * 
-     * @param chart  the chart ({@code null} not permitted). 
+     *
+     * @param chart the chart ({@code null} not permitted).
      */
     public ChartViewer(JFreeChart chart) {
         this(chart, true);
     }
-    
+
     /**
      * Creates a new viewer instance.
-     * 
-     * @param chart  the chart ({@code null} not permitted).
-     * @param contextMenuEnabled  enable the context menu?
+     *
+     * @param chart              the chart ({@code null} not permitted).
+     * @param contextMenuEnabled enable the context menu?
      */
     public ChartViewer(JFreeChart chart, boolean contextMenuEnabled) {
         ParamChecks.nullNotPermitted(chart, "chart");
@@ -117,7 +126,7 @@ public class ChartViewer extends Control implements Skinnable,
         this.tooltipEnabled = true;
         this.chartMouseListeners = new ArrayList<ChartMouseListenerFX>();
     }
-    
+
     @Override
     public String getUserAgentStylesheet() {
         return ChartViewer.class.getResource("/fxml/diagram/css/chart-viewer.css")
@@ -126,17 +135,17 @@ public class ChartViewer extends Control implements Skinnable,
 
     /**
      * Returns the chart that is being displayed by this node.
-     * 
-     * @return The chart (never {@code null}). 
+     *
+     * @return The chart (never {@code null}).
      */
     public JFreeChart getChart() {
         return this.chart;
     }
-    
+
     /**
      * Sets the chart to be displayed by this node.
-     * 
-     * @param chart  the chart ({@code null} not permitted). 
+     *
+     * @param chart the chart ({@code null} not permitted).
      */
     public void setChart(JFreeChart chart) {
         ParamChecks.nullNotPermitted(chart, "chart");
@@ -144,35 +153,35 @@ public class ChartViewer extends Control implements Skinnable,
         ChartViewerSkin skin = (ChartViewerSkin) getSkin();
         skin.setChart(chart);
     }
-    
+
     /**
      * Returns the flag that controls whether or not tooltips are displayed
      * for the chart.
-     * 
+     *
      * @return A boolean.
      */
     public boolean isTooltipEnabled() {
-        return this.tooltipEnabled;    
+        return this.tooltipEnabled;
     }
-    
+
     /**
      * Sets the flag that controls whether or not the chart tooltips are shown
      * by this viewer.
-     * 
-     * @param enabled  the new flag value. 
+     *
+     * @param enabled the new flag value.
      */
     public void setTooltipEnabled(boolean enabled) {
         this.tooltipEnabled = enabled;
         ChartViewerSkin skin = (ChartViewerSkin) getSkin();
         if (skin != null) {
-            skin.setTooltipEnabled(enabled);        
+            skin.setTooltipEnabled(enabled);
         }
     }
 
     /**
      * Returns the rendering info from the most recent drawing of the chart.
-     * 
-     * @return The rendering info (possibly {@code null}). 
+     *
+     * @return The rendering info (possibly {@code null}).
      */
     public ChartRenderingInfo getRenderingInfo() {
         ChartViewerSkin skin = (ChartViewerSkin) getSkin();
@@ -183,34 +192,34 @@ public class ChartViewer extends Control implements Skinnable,
     }
 
     /**
-     * Hides the zoom rectangle.  The work is delegated to the control's 
+     * Hides the zoom rectangle.  The work is delegated to the control's
      * current skin.
      */
     public void hideZoomRectangle() {
         ChartViewerSkin skin = (ChartViewerSkin) getSkin();
         skin.setZoomRectangleVisible(false);
     }
-    
+
     /**
      * Sets the size and location of the zoom rectangle and makes it visible
-     * if it wasn't already visible.  The work is delegated to the control's 
+     * if it wasn't already visible.  The work is delegated to the control's
      * current skin.
-     * 
-     * @param x  the x-location.
-     * @param y  the y-location.
-     * @param w  the width.
-     * @param h  the height.
+     *
+     * @param x the x-location.
+     * @param y the y-location.
+     * @param w the width.
+     * @param h the height.
      */
     public void showZoomRectangle(double x, double y, double w, double h) {
         ChartViewerSkin skin = (ChartViewerSkin) getSkin();
         skin.showZoomRectangle(x, y, w, h);
     }
-    
+
     /**
      * Registers a listener to receive {@link ChartMouseEvent} notifications
      * from this viewer.
      *
-     * @param listener  the listener ({@code null} not permitted).
+     * @param listener the listener ({@code null} not permitted).
      */
     public void addChartMouseListener(ChartMouseListenerFX listener) {
         ParamChecks.nullNotPermitted(listener, "listener");
@@ -221,7 +230,7 @@ public class ChartViewer extends Control implements Skinnable,
      * Removes a listener from the list of objects listening for chart mouse
      * events.
      *
-     * @param listener  the listener.
+     * @param listener the listener.
      */
     public void removeChartMouseListener(ChartMouseListenerFX listener) {
         ParamChecks.nullNotPermitted(listener, "listener");
@@ -230,26 +239,32 @@ public class ChartViewer extends Control implements Skinnable,
 
     /**
      * Creates the context menu.
-     * 
+     *
      * @return The context menu.
      */
     private ContextMenu createContextMenu() {
         final ContextMenu menu = new ContextMenu();
-       
+
         Menu export = new Menu("Export As");
-        
+
         MenuItem pngItem = new MenuItem("PNG...");
-        pngItem.setOnAction((ActionEvent e) -> { handleExportToPNG(); });        
+        pngItem.setOnAction((ActionEvent e) -> {
+            handleExportToPNG();
+        });
         export.getItems().add(pngItem);
-        
+
         MenuItem jpegItem = new MenuItem("JPEG...");
-        jpegItem.setOnAction((ActionEvent e) -> { handleExportToJPEG(); });        
+        jpegItem.setOnAction((ActionEvent e) -> {
+            handleExportToJPEG();
+        });
         export.getItems().add(jpegItem);
 
         MenuItem tikzItem = new MenuItem("TIKZ ...");
-        tikzItem.setOnAction((ActionEvent e) -> {handleExportToTikz();});
+        tikzItem.setOnAction((ActionEvent e) -> {
+            handleExportToTikz();
+        });
         export.getItems().add(tikzItem);
-        
+
         if (ExportUtils.isOrsonPDFAvailable()) {
             MenuItem pdfItem = new MenuItem("PDF...");
             pdfItem.setOnAction((ActionEvent e) -> {
@@ -262,12 +277,12 @@ public class ChartViewer extends Control implements Skinnable,
             svgItem.setOnAction((ActionEvent e) -> {
                 handleExportToSVG();
             });
-            export.getItems().add(svgItem);        
+            export.getItems().add(svgItem);
         }
         menu.getItems().add(export);
         return menu;
     }
-    
+
     /**
      * A handler for the export to PDF option in the context menu.
      */
@@ -278,11 +293,11 @@ public class ChartViewer extends Control implements Skinnable,
         fileChooser.setTitle("Export to PDF");
         File file = fileChooser.showSaveDialog(this.getScene().getWindow());
         if (file != null) {
-            ExportUtils.writeAsPDF(this.chart, (int) getWidth(), 
+            ExportUtils.writeAsPDF(this.chart, (int) getWidth(),
                     (int) getHeight(), file);
-        } 
+        }
     }
-    
+
     /**
      * A handler for the export to SVG option in the context menu.
      */
@@ -293,11 +308,11 @@ public class ChartViewer extends Control implements Skinnable,
                 "Scalable Vector Graphics (SVG)", "svg"));
         File file = fileChooser.showSaveDialog(this.getScene().getWindow());
         if (file != null) {
-            ExportUtils.writeAsSVG(this.chart, (int) getWidth(), 
+            ExportUtils.writeAsSVG(this.chart, (int) getWidth(),
                     (int) getHeight(), file);
         }
     }
-    
+
     /**
      * A handler for the export to PNG option in the context menu.
      */
@@ -314,7 +329,7 @@ public class ChartViewer extends Control implements Skinnable,
             } catch (IOException ex) {
                 // FIXME: show a dialog with the error
             }
-        }        
+        }
     }
 
     /**
@@ -333,7 +348,7 @@ public class ChartViewer extends Control implements Skinnable,
             } catch (IOException ex) {
                 // FIXME: show a dialog with the error
             }
-        }        
+        }
     }
 
     /**
@@ -346,7 +361,7 @@ public class ChartViewer extends Control implements Skinnable,
     @Override
     public void chartMouseClicked(ChartMouseEventFX event) {
         // relay the event from the canvas to our registered listeners
-        for (ChartMouseListenerFX listener: this.chartMouseListeners) {
+        for (ChartMouseListenerFX listener : this.chartMouseListeners) {
             listener.chartMouseClicked(event);
         }
     }
@@ -354,10 +369,10 @@ public class ChartViewer extends Control implements Skinnable,
     @Override
     public void chartMouseMoved(ChartMouseEventFX event) {
         // relay the event from the canvas to our registered listeners
-        for (ChartMouseListenerFX listener: this.chartMouseListeners) {
+        for (ChartMouseListenerFX listener : this.chartMouseListeners) {
             listener.chartMouseMoved(event);
         }
     }
- 
+
 }
 

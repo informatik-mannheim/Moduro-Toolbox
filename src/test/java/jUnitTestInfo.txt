@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 jUnit Tests für ModuroToolbox
-**Die Pfade in setting.xml und in einingen Testfällen müssen angepasst werden**
+**Die Pfade in setting.xml und in einigen Testfällen müssen angepasst werden**
 --------------------------------------------------------------------------------
 
 * Ausgangsdaten (in Setting.xml konfiguriert)
