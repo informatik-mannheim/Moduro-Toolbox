@@ -1,4 +1,4 @@
-moduro
-======
+ModUro-Toolbox
+==============
 
-Modelling the Urothelium
+A toolbox for the analysis of computer models on the urothelium.
