@@ -1,3 +1,18 @@
+/*
+Copyright 2016 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package de.hs.mannheim.modUro.controller;
 
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
@@ -22,10 +37,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 /**
  * Controller controls the MainLayout.
+ *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class MainController {
@@ -61,7 +78,7 @@ public class MainController {
      */
     @FXML
     private void initialize() {
-        mainModel  = new MainModel("/setting/Setting.xml");
+        mainModel = new MainModel("/setting/Setting.xml");
         //get the Project Data from Main Model
         this.projectData = FXCollections.observableArrayList(mainModel.getProjectData());
 
@@ -75,17 +92,17 @@ public class MainController {
                     public void changed(
                             ObservableValue<? extends TreeItem<String>> observable,
                             TreeItem<String> old_val, TreeItem<String> new_val) {
-                            TreeItem<String> selectedItem = new_val;
+                        TreeItem<String> selectedItem = new_val;
 
                         //Checks if selected items is child from "ProjectRoot" TreeItem.
                         //If yes, then it is a project-selection.
-                        if(selectedItem.getParent().getValue() == "ProjectRoot") {
+                        if (selectedItem.getParent().getValue() == "ProjectRoot") {
                             addViewToOverview("/fxml/overview/ProjectOverview.fxml", selectedItem);
                             addViewToDiagram("/fxml/diagram/BoxWhiskerPlot.fxml", selectedItem);
 
                             //Checks if selected items is a leaf
                             //If yes, then it is a simulation-selection.
-                        } else if(selectedItem.isLeaf()) {
+                        } else if (selectedItem.isLeaf()) {
                             addViewToOverview("/fxml/overview/SimulationOverview.fxml", selectedItem);
                             addViewToDiagram("/fxml/diagram/SimulationDiagram.fxml", selectedItem);
 
@@ -99,6 +116,7 @@ public class MainController {
 
     /**
      * Add View to Overview-Tab.
+     *
      * @param path
      */
     private void addViewToOverview(String path, TreeItem<String> selectedItem) {
@@ -106,12 +124,12 @@ public class MainController {
         try {
             overviewTab.setContent(loader.load()); //set FXML file to overviewTab.
 
-            if(loader.getController() instanceof ProjectOverviewController) {
+            if (loader.getController() instanceof ProjectOverviewController) {
                 //if controller is ProjectOverview, then load ProjectOverview FXML
                 projectOverviewController = loader.getController();
                 int indexOfProject = 0;  //index for selected project
-                for (Project project: projectData) {
-                    if(project.getName().equals(selectedItem.getValue())) {
+                for (Project project : projectData) {
+                    if (project.getName().equals(selectedItem.getValue())) {
                         indexOfProject = projectData.indexOf(project);
                     }
                 }
@@ -119,32 +137,32 @@ public class MainController {
                 projectOverviewController.init(projectData.get(indexOfProject));
             }
 
-            if(loader.getController() instanceof SimulationOverviewController) {
+            if (loader.getController() instanceof SimulationOverviewController) {
                 //if controller is SimulationOverview, then load SimulationOverview FXML
                 simulationOverviewController = loader.getController();
 
                 //checking, which simulation is selected and load the simulation to the overview
-                for (Project project: projectData) {
-                        for (ModelType modelType: project.getModelTypeList()) {
-                            for (Simulation simulation: modelType.getSimulations()) {
-                                if(selectedItem.getValue().equals(simulation.getSimulationName())) {
-                                    simulationOverviewController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)).getSimulations().get(modelType.getSimulations().indexOf(simulation)));
-                                }
+                for (Project project : projectData) {
+                    for (ModelType modelType : project.getModelTypeList()) {
+                        for (Simulation simulation : modelType.getSimulations()) {
+                            if (selectedItem.getValue().equals(simulation.getSimulationName())) {
+                                simulationOverviewController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)).getSimulations().get(modelType.getSimulations().indexOf(simulation)));
                             }
                         }
+                    }
 
                 }
             }
 
-            if(loader.getController() instanceof ModeltypeOverviewController) {
+            if (loader.getController() instanceof ModeltypeOverviewController) {
                 modeltypeOverviewController = loader.getController();
 
                 //checking, which modelType is selected and load the modelType to the overview
-                for (Project project: projectData) {
-                    for (ModelType modelType: project.getModelTypeList()) {
-                            if(selectedItem.getValue().equals(modelType.getName())) {
-                                modeltypeOverviewController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)));
-                            }
+                for (Project project : projectData) {
+                    for (ModelType modelType : project.getModelTypeList()) {
+                        if (selectedItem.getValue().equals(modelType.getName())) {
+                            modeltypeOverviewController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)));
+                        }
                     }
 
                 }
@@ -157,6 +175,7 @@ public class MainController {
 
     /**
      * Add View to Diagram-Tab.
+     *
      * @param path
      */
     private void addViewToDiagram(String path, TreeItem<String> selectedItem) {
@@ -164,12 +183,12 @@ public class MainController {
         try {
             diagramTab.setContent(loader.load()); //set FXML file to overviewTab.
 
-            if(loader.getController() instanceof BoxAndWhiskerPlotController) {
+            if (loader.getController() instanceof BoxAndWhiskerPlotController) {
                 //if controller is BoxAndWhiskerPlot, then load BoxAndWhiskerPlot FXML
                 boxAndWhiskerPlotController = loader.getController();
                 int indexOfProject = 0;  //index for selected project
-                for (Project project: projectData) {
-                    if(project.getName().equals(selectedItem.getValue())) {
+                for (Project project : projectData) {
+                    if (project.getName().equals(selectedItem.getValue())) {
                         indexOfProject = projectData.indexOf(project);
                     }
                 }
@@ -177,15 +196,15 @@ public class MainController {
                 boxAndWhiskerPlotController.init(projectData.get(indexOfProject));
             }
 
-            if(loader.getController() instanceof SimulationDiagramController) {
+            if (loader.getController() instanceof SimulationDiagramController) {
                 //if controller is SimulationDiagram, then load SimulationDiagram FXML
                 simulationDiagramController = loader.getController();
 
                 //checking, which simulation is selected and load the simulation to the overview
-                for (Project project: projectData) {
-                    for (ModelType modelType: project.getModelTypeList()) {
-                        for (Simulation simulation: modelType.getSimulations()) {
-                            if(selectedItem.getValue().equals(simulation.getSimulationName())) {
+                for (Project project : projectData) {
+                    for (ModelType modelType : project.getModelTypeList()) {
+                        for (Simulation simulation : modelType.getSimulations()) {
+                            if (selectedItem.getValue().equals(simulation.getSimulationName())) {
                                 simulationDiagramController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)).getSimulations().get(modelType.getSimulations().indexOf(simulation)));
                             }
                         }
@@ -194,13 +213,13 @@ public class MainController {
                 }
             }
 
-            if(loader.getController() instanceof ModeltypeDiagramController) {
+            if (loader.getController() instanceof ModeltypeDiagramController) {
                 modeltypeDiagramController = loader.getController();
 
                 //checking, which modelType is selected and load the modelType to the overview
-                for (Project project: projectData) {
-                    for (ModelType modelType: project.getModelTypeList()) {
-                        if(selectedItem.getValue().equals(modelType.getName())) {
+                for (Project project : projectData) {
+                    for (ModelType modelType : project.getModelTypeList()) {
+                        if (selectedItem.getValue().equals(modelType.getName())) {
                             modeltypeDiagramController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)));
                         }
                     }
@@ -226,31 +245,32 @@ public class MainController {
         TreeItem<String> model;         //de.hs.mannheim.modUro.model: child of project
         TreeItem<String> simulation;    //simulation: child of de.hs.mannheim.modUro.model
 
-        for (Project projectItem: projectData) {
+        for (Project projectItem : projectData) {
             //treeitem: project
             project = makeBranch(projectItem.getName(), root); //all project in the projectData will be set as child of the root
 
             //treeitem: modeltypes
-                for (ModelType modelTypeItem: projectItem.getModelTypeList()) {
-                    model = makeBranch(modelTypeItem.getName(), project);
+            for (ModelType modelTypeItem : projectItem.getModelTypeList()) {
+                model = makeBranch(modelTypeItem.getName(), project);
 
-                    //treeitem: simulation
-                    for (Simulation simulationItem: modelTypeItem.getSimulations()) {
-                         if(simulationItem.getSimulationName().contains(modelTypeItem.getName())) { //category check of simulation to its modeltype
-                           if(simulationItem.isAborted()) {
-                               simulation = makeBranchWithIcon(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
-                           } else {
-                               simulation = makeBranch(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
-                           }
-
+                //treeitem: simulation
+                for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+                    if (simulationItem.getSimulationName().contains(modelTypeItem.getName())) { //category check of simulation to its modeltype
+                        if (simulationItem.isAborted()) {
+                            simulation = makeBranchWithIcon(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
+                        } else {
+                            simulation = makeBranch(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
                         }
+
                     }
                 }
+            }
         }
     }
 
     /**
      * Makes a Branch.
+     *
      * @param title
      * @param parent
      * @return
@@ -264,6 +284,7 @@ public class MainController {
 
     /**
      * Makes a Branch with red Icon for aborted simulation.
+     *
      * @param title
      * @param parent
      * @return
@@ -278,6 +299,7 @@ public class MainController {
 
     /**
      * Loads Setting Dialog FXMl and opens it in a new Window.
+     *
      * @param actionEvent
      */
     public void showSettingsDialog(ActionEvent actionEvent) {

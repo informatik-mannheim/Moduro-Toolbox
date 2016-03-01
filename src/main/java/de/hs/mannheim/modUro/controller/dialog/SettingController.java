@@ -1,3 +1,18 @@
+/*
+Copyright 2016 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package de.hs.mannheim.modUro.controller.dialog;
 
 import de.hs.mannheim.modUro.model.dialog.SettingFile;
@@ -14,7 +29,7 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.util.Callback;
 
 /**
- * Created by m.pathmanathan on 18.12.2015.
+ * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class SettingController {
 
@@ -43,7 +58,7 @@ public class SettingController {
         TreeItem<SettingFile> root = new TreeItem<>(new SettingFile());
         TreeItem<SettingFile> treeItem;
 
-        for (SettingFile settingFileItem: setting) {
+        for (SettingFile settingFileItem : setting) {
             treeItem = new TreeItem<>(settingFileItem);
             root.getChildren().add(treeItem);
         }
@@ -70,6 +85,8 @@ public class SettingController {
 
         treeTable.getColumns().addAll(columnProject, columnNode, columnPath);
         treeTable.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-    };
+    }
+
+    ;
 
 }

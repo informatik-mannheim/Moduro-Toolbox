@@ -1,7 +1,23 @@
+/*
+Copyright 2016 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package de.hs.mannheim.modUro.model.overview;
 
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
+
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +25,8 @@ import java.util.List;
 
 /**
  * Class for Simulation Overview Model.
- * @author  Mathuraa Pathmanathan (mathuraa@hotmail.de)
+ *
+ * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class SimulationOverview {
 
@@ -30,9 +47,10 @@ public class SimulationOverview {
 
     /**
      * Constructor.
+     *
      * @param simulation
      */
-    public SimulationOverview(Simulation simulation){
+    public SimulationOverview(Simulation simulation) {
         this.simulation = simulation;
         this.simulationName = simulation.getSimulationName();
         this.simulationID = simulation.getSimulationID();
@@ -50,14 +68,15 @@ public class SimulationOverview {
 
     /**
      * Selects name of the metric types of a simulation.
+     *
      * @param metricType
      * @return
      */
-    private List<String> selectNameOfMetricType(List<MetricType> metricType){
+    private List<String> selectNameOfMetricType(List<MetricType> metricType) {
         List<String> metricTypeNameList = new ArrayList<>();
 
-        for (MetricType metricTypeItem: metricType) {
-           metricTypeNameList.add( metricTypeItem.getName());
+        for (MetricType metricTypeItem : metricType) {
+            metricTypeNameList.add(metricTypeItem.getName());
         }
         return metricTypeNameList;
     }
@@ -95,11 +114,17 @@ public class SimulationOverview {
         return directory;
     }
 
-    public List<String> getMetricTypesName() { return metricTypesName; }
+    public List<String> getMetricTypesName() {
+        return metricTypesName;
+    }
 
-    public String getSimulationName() { return simulationName; }
+    public String getSimulationName() {
+        return simulationName;
+    }
 
-    public boolean isInSteadyState() { return isInSteadyState; }
+    public boolean isInSteadyState() {
+        return isInSteadyState;
+    }
 
     public List<MetricType> getMetricTypes() {
         return metricTypes;

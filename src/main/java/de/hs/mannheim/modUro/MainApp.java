@@ -1,3 +1,18 @@
+/*
+Copyright 2016 the original author or authors.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package de.hs.mannheim.modUro;
 
 import javafx.application.Application;
@@ -5,10 +20,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 /**
  * Class of the MainApp. Application starts from here.
+ *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class MainApp extends Application {
@@ -18,7 +35,7 @@ public class MainApp extends Application {
     private BorderPane mainLayout;
 
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("ModUro Toolbox");
         initRootLayout();
@@ -28,7 +45,7 @@ public class MainApp extends Application {
      * Initializes the root Layout.
      */
     private void initRootLayout() {
-        try{
+        try {
             //Load main layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("/fxml/MainLayout.fxml"));
@@ -40,10 +57,12 @@ public class MainApp extends Application {
             primaryStage.setMinHeight(650);
             primaryStage.setMinWidth(970);
             primaryStage.show();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
