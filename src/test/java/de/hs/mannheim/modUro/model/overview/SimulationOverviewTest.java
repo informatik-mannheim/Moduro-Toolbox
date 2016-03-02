@@ -129,9 +129,9 @@ public class SimulationOverviewTest {
 
     @Test
     public void imagesOfSimulation() {
-        File firstImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0009000.png");
-        File secondImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0009600.png");
-        File thirdImageFile = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08\\PAS-IN-RA_cc3d_0010100.png");
+        File firstImageFile = new File("src/test/resources/Simulationdata/Projekt2/node1/PAS-IN-RA_cc3d_12_04_2014_11_03_08/PAS-IN-RA_cc3d_0009000.png");
+        File secondImageFile = new File("src/test/resources/Simulationdata/Projekt2/node1/PAS-IN-RA_cc3d_12_04_2014_11_03_08/PAS-IN-RA_cc3d_0009600.png");
+        File thirdImageFile = new File("src/test/resources/Simulationdata/Projekt2/node1/PAS-IN-RA_cc3d_12_04_2014_11_03_08/PAS-IN-RA_cc3d_0010100.png");
         List<File> imageFiles = new ArrayList<File>() {{
             add(firstImageFile);
             add(secondImageFile);
@@ -143,7 +143,7 @@ public class SimulationOverviewTest {
 
     @Test
     public void filePathOfSimulation() {
-        File file = new File("C:\\Users\\adminM\\Desktop\\Moduro-Toolbox\\src\\test\\resources\\Simulationdata\\Projekt2\\node1\\PAS-IN-RA_cc3d_12_04_2014_11_03_08");
+        File file = new File("src/test/resources/Simulationdata/Projekt2/node1/PAS-IN-RA_cc3d_12_04_2014_11_03_08");
 
         Assert.assertEquals("Path of the Simulation should be " + file + " and not: " + simulationOverview.getDirectory(), file, simulationOverview.getDirectory());
     }
