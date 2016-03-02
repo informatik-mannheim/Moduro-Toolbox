@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.hs.mannheim.modUro.controller.MainController">
+  <center>
+    <TextArea editable="false" prefWidth="200.0" text="Credits:&#10;Foo&#10;Bar" wrapText="true" />
+  </center>
+  <top>
+    <VBox prefHeight="200.0" prefWidth="100.0">
+      <children>
+        <Label text="Moduro-Toolbox">
+          <font>
+            <Font name="System Bold" size="15.0" />
+          </font>
+        </Label>
+        <Label fx:id="toolboxversion" text="Version" />
+      </children>
+    </VBox>
+  </top>
+</BorderPane>

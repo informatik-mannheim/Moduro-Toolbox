@@ -22,6 +22,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
+import java.util.Properties;
 
 /**
  * Class of the MainApp. Application starts from here.
@@ -33,9 +36,26 @@ public class MainApp extends Application {
     // Main window of the application.
     private Stage primaryStage;
     private BorderPane mainLayout;
+    public static String VERSION = "UNKNOWN";
 
     @Override
     public void start(Stage primaryStage) {
+        String version = "UNKNOWN";
+        try (InputStream versionInput = Optional.ofNullable(MainApp.class.getClassLoader().
+                getResourceAsStream("version.properties")).orElseThrow(IOException::new)) {
+            Properties versionProperties = new Properties();
+            versionProperties.load(versionInput);
+            version = versionProperties.getProperty("version", version);
+        } catch (IOException e1) {
+            try (InputStream mavenInput = Optional.ofNullable(MainApp.class.getClassLoader().
+                    getResourceAsStream("META-INF/maven/pom.properties")).orElseThrow(IOException::new)) {
+                Properties mavenProperties = new Properties();
+                mavenProperties.load(mavenInput);
+                version = mavenProperties.getProperty("version", version);
+            } catch (IOException e2) { /* nothing to do here */ }
+        } finally {
+            VERSION = version;
+        }
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("ModUro Toolbox");
         initRootLayout();

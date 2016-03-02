@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.controller;
 
+import de.hs.mannheim.modUro.MainApp;
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
 import de.hs.mannheim.modUro.controller.diagram.ModeltypeDiagramController;
 import de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController;
@@ -30,12 +31,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -53,6 +53,8 @@ public class MainController {
     private Tab overviewTab;
     @FXML
     private Tab diagramTab;
+    @FXML
+    private Label toolboxversion;
 
     // List with projectData
     private ObservableList<Project> projectData;
@@ -327,5 +329,41 @@ public class MainController {
         initialize();
         //set after refresh the last selectedItem
         projectTree.getSelectionModel().select(lastSelected);
+    }
+
+    /**
+     * Loads About Dialog FXMl and opens it in a new Window.
+     *
+     * @param actionEvent
+     */
+    public void showAboutDialog(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About");
+        alert.setHeaderText("Moduro-Toolbox " + MainApp.VERSION);
+        alert.setContentText("Credits\n" +
+                "Mathuraa Pathmanathan (mathuraa@hotmail.de)\n" +
+                "Markus Gumbel (m.gumbel@hs-mannheim.de)\n" +
+                "\n" +
+                "This is free software under the Apache 2 license."
+        );
+        alert.showAndWait();
+        /*
+        AnchorPane pane = new AnchorPane();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/dialog/About.fxml"));
+
+        try {
+            pane = (AnchorPane) loader.load();
+            toolboxversion.setText(MainApp.VERSION);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Show the scene containing the root layout.
+        Scene scene = new Scene(pane);
+        Stage stage = new Stage();
+        stage.setTitle("About");
+        stage.setScene(scene);
+        stage.show();
+        */
     }
 }
