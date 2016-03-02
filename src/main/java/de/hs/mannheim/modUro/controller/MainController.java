@@ -307,7 +307,7 @@ public class MainController {
     public void showSettingsDialog(ActionEvent actionEvent) {
         AnchorPane pane = new AnchorPane();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/dialog/Setting.fxml"));
+        loader.setLocation(getClass().getResource("/FXML/dialog/Setting.fxml"));
 
         try {
             pane = (AnchorPane) loader.load();
@@ -350,7 +350,7 @@ public class MainController {
         /*
         AnchorPane pane = new AnchorPane();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/dialog/About.fxml"));
+        loader.setLocation(getClass().getResource("/FXML/dialog/About.fxml"));
 
         try {
             pane = (AnchorPane) loader.load();
