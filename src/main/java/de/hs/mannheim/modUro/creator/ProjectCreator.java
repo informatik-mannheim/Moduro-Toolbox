@@ -81,7 +81,7 @@ public class ProjectCreator {
 
         for (String name : modelTypeName) {
             for (File file : allDir) {
-                if (file.getName().contains(name)) {
+                if (file.getName().contains(name + "_")) {
                     dirList.add(file);
                 }
             }
@@ -127,7 +127,7 @@ public class ProjectCreator {
                 String[] tokenValue = file.getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
                 name = tokenValue[0];
 
-                if (!modelTypeNameList.contains(name)) {
+                if (!modelTypeNameList.contains(name) && name.length() > 0) {
                     modelTypeNameList.add(name);
                 }
             }

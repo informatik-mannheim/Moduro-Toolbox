@@ -183,7 +183,7 @@ public class SimulationOverviewController {
                     "  <useSubfolders>false</useSubfolders>\n" +
                     "  <sortBy>0</sortBy>\n" +
                     "  <kbitrate>-1</kbitrate>\n" +
-                    "  <fps>2</fps>\n" +
+                    "  <fps>15</fps>\n" +
                     "  <videocodec>1</videocodec>\n" +
                     "  <cropleft>0</cropleft>\n" +
                     "  <croptop>0</croptop>\n" +
@@ -201,7 +201,7 @@ public class SimulationOverviewController {
                     "  <FlipHorizontal>false</FlipHorizontal>\n" +
                     "  <FlipVertical>false</FlipVertical>\n" +
                     "  <Rotate>0</Rotate>\n" +
-                    "  <CPUThreads>1</CPUThreads>\n" +
+                    "  <CPUThreads>2</CPUThreads>\n" +
                     "</SVNDirectory>";
             String configFile = "C:\\temp\\ImagesToVideo-Moduro.xml";
             PrintStream ps = new PrintStream(new File(configFile));
