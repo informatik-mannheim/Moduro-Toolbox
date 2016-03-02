@@ -35,6 +35,8 @@ import javafx.scene.image.ImageView;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.List;
 
@@ -168,12 +170,48 @@ public class SimulationOverviewController {
      * @param actionEvent
      */
     public void handleImagesToVideo(ActionEvent actionEvent) {
-        URL pathToImagesToVideoExe = getClass().getResource("/exe/ImagesToVideo.exe");
-        URL pathToConfigurationXML = getClass().getResource("/exe/Data/configuration.xml");
-        String sourceDir = simulationOverview.getDirectory().getAbsolutePath();
         try {
-            Process process = new ProcessBuilder(pathToImagesToVideoExe.getPath(), "--config " + pathToConfigurationXML).start();
+            URL pathToImagesToVideoExe = getClass().getResource("/exe/ImagesToVideo.exe");
+
+            String srcDir = simulationOverview.getDirectory().getAbsolutePath();
+            String destFile = simulationOverview.getDirectory().getAbsolutePath() + "\\video";
+            String config = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                    "<SVNDirectory xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
+                    "  <version>400</version>\n" +
+                    "  <sourceDir>" + srcDir + " </sourceDir>\n" +
+                    "  <destFile>" + destFile + "</destFile>\n" +
+                    "  <useSubfolders>false</useSubfolders>\n" +
+                    "  <sortBy>0</sortBy>\n" +
+                    "  <kbitrate>-1</kbitrate>\n" +
+                    "  <fps>2</fps>\n" +
+                    "  <videocodec>1</videocodec>\n" +
+                    "  <cropleft>0</cropleft>\n" +
+                    "  <croptop>0</croptop>\n" +
+                    "  <cropwidth>0</cropwidth>\n" +
+                    "  <cropheight>0</cropheight>\n" +
+                    "  <imageExtension>png</imageExtension>\n" +
+                    "  <tempdir>C:\\temp\\</tempdir>\n" +
+                    "  <regexp>.*</regexp>\n" +
+                    "  <before>2008-11-07T00:00:00</before>\n" +
+                    "  <after>2008-11-07T23:59:59</after>\n" +
+                    "  <width>-1</width>\n" +
+                    "  <height>-1</height>\n" +
+                    "  <DeleteSourceFiles>false</DeleteSourceFiles>\n" +
+                    "  <SoftwareScale>false</SoftwareScale>\n" +
+                    "  <FlipHorizontal>false</FlipHorizontal>\n" +
+                    "  <FlipVertical>false</FlipVertical>\n" +
+                    "  <Rotate>0</Rotate>\n" +
+                    "  <CPUThreads>1</CPUThreads>\n" +
+                    "</SVNDirectory>";
+            String configFile = "C:\\temp\\ImagesToVideo-Moduro.xml";
+            PrintStream ps = new PrintStream(new File(configFile));
+            ps.println(config);
+            ps.close();
+
+            Process process = new ProcessBuilder(pathToImagesToVideoExe.getPath(), "--config", configFile).start();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
