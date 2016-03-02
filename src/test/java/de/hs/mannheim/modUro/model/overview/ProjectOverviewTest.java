@@ -40,7 +40,7 @@ public class ProjectOverviewTest {
 
     @Before
     public void setUp() {
-        mainModel = new MainModel("/setting/Setting.xml");
+        mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         projectList = mainModel.getProjectData();
         project = projectList.get(1);
 

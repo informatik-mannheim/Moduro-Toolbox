@@ -171,7 +171,7 @@ public class SimulationOverviewController {
      */
     public void handleImagesToVideo(ActionEvent actionEvent) {
         try {
-            URL pathToImagesToVideoExe = getClass().getResource("/exe/ImagesToVideo.exe");
+            String pathToImagesToVideoExe = "ImagesToVideo.exe";
 
             String srcDir = simulationOverview.getDirectory().getAbsolutePath();
             String destFile = simulationOverview.getDirectory().getAbsolutePath() + "\\video";
@@ -208,7 +208,7 @@ public class SimulationOverviewController {
             ps.println(config);
             ps.close();
 
-            Process process = new ProcessBuilder(pathToImagesToVideoExe.getPath(), "--config", configFile).start();
+            Process process = new ProcessBuilder(pathToImagesToVideoExe, "--config", configFile).start();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {

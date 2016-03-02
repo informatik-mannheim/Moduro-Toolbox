@@ -80,7 +80,7 @@ public class MainController {
      */
     @FXML
     private void initialize() {
-        mainModel = new MainModel("/setting/Setting.xml");
+        mainModel = new MainModel("moduro-toolbox-settings.xml");
         //get the Project Data from Main Model
         this.projectData = FXCollections.observableArrayList(mainModel.getProjectData());
 
@@ -99,18 +99,18 @@ public class MainController {
                         //Checks if selected items is child from "ProjectRoot" TreeItem.
                         //If yes, then it is a project-selection.
                         if (selectedItem.getParent().getValue() == "ProjectRoot") {
-                            addViewToOverview("/fxml/overview/ProjectOverview.fxml", selectedItem);
-                            addViewToDiagram("/fxml/diagram/BoxWhiskerPlot.fxml", selectedItem);
+                            addViewToOverview("/FXML/overview/ProjectOverview.fxml", selectedItem);
+                            addViewToDiagram("/FXML/diagram/BoxWhiskerPlot.fxml", selectedItem);
 
                             //Checks if selected items is a leaf
                             //If yes, then it is a simulation-selection.
                         } else if (selectedItem.isLeaf()) {
-                            addViewToOverview("/fxml/overview/SimulationOverview.fxml", selectedItem);
-                            addViewToDiagram("/fxml/diagram/SimulationDiagram.fxml", selectedItem);
+                            addViewToOverview("/FXML/overview/SimulationOverview.fxml", selectedItem);
+                            addViewToDiagram("/FXML/diagram/SimulationDiagram.fxml", selectedItem);
 
                         } else {  //otherwise, it is a de.hs.mannheim.modUro.model-selection.
-                            addViewToOverview("/fxml/overview/ModeltypeOverview.fxml", selectedItem);
-                            addViewToDiagram("/fxml/diagram/ModeltypeDiagram.fxml", selectedItem);
+                            addViewToOverview("/FXML/overview/ModeltypeOverview.fxml", selectedItem);
+                            addViewToDiagram("/FXML/diagram/ModeltypeDiagram.fxml", selectedItem);
                         }
                     }
                 });

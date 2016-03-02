@@ -42,7 +42,7 @@ public class MainModel {
 
     //Setting.xml file with projects and its nodes.
     String settingFilePath;
-    private final URL settingURL;
+    // private final URL settingURL;
     private final File SETTINGXML;
 
     //List with settings loaded from the Setting.xml file.
@@ -53,8 +53,8 @@ public class MainModel {
      */
     public MainModel(String settingFilePath) {
         this.settingFilePath = settingFilePath;
-        this.settingURL = getClass().getResource(settingFilePath);
-        this.SETTINGXML = new File(settingURL.getPath());
+        // this.settingURL = getClass().getResource(settingFilePath);
+        this.SETTINGXML = new File(settingFilePath);
 
         loadNodeDataFromFile(); // Load Setting File with Project and its nodes.
 
