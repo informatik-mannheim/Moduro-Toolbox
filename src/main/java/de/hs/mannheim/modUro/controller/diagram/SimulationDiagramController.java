@@ -19,6 +19,9 @@ import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.diagram.SimulationDiagram;
+import de.hs.mannheim.modUro.reader.CelltimesReader;
+import de.hs.mannheim.modUro.reader.JCellCountDiagram;
+import de.hs.mannheim.modUro.reader.JCellcycletimeDiagram;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -66,7 +69,10 @@ public class SimulationDiagramController extends DiagramController {
     private static String leftLastSelectedMetrictypename;
     private static String rightLastSelectedMetrictypename;
 
+    private Simulation simulation;
+
     public void init(Simulation simulation) {
+        this.simulation = simulation;
         this.simulationDiagram = new SimulationDiagram(simulation);
 
         if (leftLastSelectedIndex == null || rightLastSelectedIndex == null) {
@@ -166,6 +172,9 @@ public class SimulationDiagramController extends DiagramController {
         for (MetricType metricTypeItem : simulationDiagram.getMetricTypes()) {
             name.add(metricTypeItem.getName());
         }
+        // Here we add - for now - the two generic diagram types:
+        name.add("Cell count");
+        name.add("Cell cycle times");
 
         return name;
     }
@@ -190,11 +199,7 @@ public class SimulationDiagramController extends DiagramController {
      * @param selectedItemIndex
      */
     private void setLeftChartContent(int selectedItemIndex) {
-        XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), simulationDiagram.getMetricTypes().get(selectedItemIndex).getMetricData());
-        JFreeChart chart = createChart(dataset, simulationDiagram.getMetricTypes().get(selectedItemIndex).getName());
-        ChartViewer viewer = new ChartViewer(chart);
-        leftPane.setCenter(viewer);
-        leftPane.layout();
+        setChartContent(selectedItemIndex, leftPane);
     }
 
     /**
@@ -203,11 +208,41 @@ public class SimulationDiagramController extends DiagramController {
      * @param selectedItemIndex
      */
     private void setRightChartContent(int selectedItemIndex) {
-        XYDataset rightDataset = createDataset(simulationDiagram.getSimulationName(), simulationDiagram.getMetricTypes().get(selectedItemIndex).getMetricData());
-        JFreeChart rightChart = createChart(rightDataset, simulationDiagram.getMetricTypes().get(selectedItemIndex).getName());
-        ChartViewer rightViewer = new ChartViewer(rightChart);
-        rightPane.setCenter(rightViewer);
-        rightPane.layout();
+        setChartContent(selectedItemIndex, rightPane);
+    }
+
+    private void setChartContent(int selectedItemIndex, BorderPane pane) {
+        // Very quick and dirty: TODO
+        // New diagrams obtain size and size+1.
+        if (selectedItemIndex == simulationDiagram.getMetricTypes().size()) {
+            // This means cell count.
+            CelltimesReader ctr = simulation.getCellTimesReader();
+            if (ctr != null) {
+                JCellCountDiagram ccd =
+                        new JCellCountDiagram(ctr.getCellTypes(), ctr.getNumberOfCells());
+                ChartViewer viewer = new ChartViewer(ccd.chart);
+                pane.setCenter(viewer);
+            } else {
+                // Cell count not available.
+            }
+        } else if (selectedItemIndex == simulationDiagram.getMetricTypes().size() + 1) {
+            // And this means cell cycle times.
+            CelltimesReader ctr = simulation.getCellTimesReader();
+            if (ctr != null) {
+                JCellcycletimeDiagram ctd =
+                        new JCellcycletimeDiagram(ctr.getCellTypes(), ctr.getCycletimes());
+                ChartViewer viewer = new ChartViewer(ctd.chart);
+                pane.setCenter(viewer);
+            } else {
+                // Cell count not available.
+            }
+        } else {
+            XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), simulationDiagram.getMetricTypes().get(selectedItemIndex).getMetricData());
+            JFreeChart chart = createChart(dataset, simulationDiagram.getMetricTypes().get(selectedItemIndex).getName());
+            ChartViewer viewer = new ChartViewer(chart);
+            pane.setCenter(viewer);
+        }
+        pane.layout();
     }
 
     /**

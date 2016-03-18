@@ -18,6 +18,7 @@ package de.hs.mannheim.modUro.creator;
 import de.hs.mannheim.modUro.config.*;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.reader.CelltimesReader;
 
 import java.io.*;
 import java.time.LocalDateTime;

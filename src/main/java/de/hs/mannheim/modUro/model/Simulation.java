@@ -15,7 +15,11 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
+import de.hs.mannheim.modUro.reader.CelltimesReader;
+
 import java.io.File;
+import java.io.IOException;
+import java.rmi.server.ExportException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -81,6 +85,20 @@ public class Simulation {
 
     public List<MetricType> getMetricType() {
         return metricType;
+    }
+
+    /**
+     * Quick and dirty. TODO
+     *
+     * @return
+     */
+    public CelltimesReader getCellTimesReader() {
+        try {
+            String file = dir.getAbsolutePath().toString() + "/Celltimes.daz";
+            return new CelltimesReader(file, 0.5, 2.0);
+        } catch (Exception e) {
+            return null; // No cell times.
+        }
     }
 
     public double getDuration() {
