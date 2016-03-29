@@ -30,6 +30,8 @@ import org.jfree.ui.HorizontalAlignment;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
@@ -49,7 +51,7 @@ public class JCellCountDiagram extends JPanel {
 
         XYSeriesCollection dataset = new XYSeriesCollection();
 
-
+        XYSeries xySerieSum = new XYSeries("total");
         for (String cellType : cellTypes) {
             XYSeries xySerie = new XYSeries(cellType);
             for (CellCountEntry e : cellcountList) {
@@ -62,6 +64,14 @@ public class JCellCountDiagram extends JPanel {
             }
             dataset.addSeries(xySerie);
         }
+        for (CellCountEntry e : cellcountList) {
+            double x = e.time;
+            double y = e.count.values().stream().mapToDouble(i -> i.intValue()).sum();
+            if (y != Double.NaN) {
+                xySerieSum.add(x, y);
+            }
+        }
+        dataset.addSeries(xySerieSum);
         return dataset;
     }
 
@@ -99,6 +109,7 @@ public class JCellCountDiagram extends JPanel {
             r.setSeriesPaint(i, CellTypeColor.getColor(celltype));
             i++;
         }
+        r.setSeriesPaint(i, Color.BLACK);
         return xyLineChart;
     }
 }

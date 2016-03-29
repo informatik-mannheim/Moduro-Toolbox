@@ -35,7 +35,7 @@ public class CellTypeColor {
                 color = new Color(255, 128, 0); // Orange
                 break;
             case "4: I":
-                color = Color.GREEN;
+                color = new Color(0, 128, 0); // Dark green.
                 break;
             case "5: U":
                 color = Color.WHITE;

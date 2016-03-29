@@ -50,7 +50,7 @@ public class CelltimesReaderTest {
     }
 
     @Test
-    public void testValues() throws Exception {
+    public void testCycleValues() throws Exception {
         String s = "src/test/resources/Simulationdata/Projekt1/node1/CM-IN-DAE_cc3d_01_15_2015_12_53_49/Celltimes.daz";
         CelltimesReader r = new CelltimesReader(s, 0.5, 2.0);
         List<CellCycletimeEntry> l = r.getCycletimes();
@@ -60,5 +60,33 @@ public class CelltimesReaderTest {
         CellCycletimeEntry e2 = l.get(2);
         assertEquals(4.5, e2.meanValues.get("3: B"), 0.001);
 
+    }
+
+    @Test
+    public void testCountValues() throws Exception {
+        String s = "src/test/resources/Simulationdata/Projekt1/node1/CM-IN-DAE_cc3d_01_15_2015_12_53_49/Celltimes.daz";
+        CelltimesReader r = new CelltimesReader(s, 0.5, 20);
+        List<CellCountEntry> cc = r.getNumberOfCells();
+
+        assertEquals(0.5, cc.get(0).time, 0.001);
+        assertEquals(2, (long) cc.get(0).count.get("2: S"));
+        assertEquals(1, (long) cc.get(0).count.get("1: BM"));
+
+        assertEquals(1, cc.get(1).time, 0.001);
+        assertEquals(2, (long) cc.get(1).count.get("2: S"));
+        assertEquals(1, (long) cc.get(1).count.get("1: BM"));
+
+        assertEquals(4.5, cc.get(8).time, 0.001);
+        assertEquals(2, (long) cc.get(8).count.get("2: S"));
+        assertEquals(1, (long) cc.get(8).count.get("1: BM"));
+
+        assertEquals(5, cc.get(9).time, 0.001);
+        assertEquals(2, (long) cc.get(9).count.get("2: S"));
+        assertEquals(1, (long) cc.get(9).count.get("1: BM"));
+
+        assertEquals(5.5, cc.get(10).time, 0.001);
+        assertEquals(1, (long) cc.get(10).count.get("3: B"));
+        assertEquals(2, (long) cc.get(10).count.get("2: S"));
+        assertEquals(1, (long) cc.get(10).count.get("1: BM"));
     }
 }

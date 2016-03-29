@@ -38,6 +38,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -96,9 +97,15 @@ public class MainController {
                             TreeItem<String> old_val, TreeItem<String> new_val) {
                         TreeItem<String> selectedItem = new_val;
 
+                        // Callback may occur even when there is no
+                        // Tree item selected:
+                        if (selectedItem == null) {
+                            return;
+                        }
                         //Checks if selected items is child from "ProjectRoot" TreeItem.
                         //If yes, then it is a project-selection.
-                        if (selectedItem.getParent().getValue() == "ProjectRoot") {
+                        if (selectedItem.getParent() != null &&
+                                "ProjectRoot".equals(selectedItem.getParent().getValue())) {
                             addViewToOverview("/FXML/overview/ProjectOverview.fxml", selectedItem);
                             addViewToDiagram("/FXML/diagram/BoxWhiskerPlot.fxml", selectedItem);
 
@@ -211,7 +218,6 @@ public class MainController {
                             }
                         }
                     }
-
                 }
             }
 
@@ -263,7 +269,6 @@ public class MainController {
                         } else {
                             simulation = makeBranch(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
                         }
-
                     }
                 }
             }
@@ -320,6 +325,59 @@ public class MainController {
         stage.setTitle("Settings");
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void showEditDialog(ActionEvent actionEvent) {
+        TreeItem<String> item = projectTree.getSelectionModel().getSelectedItem();
+        String simId = item.getValue();
+        Simulation sim = null;
+        // TODO associate data with Tree selection model.
+        for (Project project : projectData) {
+            for (ModelType modelType : project.getModelTypeList()) {
+                for (Simulation simulation : modelType.getSimulations()) {
+                    if (simId.equals(simulation.getSimulationName())) {
+                        sim = simulation;
+                    }
+                }
+            }
+        }
+        if (sim != null) {
+            String dir = sim.getDir().toString();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete files");
+            alert.setHeaderText("Remove folder and all files in the following folder?");
+            alert.setContentText(dir);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    System.out.println("Delete " + dir);
+                    File dirFile = new File(dir);
+                    deleteFolder(dirFile);
+                }
+            });
+            projectData.clear();
+            initialize();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setHeaderText("Not a simulation run.");
+            alert.setContentText("Please select a single simulation run.\n" +
+                    "Models or entire projects cannot be deleted.");
+            alert.showAndWait();
+        }
+    }
+
+    private void deleteFolder(File folder) {
+        File[] files = folder.listFiles();
+        if (files != null) { //some JVMs return null for empty dirs
+            for (File f : files) {
+                if (f.isDirectory()) {
+                    deleteFolder(f);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+        folder.delete();
     }
 
     public void handleRefreshButton(ActionEvent actionEvent) {
