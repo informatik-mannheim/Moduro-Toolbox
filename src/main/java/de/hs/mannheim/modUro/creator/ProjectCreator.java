@@ -81,7 +81,7 @@ public class ProjectCreator {
 
         for (String name : modelTypeName) {
             for (File file : allDir) {
-                if (file.getName().contains(name + "_")) {
+                if (file.getName().startsWith(name + "_")) {
                     dirList.add(file);
                 }
             }
