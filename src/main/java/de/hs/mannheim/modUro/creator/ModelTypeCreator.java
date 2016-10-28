@@ -30,6 +30,8 @@ import java.util.List;
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class ModelTypeCreator {
+
+    private final String INVALID_NAME_DEFAULT = "INVALID_NAME";
     //Input List of Dir of specific Model Type
     private List<File> fileList;
 
@@ -48,10 +50,14 @@ public class ModelTypeCreator {
      * @return
      */
     private String createModelTypeName() {
-        String name;
-        String[] tokenValue = fileList.get(0).getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
-        name = tokenValue[0];
-        return name;
+
+        if (fileList == null || fileList.size() == 0) {
+            System.out.println("Can't set modelTypeName because of missing fileList.");
+            return INVALID_NAME_DEFAULT;
+        }
+
+        // todo: kann man hier nicht den ModelTypeName direkt setzen?
+        return  fileList.get(0).getName().split(RegEx.Model_TYPE_NAME_SUFFIX.getName())[0];
     }
 
     /**

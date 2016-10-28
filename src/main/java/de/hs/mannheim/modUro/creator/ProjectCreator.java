@@ -15,11 +15,11 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.creator;
 
+import de.hs.mannheim.modUro.config.RegEx;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Node;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.dialog.SettingFile;
-import de.hs.mannheim.modUro.config.RegEx;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,21 +75,33 @@ public class ProjectCreator {
         List<ModelType> modelTypeList = new ArrayList<>();
         ModelTypeCreator modelTypeCreator = new ModelTypeCreator();
 
-        List<String> modelTypeName = getAllModelTypeName();
-        List<File> allDir = listAllDirInAllNodes();
-        List<File> dirList = new ArrayList<>();
+        List<String> modelTypeNames = getAllModelTypeName();
+        System.out.println(String.format("Found %d modelTypeNames", modelTypeNames.size()));
+        List<File> nodeDirectories = listAllDirInAllNodes();
+        System.out.println(String.format("Found %d nodeDirs", nodeDirectories.size()));
+        List<File> dirsPerModelTypeName;
 
-        for (String name : modelTypeName) {
-            for (File file : allDir) {
-                if (file.getName().startsWith(name + "_")) {
-                    dirList.add(file);
+        for (String modelTypeName : modelTypeNames) {
+             dirsPerModelTypeName = new ArrayList<>();
+            System.out.println(String.format("Loading directories starting with %s", modelTypeName));
+            for (File nodeDir : nodeDirectories) {
+                if(!nodeDir.isDirectory()){
+                    System.out.println(nodeDir.getName() + " is not a directory. Only directories can be added to a modelType sublist.");
+                    continue;
+                }
+
+                String dirName = nodeDir.getName();
+                if (dirName.startsWith(modelTypeName)) {
+                    System.out.println(String.format(
+                            "Adding directory %s for modelTypeName %s", dirName,modelTypeName));
+                    dirsPerModelTypeName.add(nodeDir);
                 }
             }
-            modelTypeCreator.setFileList(dirList);
+
+            modelTypeCreator.setFileList(dirsPerModelTypeName);
             modelTypeCreator.createModelType();
             modelType = modelTypeCreator.getModelType();
             modelTypeList.add(modelType);
-            dirList.clear();
         }
         return modelTypeList;
     }
@@ -123,9 +135,25 @@ public class ProjectCreator {
         for (Node node : settingFile.getNode()) {
             File[] dirs = node.getPath().listFiles(f -> f.isDirectory());
             for (File file : dirs) {
-                String name;
-                String[] tokenValue = file.getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
-                name = tokenValue[0];
+                // todo: quite happy path
+                System.out.println(String.format("Trying to append file %s to modelTypeNameList.", file.getName()));
+                // todo: at the moment I face trouble with this method. The output data of my instance of CompuCell3D is of
+                // todo: a different name scheme, which does not the value referenced in the "RegEx"-Class.
+                // todo: This will crash the programm on startup
+
+                // todo:  e.g.: We place an empty dir in the node folder, the filename is "I_M_broken";
+                // todo: This will be added as a modelTypeName, even though there are no valid files in the dir.
+
+                // todo: 2nd scena We place a valid set of data in the directory. But this time we change the name
+                // todo: to SpaCdbCdiInDa.cc3d-2016-08-23-11-03-29-425000 -> this will cause an exception + crash
+
+                // This is because the programm will later compare the count of available directories in the node-dir
+                // and the count of directories it was able to convert into a name. If the count doesn't match
+                // the programm will crash. Feel free to improve.
+
+                String[] tokenValue = file.getName().split(RegEx.Model_TYPE_NAME_SUFFIX.getName());
+                System.out.println("ModelType name is: "+ tokenValue[0]);
+                String name = tokenValue[0];
 
                 if (!modelTypeNameList.contains(name) && name.length() > 0) {
                     modelTypeNameList.add(name);

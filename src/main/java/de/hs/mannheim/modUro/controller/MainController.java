@@ -22,7 +22,10 @@ import de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController;
 import de.hs.mannheim.modUro.controller.overview.ModeltypeOverviewController;
 import de.hs.mannheim.modUro.controller.overview.ProjectOverviewController;
 import de.hs.mannheim.modUro.controller.overview.SimulationOverviewController;
-import de.hs.mannheim.modUro.model.*;
+import de.hs.mannheim.modUro.model.MainModel;
+import de.hs.mannheim.modUro.model.ModelType;
+import de.hs.mannheim.modUro.model.Project;
+import de.hs.mannheim.modUro.model.Simulation;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,12 +33,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -327,6 +335,10 @@ public class MainController {
         stage.show();
     }
 
+    /**
+     * This method shows the dialog of the toolbox-view.
+     * @param actionEvent
+     */
     public void showEditDialog(ActionEvent actionEvent) {
         TreeItem<String> item = projectTree.getSelectionModel().getSelectedItem();
         String simId = item.getValue();
@@ -356,6 +368,7 @@ public class MainController {
             });
             projectData.clear();
             initialize();
+         // that does not appear
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
@@ -363,9 +376,14 @@ public class MainController {
             alert.setContentText("Please select a single simulation run.\n" +
                     "Models or entire projects cannot be deleted.");
             alert.showAndWait();
+            //todo: throw exception or log it
         }
     }
 
+    /**
+     * This method deletes one selected folder
+     * @param folder: folder-directory
+     */
     private void deleteFolder(File folder) {
         File[] files = folder.listFiles();
         if (files != null) { //some JVMs return null for empty dirs
@@ -387,6 +405,39 @@ public class MainController {
         initialize();
         //set after refresh the last selectedItem
         projectTree.getSelectionModel().select(lastSelected);
+    }
+
+    /**
+     * This window opens if the "optimizer"-button is pressed
+     * @param clickOptimize
+     */
+    public void handleOptimizeButton(ActionEvent clickOptimize){
+        Stage optStage = new Stage();
+        optStage.setTitle("optimusPrime");
+
+        //set grid pane
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        //add scenetitle
+        Text scenetitle = new Text("Welcome to optimusPrime");
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        //add some buttons
+        Button selectModel = new Button("Select a model");
+        grid.add(selectModel, 1,1);
+
+        Button startCc3d = new Button("Just start CC3D");
+        grid.add(startCc3d, 1,2);
+
+        Scene scene = new Scene(grid, 500, 275);
+        optStage.setScene(scene);
+
+        optStage.show();
     }
 
     /**

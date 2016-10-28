@@ -18,7 +18,6 @@ package de.hs.mannheim.modUro.creator;
 import de.hs.mannheim.modUro.config.*;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
-import de.hs.mannheim.modUro.reader.CelltimesReader;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -78,7 +77,7 @@ public class SimulationCreator {
      */
     private String createModelTypeName() {
         String name;
-        String[] tokenValue = file.getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
+        String[] tokenValue = file.getName().split(RegEx.Model_TYPE_NAME_SUFFIX.getName());
         name = tokenValue[0];
         return name;
     }
