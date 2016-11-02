@@ -45,6 +45,7 @@
           <center>
             <TabPane prefHeight="-1.0" prefWidth="-1.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
+                <!--todo: hier wird null als content angegeben, wieso?-->
                 <Tab fx:id="overviewTab" content="$null" text="Overview" />
                 <Tab fx:id="diagramTab" content="$null" text="Diagram" />
               </tabs>
@@ -62,6 +63,9 @@
                     </ImageView>
                   </graphic>
                 </Button>
+                <Button fx:id="optimizeButton" mnemonicParsing="false" onAction="#handleOptimizeButton" text="Optimize">
+                </Button>
+
               </items>
             </ToolBar>
           </top>

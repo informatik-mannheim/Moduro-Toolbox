@@ -26,11 +26,13 @@ import de.hs.mannheim.modUro.model.MainModel;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.optimizer.cmd.OptimizationProcessHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -409,34 +411,61 @@ public class MainController {
 
     /**
      * This window opens if the "optimizer"-button is pressed
+     * (could be a temporary solution)
      * @param clickOptimize
      */
     public void handleOptimizeButton(ActionEvent clickOptimize){
         Stage optStage = new Stage();
         optStage.setTitle("optimusPrime");
 
-        //set grid pane
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        //add scenetitle
         Text scenetitle = new Text("Welcome to optimusPrime");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
 
-        //add some buttons
-        Button selectModel = new Button("Select a model");
-        grid.add(selectModel, 1,1);
+        Button selectModelButton = new Button("Select optimization parameters and a model");
+        grid.add(selectModelButton, 1,1);
 
-        Button startCc3d = new Button("Just start CC3D");
-        grid.add(startCc3d, 1,2);
+        // todo: impl
+        selectModelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("CC3D-path opens!");
+                //todo: if paramaters are set, open the cc3d-model path
+                OptimizationProcessHelper.receiveParameters();
+                //This happens in "receiveParameters"
+                //OptimizationProcessHelper.openModel();
+            }
+        });
+
+        Button startCc3dButton = new Button("Just start CC3D");
+        grid.add(startCc3dButton, 1,2);
+        //add action
+
+        // todo: move to config file. Don't use static strings as path config
+        final String cc3dExecutionPath = "C:/Program Files (x86)/CompuCell3D/compucell3d.bat";
+        //final String cc3dExecutionCommandWindows = "cmd /C \"" + cc3dExecutionPath + "\"";
+        startCc3dButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Bin of cc3d: " +cc3dExecutionPath);
+                File targetPathFile = new File(cc3dExecutionPath);
+                System.out.println(targetPathFile.exists() ? "cc3d path found" : "cc3d path not found.Can't start cc3d");
+                if(!targetPathFile.exists()){
+                    return;
+                }
+                System.out.println("CC3D path found. executing path " + cc3dExecutionPath);
+                    OptimizationProcessHelper.openCompuCell();
+            }
+        });
 
         Scene scene = new Scene(grid, 500, 275);
         optStage.setScene(scene);
-
         optStage.show();
     }
 
