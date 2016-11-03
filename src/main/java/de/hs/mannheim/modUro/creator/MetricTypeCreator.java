@@ -19,6 +19,8 @@ import de.hs.mannheim.modUro.model.MetricType;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MetricTypeCreator helps to create a MetricType by passing a file txt.
@@ -56,57 +58,37 @@ public class MetricTypeCreator {
         return name;
     }
 
-    /**
-     * Counts the line in a txt file.
-     *
-     * @return
-     * @throws IOException
-     */
-    private int countLines() {
-        int cnt = 0;
-        try {
-            LineNumberReader reader = new LineNumberReader(new FileReader(file.getAbsolutePath()));
-            String lineRead = "";
-            while ((lineRead = reader.readLine()) != null) {
-            }
-            cnt = reader.getLineNumber();
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return cnt;
-    }
+    private double[][] metricData;
 
     /**
      * Reads and parse MetricData from File.
+     * TODO This is redundant with subroutine in SimulationCreator!
      */
-    private double[][] readMetricData() {
-        //get the number of lines in txt file
-        int lineNr = countLines();
+    private void readMetricDataFromFile() {
         //initialize matrix length with line length of file
-        double[][] matrix = new double[lineNr][2];
-
+        metricData = new double[1][2];
         String line;
         int row = 0;
-        int col1 = 0;
-        int col2 = 1;
 
+        List<Double> times = new ArrayList<>();
+        List<Double> fitness = new ArrayList<>();
         BufferedReader buffer = null;
         try {
             buffer = new BufferedReader(new FileReader(file.getAbsolutePath()));
             while ((line = buffer.readLine()) != null) {
                 String[] vals = line.trim().split(" ");
-
-                matrix[row][col1] = Double.parseDouble(vals[0]);
-                matrix[row][col2] = Double.parseDouble(vals[1]);
-
+                times.add(Double.parseDouble(vals[0]));
+                fitness.add(Double.parseDouble(vals[1]));
                 row++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return matrix;
+        metricData = new double[row][2];
+        for (int i = 0; i < row; i++) {
+            metricData[i][0] = times.get(i);
+            metricData[i][1] = fitness.get(i);
+        }
     }
 
     /**
@@ -115,46 +97,13 @@ public class MetricTypeCreator {
      * @return
      */
     private double calculateMean() {
-        double[] value = getMetricValues();
-
         // Add the data from the array
-        for (int i = 0; i < value.length; i++) {
-            stats.addValue(value[i]);
+        for (int i = 0; i < metricData.length; i++) {
+            stats.addValue(metricData[i][1]);
         }
-
         double mean = stats.getMean();
         stats.clear();
-
         return mean;
-    }
-
-    /**
-     * Read only the values of Metric data.
-     *
-     * @return
-     */
-    private double[] getMetricValues() {
-
-        int lineNr = countLines();
-
-        double[] matrix = new double[lineNr];
-
-        String line;
-        int row = 0;
-
-        BufferedReader buffer = null;
-        try {
-            buffer = new BufferedReader(new FileReader(file.getAbsolutePath()));
-            while ((line = buffer.readLine()) != null) {
-                String[] vals = line.trim().split(" ");
-                matrix[row] = Double.parseDouble(vals[1]);
-                row++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return matrix;
     }
 
     /**
@@ -163,16 +112,12 @@ public class MetricTypeCreator {
      * @return
      */
     private double calculateDeviation() {
-        double[] value = getMetricValues();
-
         // Add the data from the array
-        for (int i = 0; i < value.length; i++) {
-            stats.addValue(value[i]);
+        for (int i = 0; i < metricData.length; i++) {
+            stats.addValue(metricData[i][1]);
         }
-
         double stdDev = stats.getStandardDeviation();
         stats.clear();
-
         return stdDev;
     }
 
@@ -180,7 +125,9 @@ public class MetricTypeCreator {
      * Creates a MetricType Instance.
      */
     public void createMetricType() {
-        this.metricType = new MetricType(nameOfMetricType(), readMetricData(), calculateMean(), calculateDeviation());
+        readMetricDataFromFile();
+        this.metricType = new MetricType(nameOfMetricType(),
+                metricData, calculateMean(), calculateDeviation());
     }
 
     public File getFile() {

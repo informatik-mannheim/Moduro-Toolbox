@@ -179,7 +179,12 @@ public class SimulationCreator {
      * @return
      */
     private List<MetricType> createMetricTypeList() {
-        File[] txtFiles = dir.listFiles((parent, name) -> (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) && !name.equals(FileName.PARAMETER_DUMP.getName())));
+        // This is how fitness files are detected:
+        File[] txtFiles = dir.listFiles(
+                (parent, name) ->
+                        (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) &&
+                                !name.equals(FileName.PARAMETER_DUMP.getName()))
+        );
         List<MetricType> metricTypeList = new ArrayList<>();
 
         for (File file : txtFiles) {

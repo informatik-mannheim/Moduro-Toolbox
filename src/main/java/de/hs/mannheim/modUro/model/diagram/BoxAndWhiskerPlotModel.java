@@ -50,17 +50,15 @@ public class BoxAndWhiskerPlotModel {
         for (String value : modelTypeName) {
             for (ModelType modelTypeItem : project.getModelTypeList()) {
                 if (modelTypeItem.getName().equals(value)) {
-                    for (Simulation simultionItem : modelTypeItem.getSimulations()) {
-                        List<MetricType> metricType = simultionItem.getMetricTypes();
+                    for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+                        List<MetricType> metricType = simulationItem.getMetricTypes();
                         double mean = 0.0;
                         for (MetricType metricTypeItem : metricType) {
                             if (metricTypeItem.getName().contains("Plot")) {
                                 mean = metricTypeItem.getMean();
-
                             }
                         }
                         meanOfSimulations.add(mean);
-
                     }
                     double[] meanArrayOfMeans = new double[meanOfSimulations.size()];
                     for (int i = 0; i < meanOfSimulations.size(); i++) meanArrayOfMeans[i] = meanOfSimulations.get(i);
