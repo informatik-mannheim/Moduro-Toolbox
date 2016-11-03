@@ -51,7 +51,7 @@ public class BoxAndWhiskerPlotModel {
             for (ModelType modelTypeItem : project.getModelTypeList()) {
                 if (modelTypeItem.getName().equals(value)) {
                     for (Simulation simultionItem : modelTypeItem.getSimulations()) {
-                        List<MetricType> metricType = simultionItem.getMetricType();
+                        List<MetricType> metricType = simultionItem.getMetricTypes();
                         double mean = 0.0;
                         for (MetricType metricTypeItem : metricType) {
                             if (metricTypeItem.getName().contains("Plot")) {

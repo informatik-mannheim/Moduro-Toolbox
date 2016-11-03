@@ -18,7 +18,6 @@ package de.hs.mannheim.modUro.creator;
 import de.hs.mannheim.modUro.config.*;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
-import de.hs.mannheim.modUro.reader.CelltimesReader;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -28,13 +27,15 @@ import java.util.List;
 
 /**
  * SimulationCreator helps to create a Simulation by passing a path.
+ * The dir must be set via setDir(). Then createSimulation()
+ * creates a simulation object.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class SimulationCreator {
 
-    //Input file of a simulation
-    private File file;
+    //Input dir of a simulation
+    private File dir;
 
     //Simulation Instance
     private Simulation simulation;
@@ -67,7 +68,7 @@ public class SimulationCreator {
      * @return
      */
     private String createsSimulationName() {
-        String name = file.getName();
+        String name = dir.getName();
         return name;
     }
 
@@ -78,7 +79,7 @@ public class SimulationCreator {
      */
     private String createModelTypeName() {
         String name;
-        String[] tokenValue = file.getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
+        String[] tokenValue = dir.getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
         name = tokenValue[0];
         return name;
     }
@@ -88,56 +89,46 @@ public class SimulationCreator {
      *
      * @return
      */
-    private double[] getTimeValuesOfFitnessPlot() {
-        File fitnessPlotFile = file.listFiles((parent, name) -> (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) && name.equals(FileName.TOTAL_FITNESS_FILE.getName())))[0];
-        int lineNr = countLines(fitnessPlotFile);
+    private double[][] defaultFitnessTable;
 
-        double[] matrix = new double[lineNr];
+    private void calcDefaultFitnessTable() {
+        defaultFitnessTable = new double[1][2]; // Empty table so far.
+
+        File[] files = dir.listFiles(
+                (parent, name) ->
+                        name.equals(FileName.DEFAULT_FITNESS_FILE.getName())
+        );
+        if (files.length == 0) {
+            System.err.println("Dir " + dir + " does not contain a " +
+                    FileName.DEFAULT_FITNESS_FILE.getName());
+            return;
+        }
+        File fitnessPlotFile = files[0];
 
         String line;
         int row = 0;
 
+        List<Double> times = new ArrayList<>();
+        List<Double> fitness = new ArrayList<>();
         BufferedReader buffer = null;
         try {
             buffer = new BufferedReader(new FileReader(fitnessPlotFile.getAbsolutePath()));
             while ((line = buffer.readLine()) != null) {
                 String[] vals = line.trim().split(" ");
-                matrix[row] = Double.parseDouble(vals[0]);
+                times.add(Double.parseDouble(vals[0]));
+                fitness.add(Double.parseDouble(vals[1]));
                 row++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return matrix;
-    }
-
-    /**
-     * Gets fitness values of FitnessPlot second column in matrix.
-     *
-     * @return
-     */
-    private double[] getFitnessValuesOfFitnessPlot() {
-        File fitnessPlotFile = file.listFiles((parent, name) -> (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) && name.equals(FileName.TOTAL_FITNESS_FILE.getName())))[0];
-        int lineNr = countLines(fitnessPlotFile);
-
-        double[] matrix = new double[lineNr];
-
-        String line;
-        int row = 0;
-
-        BufferedReader buffer = null;
-        try {
-            buffer = new BufferedReader(new FileReader(fitnessPlotFile.getAbsolutePath()));
-            while ((line = buffer.readLine()) != null) {
-                String[] vals = line.trim().split(" ");
-                matrix[row] = Double.parseDouble(vals[1]);
-                row++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        defaultFitnessTable = new double[row][2];
+        for (int i = 0; i < row; i++) {
+            defaultFitnessTable[i][0] = times.get(i);
+            defaultFitnessTable[i][1] = fitness.get(i);
         }
-        return matrix;
     }
+
 
     /**
      * Calculates duration of metric data.
@@ -145,29 +136,7 @@ public class SimulationCreator {
      * @return
      */
     private double calculateDuration() {
-        double duration = getTimeValuesOfFitnessPlot()[getTimeValuesOfFitnessPlot().length - 1];
-        return duration;
-    }
-
-    /**
-     * Counts the line in a txt file.
-     *
-     * @return
-     * @throws IOException
-     */
-    private int countLines(File file) {
-        int cnt = 0;
-        try {
-            LineNumberReader reader = new LineNumberReader(new FileReader(file.getAbsolutePath()));
-            String lineRead = "";
-            while ((lineRead = reader.readLine()) != null) {
-            }
-            cnt = reader.getLineNumber();
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return cnt;
+        return defaultFitnessTable[defaultFitnessTable.length - 1][0];
     }
 
     /**
@@ -180,11 +149,11 @@ public class SimulationCreator {
         String timeInString = null;
         LocalDateTime simulationTime = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        File parameterDumpFile = file.listFiles((parent, name) -> (name.endsWith(FileEnding.METRIC_DATA_FILE.getFileEnding()) && name.contains(FileName.METRIC_DATA_FILE.getName())))[0];
+        File parameterDumpFile = dir.listFiles((parent, name) -> (name.endsWith(FileEnding.METRIC_DATA_FILE.getFileEnding()) && name.contains(FileName.PARAMETER_DUMP.getName())))[0];
         try {
             BufferedReader in = new BufferedReader(new FileReader(parameterDumpFile.getAbsolutePath()));    //reading files in specified directory
             String line;
-            while ((line = in.readLine()) != null)    //file reading
+            while ((line = in.readLine()) != null)    //dir reading
             {
                 if (line.contains("startTime")) {
                     String[] values = line.split(" ");
@@ -210,7 +179,7 @@ public class SimulationCreator {
      * @return
      */
     private List<MetricType> createMetricTypeList() {
-        File[] txtFiles = file.listFiles((parent, name) -> (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) && !name.equals(FileName.METRIC_DATA_FILE.getName())));
+        File[] txtFiles = dir.listFiles((parent, name) -> (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) && !name.equals(FileName.PARAMETER_DUMP.getName())));
         List<MetricType> metricTypeList = new ArrayList<>();
 
         for (File file : txtFiles) {
@@ -228,7 +197,7 @@ public class SimulationCreator {
      */
     private boolean isCompleted() {
         boolean isDone = false;
-        double toTime = getTimeValuesOfFitnessPlot()[getTimeValuesOfFitnessPlot().length - 1];
+        double toTime = defaultFitnessTable[defaultFitnessTable.length - 1][0];
         if (toTime >= maxTime) {
             isDone = true;
         }
@@ -241,7 +210,7 @@ public class SimulationCreator {
      * @return
      */
     private boolean isAborted() {
-        double lastFitness = getFitnessValuesOfFitnessPlot()[getFitnessValuesOfFitnessPlot().length - 1];
+        double lastFitness = defaultFitnessTable[defaultFitnessTable.length - 1][1];
         boolean isAborted = false;
 
         if (lastFitness < 0.05 && isInSteadyState()) {
@@ -258,7 +227,7 @@ public class SimulationCreator {
     private boolean isInSteadyState() {
 
         boolean isInSteadyState = false;
-        double toTime = getTimeValuesOfFitnessPlot()[getTimeValuesOfFitnessPlot().length - 1];
+        double toTime = defaultFitnessTable[defaultFitnessTable.length - 1][0];
         if (toTime >= minTime) {
             isInSteadyState = true;
         }
@@ -271,7 +240,7 @@ public class SimulationCreator {
      * @return
      */
     private File dirPath() {
-        File dirPath = file;
+        File dirPath = dir;
         return dirPath;
     }
 
@@ -283,7 +252,7 @@ public class SimulationCreator {
     private List<File> images() {
         List<File> imagePath = new ArrayList<>();
 
-        File[] images = file.listFiles((parent, name) -> name.endsWith(FileEnding.IMAGEFILE.getFileEnding()));
+        File[] images = dir.listFiles((parent, name) -> name.endsWith(FileEnding.IMAGEFILE.getFileEnding()));
 
         if (images.length != 0) {
             int count = images.length;
@@ -305,15 +274,31 @@ public class SimulationCreator {
      * Creates simulation.
      */
     public void createSimulation() {
-        simulation = new Simulation(/*createSimulationId(),*/ createsSimulationName(), createModelTypeName(), calculateDuration(), createTime(), createMetricTypeList(), isCompleted(), isAborted(), isInSteadyState(), dirPath(), images());
+        calcDefaultFitnessTable();
+        simulation = new Simulation(/*createSimulationId(),*/
+                createsSimulationName(),
+                createModelTypeName(),
+                calculateDuration(),
+                createTime(),
+                createMetricTypeList(),
+                isCompleted(),
+                isAborted(),
+                isInSteadyState(),
+                dirPath(),
+                images());
     }
 
-    public File getFile() {
-        return file;
+    public File getDir() {
+        return dir;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    /**
+     * Set the directory that contains the CC3D log files.
+     *
+     * @param dir
+     */
+    public void setDir(File dir) {
+        this.dir = dir;
     }
 
     public Simulation getSimulation() {

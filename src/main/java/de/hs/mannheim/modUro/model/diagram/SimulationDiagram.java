@@ -34,7 +34,7 @@ public class SimulationDiagram {
 
     public SimulationDiagram(Simulation simulation) {
         this.simulation = simulation;
-        metricTypes = simulation.getMetricType();
+        metricTypes = simulation.getMetricTypes();
         simulationName = simulation.getSimulationName();
 
     }

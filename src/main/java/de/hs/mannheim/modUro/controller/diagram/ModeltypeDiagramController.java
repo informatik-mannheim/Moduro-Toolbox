@@ -26,18 +26,12 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -215,7 +209,7 @@ public class ModeltypeDiagramController extends DiagramController {
         for (Simulation simualtionItem : simulationList) {
             XYSeries xySerie = new XYSeries(simualtionItem.getSimulationName());
 
-            for (MetricType metricTypeItem : simualtionItem.getMetricType()) {
+            for (MetricType metricTypeItem : simualtionItem.getMetricTypes()) {
                 if (metricTypeItem.getName().equals(selectedItem)) {
                     double x;
                     double y;

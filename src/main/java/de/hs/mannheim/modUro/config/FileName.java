@@ -21,8 +21,11 @@ package de.hs.mannheim.modUro.config;
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public enum FileName {
-    TOTAL_FITNESS_FILE("FitnessPlot.dat"),      //Name of total fitness file
-    METRIC_DATA_FILE("ParameterDump.dat");      //Name of metric data file
+    /**
+     * The default fitness file that is required in every simulation run.
+     */
+    DEFAULT_FITNESS_FILE("FitnessVolume.dat"),
+    PARAMETER_DUMP("ParameterDump.dat");
 
     private final String name;
 

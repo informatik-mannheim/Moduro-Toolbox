@@ -24,10 +24,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -99,7 +97,7 @@ public class SimulationCreatorTest {
 
     @Test
     public void countMetricTypeOfSimulation() {
-        Assert.assertEquals("Simulation should have '3' MetricTypes and not: " + simulation.getMetricType().size(), 3, simulation.getMetricType().size());
+        Assert.assertEquals("Simulation should have '3' MetricTypes and not: " + simulation.getMetricTypes().size(), 3, simulation.getMetricTypes().size());
     }
 
     @Test

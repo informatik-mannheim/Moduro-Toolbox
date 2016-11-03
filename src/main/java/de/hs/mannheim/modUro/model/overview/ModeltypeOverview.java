@@ -68,7 +68,7 @@ public class ModeltypeOverview {
     private List<String> listMetricTypeNames() {
         List<String> metricTypeName = new ArrayList<>();
         for (Simulation simulationItem : modelType.getSimulations()) {
-            for (MetricType metricTypeItem : simulationItem.getMetricType()) {
+            for (MetricType metricTypeItem : simulationItem.getMetricTypes()) {
                 if (!metricTypeName.contains(metricTypeItem.getName())) {
                     metricTypeName.add(metricTypeItem.getName());
                 }
@@ -126,7 +126,7 @@ public class ModeltypeOverview {
         List<Double> mean = new ArrayList<>();
 
         for (Simulation simulation : modelType.getSimulations()) {
-            for (MetricType metricTypeItem : simulation.getMetricType()) {
+            for (MetricType metricTypeItem : simulation.getMetricTypes()) {
                 if (metricTypeItem.getName().equals(name)) {
                     mean.add(metricTypeItem.getMean());
                 }
@@ -156,7 +156,7 @@ public class ModeltypeOverview {
         List<Double> stdDev = new ArrayList<>();
 
         for (Simulation simulation : modelType.getSimulations()) {
-            for (MetricType metricTypeItem : simulation.getMetricType()) {
+            for (MetricType metricTypeItem : simulation.getMetricTypes()) {
                 if (metricTypeItem.getName().equals(name)) {
                     stdDev.add(metricTypeItem.getDeviation());
                 }

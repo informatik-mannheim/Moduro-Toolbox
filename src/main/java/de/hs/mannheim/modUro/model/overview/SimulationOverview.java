@@ -61,8 +61,8 @@ public class SimulationOverview {
         this.startTime = simulation.getStartTime();
         this.duration = simulation.getDuration();
         this.directory = simulation.getDir();
-        this.metricTypesName = selectNameOfMetricType(simulation.getMetricType());
-        this.metricTypes = simulation.getMetricType();
+        this.metricTypesName = selectNameOfMetricType(simulation.getMetricTypes());
+        this.metricTypes = simulation.getMetricTypes();
         this.images = simulation.getImages();
     }
 

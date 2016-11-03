@@ -47,7 +47,7 @@ public class MetricTypeCreatorTest {
         project = projectList.get(0);
         modelType = project.getModelTypeList().get(0);
         simulation = modelType.getSimulations().get(0);
-        metricType = simulation.getMetricType().get(0);
+        metricType = simulation.getMetricTypes().get(0);
     }
 
     @Test

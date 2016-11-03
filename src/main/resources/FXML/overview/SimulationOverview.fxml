@@ -26,7 +26,7 @@
             <Label fx:id="duration" GridPane.columnIndex="2" GridPane.rowIndex="7" />
             <Label text="Directory" GridPane.rowIndex="8" />
             <Label text="Metric Types:" GridPane.rowIndex="9" />
-            <Label fx:id="metricType" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+            <Label fx:id="metricTypes" GridPane.columnIndex="2" GridPane.rowIndex="9" />
             <Label text="Simulation-Name:" GridPane.rowIndex="1" />
             <Label fx:id="simulationName" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label text="in SteadyState:" GridPane.rowIndex="3" />

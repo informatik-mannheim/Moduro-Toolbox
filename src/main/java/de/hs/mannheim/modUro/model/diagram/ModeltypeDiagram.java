@@ -49,7 +49,7 @@ public class ModeltypeDiagram {
         metricTypeName = new ArrayList<>();
 
         for (Simulation simulationItem : modelType.getSimulations()) {
-            for (MetricType metricTypeItem : simulationItem.getMetricType()) {
+            for (MetricType metricTypeItem : simulationItem.getMetricTypes()) {
 
                 if (!metricTypeName.contains(metricTypeItem.getName())) {
                     metricTypeName.add(metricTypeItem.getName());

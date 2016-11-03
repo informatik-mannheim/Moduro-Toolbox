@@ -18,8 +18,6 @@ package de.hs.mannheim.modUro.model;
 import de.hs.mannheim.modUro.reader.CelltimesReader;
 
 import java.io.File;
-import java.io.IOException;
-import java.rmi.server.ExportException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class Simulation {
     private String modelType;               //modelType of this simulation
     private double duration;                //duration of this simulation
     private LocalDateTime startTime;        //starting time of this simulation
-    private List<MetricType> metricType;    //list of the metric types, which this simulation have
+    private List<MetricType> metricTypes;    //list of the metric types, which this simulation have
     private boolean isCompleted;            //simulation is done
     private boolean isAborted;              //simulation is cancelled
     private boolean isInSteadyState;        //simulation is in steadyState
@@ -50,17 +48,17 @@ public class Simulation {
      * @param modelType
      * @param duration
      * @param startTime
-     * @param metricType
+     * @param metricTypes
      * @param dir
      * @param images
      */
-    public Simulation(/*int simulationID,*/ String simulationName, String modelType, double duration, LocalDateTime startTime, List<MetricType> metricType, boolean isCompleted, boolean isAborted, boolean isInSteadyState, File dir, List<File> images) {
+    public Simulation(/*int simulationID,*/ String simulationName, String modelType, double duration, LocalDateTime startTime, List<MetricType> metricTypes, boolean isCompleted, boolean isAborted, boolean isInSteadyState, File dir, List<File> images) {
         this.simulationID = simulationID;
         this.simulationName = simulationName;
         this.modelType = modelType;
         this.duration = duration;
         this.startTime = startTime;
-        this.metricType = metricType;
+        this.metricTypes = metricTypes;
         this.isCompleted = isCompleted;
         this.isAborted = isAborted;
         this.isInSteadyState = isInSteadyState;
@@ -83,8 +81,8 @@ public class Simulation {
         return modelType;
     }
 
-    public List<MetricType> getMetricType() {
-        return metricType;
+    public List<MetricType> getMetricTypes() {
+        return metricTypes;
     }
 
     /**

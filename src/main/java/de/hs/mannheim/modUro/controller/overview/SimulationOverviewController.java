@@ -104,7 +104,9 @@ public class SimulationOverviewController {
         this.starttime.setText(simulationOverview.getStartTime().toString());
         this.duration.setText(String.valueOf(simulationOverview.getDuration()));
         this.directoryHyperlink.setText(simulationOverview.getDirectory().getAbsolutePath());
-        this.metricType.setText(String.valueOf(simulationOverview.getMetricTypesName()));
+        if (metricType != null) {
+            this.metricType.setText(String.valueOf(simulationOverview.getMetricTypesName()));
+        }
     }
 
     /**
