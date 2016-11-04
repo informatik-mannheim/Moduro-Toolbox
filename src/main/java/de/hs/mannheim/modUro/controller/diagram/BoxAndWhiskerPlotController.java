@@ -53,9 +53,7 @@ public class BoxAndWhiskerPlotController {
     public void init(Project project) {
         this.boxAndWhiskerPlotModel = new BoxAndWhiskerPlotModel(project);
         models = new HashSet<>(boxAndWhiskerPlotModel.getModelTypeName());
-        stats = new HashMap<>();
         stats = boxAndWhiskerPlotModel.getStatisticValues();
-
         boxWhiskerPlot();
     }
 

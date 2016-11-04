@@ -19,7 +19,6 @@ import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +29,6 @@ import java.util.List;
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
 public class ModeltypeOverview {
-
-    // Get a DescriptiveStatistics instance (calculation of mean and stdDev)
-    DescriptiveStatistics stats = new DescriptiveStatistics();
 
     private ModelType modelType;
 
@@ -117,12 +113,10 @@ public class ModeltypeOverview {
     }
 
     /**
-     * Calculates Mean of all same metrictype
-     *
      * @param name
      * @return
      */
-    private double returnMean(String name) {
+    private double[] getArrayByMetricName(String name) {
         List<Double> mean = new ArrayList<>();
 
         for (Simulation simulation : modelType.getSimulations()) {
@@ -136,44 +130,7 @@ public class ModeltypeOverview {
         double[] meanArray = new double[mean.size()];
         for (int i = 0; i < mean.size(); i++) meanArray[i] = mean.get(i);
 
-        for (int i = 0; i < meanArray.length; i++) {
-            stats.addValue(meanArray[i]);
-        }
-
-        double meanOfMetricType = stats.getMean();
-        stats.clear();
-
-        return meanOfMetricType;
-    }
-
-    /**
-     * Calculates stdDev of all same metrictype
-     *
-     * @param name
-     * @return
-     */
-    private double returnStdDev(String name) {
-        List<Double> stdDev = new ArrayList<>();
-
-        for (Simulation simulation : modelType.getSimulations()) {
-            for (MetricType metricTypeItem : simulation.getMetricTypes()) {
-                if (metricTypeItem.getName().equals(name)) {
-                    stdDev.add(metricTypeItem.getMean());
-                }
-            }
-        }
-
-        double[] devArray = new double[stdDev.size()];
-        for (int i = 0; i < stdDev.size(); i++) devArray[i] = stdDev.get(i);
-
-        for (int i = 0; i < devArray.length; i++) {
-            stats.addValue(devArray[i]);
-        }
-
-        double devOfMetricType = stats.getStandardDeviation();
-        stats.clear();
-
-        return devOfMetricType;
+        return meanArray;
     }
 
     /**
@@ -183,12 +140,8 @@ public class ModeltypeOverview {
         statisticValues = new ArrayList<>();
 
         for (String name : metricTypeName) {
-
-            double mean = returnMean(name);
-            double stdDev = returnStdDev(name);
-
-            StatisticValues statValue = new StatisticValues(name, mean, stdDev);
-
+            double[] array = getArrayByMetricName(name);
+            StatisticValues statValue = new StatisticValues(name, array);
             statisticValues.add(statValue);
         }
     }

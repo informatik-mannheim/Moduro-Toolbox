@@ -37,7 +37,8 @@ public class StatisticValues {
 
     DescriptiveStatistics stats = new DescriptiveStatistics();
 
-    public StatisticValues(double[] array) {
+    public StatisticValues(String metricTypeName, double[] array) {
+        this.metricTypeName = metricTypeName;
 
         for (int i = 0; i < array.length; i++) {
             stats.addValue(array[i]);
@@ -51,13 +52,6 @@ public class StatisticValues {
         this.lastPercentile = stats.getPercentile(75);
         this.min = stats.getMin();
         this.max = stats.getMax();
-    }
-
-    public StatisticValues(String metricTypeName, double mean, double stdDev) {
-
-        this.metricTypeName = metricTypeName;
-        this.mean = mean;
-        this.stdDev = stdDev;
     }
 
     public String getMetricTypeName() {
