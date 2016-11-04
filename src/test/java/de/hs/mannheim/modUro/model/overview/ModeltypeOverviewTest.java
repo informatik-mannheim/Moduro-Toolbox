@@ -25,7 +25,9 @@ import java.util.List;
 
 /**
  * JUnit Test for ModeltypeOverviewTest.
- * Test data: 2nd project (Project2)-> 2nd Modeltype (PAS-IN-RA)-> first simulation (PAS-IN-RA_cc3d_12_04_2014_11_03_08)
+ * Test data: 2nd project (Project2)->
+ * 2nd Modeltype (PAS-IN-RA)->
+ * first simulation (PAS-IN-RA_cc3d_12_04_2014_11_03_08)
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */

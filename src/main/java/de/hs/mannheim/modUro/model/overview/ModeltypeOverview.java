@@ -158,7 +158,7 @@ public class ModeltypeOverview {
         for (Simulation simulation : modelType.getSimulations()) {
             for (MetricType metricTypeItem : simulation.getMetricTypes()) {
                 if (metricTypeItem.getName().equals(name)) {
-                    stdDev.add(metricTypeItem.getDeviation());
+                    stdDev.add(metricTypeItem.getMean());
                 }
             }
         }

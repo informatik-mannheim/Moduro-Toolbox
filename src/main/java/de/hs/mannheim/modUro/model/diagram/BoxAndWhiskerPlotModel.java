@@ -30,41 +30,43 @@ import java.util.Map;
  */
 public class BoxAndWhiskerPlotModel {
 
-    Project project;
+    private Project project;
 
-    List<String> modelTypeName;
-    Map<String, StatisticValues> statisticValues;
+    private List<String> modelTypeName;
+    private Map<String, StatisticValues> statisticValues;
 
     public BoxAndWhiskerPlotModel(Project project) {
         this.project = project;
-        modelTypeName = new ArrayList<>();
+        modelTypeName = new ArrayList<>(); // TODO ???
         modelTypeName = listModelTypeName();
         statisticValues = new HashMap<>();
-
         calculateStatValues();
     }
 
     private void calculateStatValues() {
         List<Double> meanOfSimulations = new ArrayList<>();
 
-        for (String value : modelTypeName) {
+        for (String modelName : modelTypeName) {
             for (ModelType modelTypeItem : project.getModelTypeList()) {
-                if (modelTypeItem.getName().equals(value)) {
+                if (modelTypeItem.getName().equals(modelName)) {
                     for (Simulation simulationItem : modelTypeItem.getSimulations()) {
                         List<MetricType> metricType = simulationItem.getMetricTypes();
                         double mean = 0.0;
                         for (MetricType metricTypeItem : metricType) {
-                            if (metricTypeItem.getName().contains("Plot")) {
+                            if (metricTypeItem.getName().contains("FitnessVolume")) {
                                 mean = metricTypeItem.getMean();
                             }
                         }
                         meanOfSimulations.add(mean);
                     }
                     double[] meanArrayOfMeans = new double[meanOfSimulations.size()];
-                    for (int i = 0; i < meanOfSimulations.size(); i++) meanArrayOfMeans[i] = meanOfSimulations.get(i);
+                    for (int i = 0; i < meanOfSimulations.size(); i++) {
+                        meanArrayOfMeans[i] = meanOfSimulations.get(i);
+                    }
 
                     StatisticValues stat = new StatisticValues(meanArrayOfMeans);
-                    statisticValues.put(value, stat);
+                    statisticValues.put(modelName, stat);
+                    meanOfSimulations.clear();
                 }
             }
         }

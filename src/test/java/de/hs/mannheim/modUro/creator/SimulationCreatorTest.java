@@ -92,7 +92,8 @@ public class SimulationCreatorTest {
     public void startTimeMissingInSecondModelTypeFirstSimulation() {
         LocalDateTime dateTime = LocalDateTime.now();
 
-        Assert.assertEquals("Starttime of Simulation should be '" + dateTime + "' and not: " + simulation1.getStartTime(), dateTime, simulation1.getStartTime());
+        Assert.assertEquals("Starttime of Simulation should be '" + dateTime + "' and not: " + simulation1.getStartTime(),
+                dateTime, simulation1.getStartTime());
     }
 
     @Test
