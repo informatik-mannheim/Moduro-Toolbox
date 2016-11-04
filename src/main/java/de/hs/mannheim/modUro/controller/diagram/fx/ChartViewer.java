@@ -391,7 +391,7 @@ public class ChartViewer extends Control implements Skinnable,
                 " \\begin{axis}[\n" +
                 " " + ytick + ",\n" +
                 " " + ytickslabels + ",\n " +
-                " height=.4*\\textwidth,\n" +
+                " height=.3*\\textheight,\n" +
                 " xmin=0, xmax=1.0, width=.9*\\textwidth,\n" +
                 " xtick={0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1},\n" +
                 " xticklabels={0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1}\n" +
@@ -413,8 +413,7 @@ public class ChartViewer extends Control implements Skinnable,
             pos++;
         }
         s = s + " \\end{axis}\n" +
-                "\\end{tikzpicture}\n" +
-                "\\caption{\\label{ComparisonBoxPlot} " + enn + "}";
+                "\\end{tikzpicture}\n";
         System.out.println(s);
     }
 

@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.controller.diagram;
 
+import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.ModelType;
@@ -129,12 +130,12 @@ public class ModeltypeDiagramController extends DiagramController {
         int right = 0;
 
         for (String val : name) {
-            if (val.equals("FitnessArrangement")) {
-                left = name.indexOf("FitnessArrangement");
+            if (val.equals(FitnessName.ARRANGEMENT_FITNESS.getName())) {
+                left = name.indexOf(FitnessName.ARRANGEMENT_FITNESS.getName());
             }
 
-            if (val.equals("FitnessVolume")) {
-                right = name.indexOf("FitnessVolume");
+            if (val.equals(FitnessName.VOLUME_FITNESS.getName())) {
+                right = name.indexOf(FitnessName.VOLUME_FITNESS.getName());
             }
         }
 

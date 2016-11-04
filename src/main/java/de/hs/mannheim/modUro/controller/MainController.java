@@ -263,13 +263,14 @@ public class MainController {
 
                 //treeitem: simulation
                 for (Simulation simulationItem : modelTypeItem.getSimulations()) {
-                    if (simulationItem.getSimulationName().contains(modelTypeItem.getName())) { //category check of simulation to its modeltype
+                    // TODO check why this is there:
+                    // if (simulationItem.getSimulationName().contains(modelTypeItem.getName())) { //category check of simulation to its modeltype
                         if (simulationItem.isAborted()) {
                             simulation = makeBranchWithIcon(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
                         } else {
                             simulation = makeBranch(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
                         }
-                    }
+                    // }
                 }
             }
         }

@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model.overview;
 
+import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.model.MainModel;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Project;
@@ -51,7 +52,7 @@ public class ModeltypeOverview2Test {
         double shouldStdev = 0.186456332;
         double isStdev = 0;
         for (StatisticValues sv : modeltypeOverview.getStatisticValues()) {
-            if(sv.getMetricTypeName().equals("FitnessVolume")) {
+            if (sv.getMetricTypeName().equals(FitnessName.VOLUME_FITNESS.getName())) {
                 isMean = sv.getMean();
                 isStdev = sv.getStdDev();
             }

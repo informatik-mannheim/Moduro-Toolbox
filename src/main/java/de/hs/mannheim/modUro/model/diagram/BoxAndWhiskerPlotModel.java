@@ -16,6 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.model.diagram;
 
 
+import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.model.*;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class BoxAndWhiskerPlotModel {
                 List<MetricType> metricType = simulationItem.getMetricTypes();
                 double mean = 0.0;
                 for (MetricType metricTypeItem : metricType) {
-                    if (metricTypeItem.getName().contains("FitnessTotal")) {
+                    if (metricTypeItem.getName().contains(FitnessName.TOTAL_FITNESS.getName())) {
                         mean = metricTypeItem.getMean();
                     }
                 }

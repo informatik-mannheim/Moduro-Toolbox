@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model.overview;
 
+import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.model.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -85,9 +86,9 @@ public class SimulationOverviewTest {
     @Test
     public void listOfMetricTypesInSimulation() {
         List<String> metricTypeList = new ArrayList<String>() {{
-            add("FitnessArrangement");
-            add("FitnessVolume");
-            add("FitnessTotal");
+            add(FitnessName.ARRANGEMENT_FITNESS.getName());
+            add(FitnessName.VOLUME_FITNESS.getName());
+            add(FitnessName.TOTAL_FITNESS.getName());
         }};
 
         Assert.assertEquals("Simulation should have other MetricType names.", metricTypeList, simulationOverview.getMetricTypesName());
@@ -154,7 +155,7 @@ public class SimulationOverviewTest {
         double shouldStdev = 0.268832719; // According to excel.
         double isStdev = 0;
         for (MetricType sim : simulation.getMetricTypes()) {
-            if (sim.getName().contains("FitnessVolume")) {
+            if (sim.getName().contains(FitnessName.VOLUME_FITNESS.getName())) {
                 isAvg = sim.getMean();
                 isStdev = sim.getDeviation();
             }

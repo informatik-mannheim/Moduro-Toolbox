@@ -205,17 +205,17 @@ public class SimulationCreator {
     private MetricType calcTotalFitness(List<MetricType> metricTypeList) {
         MetricType vol = null, arr = null;
         for (MetricType metric : metricTypeList) {
-            if (metric.getName().equals("FitnessVolume")) {
+            if (metric.getName().equals(FitnessName.VOLUME_FITNESS.getName())) {
                 vol = metric;
             }
-            if (metric.getName().equals("FitnessArrangement")) {
+            if (metric.getName().equals(FitnessName.ARRANGEMENT_FITNESS.getName())) {
                 arr = metric;
             }
         }
         if (vol == null || arr == null) {
             return null; // No total fitness possible!
         }
-        String name = "FitnessTotal";
+        String name = FitnessName.TOTAL_FITNESS.getName();
         int size = Math.min(vol.getMetricData().length, arr.getMetricData().length);
         double[][] metricData = new double[size][2];
         for (int i = 0; i < metricData.length; i++) {

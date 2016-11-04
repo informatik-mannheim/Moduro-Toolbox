@@ -35,7 +35,7 @@ public class StatisticValues {
     private double min;
     private double max;
 
-    DescriptiveStatistics stats = new DescriptiveStatistics();
+    private DescriptiveStatistics stats = new DescriptiveStatistics();
 
     public StatisticValues(String metricTypeName, double[] array) {
         this.metricTypeName = metricTypeName;
