@@ -28,6 +28,7 @@ import java.util.stream.Stream;
  * Class for BoxAndWhiskerPlotModel.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
+ * @auhor Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class BoxAndWhiskerPlotModel {
 
@@ -38,7 +39,6 @@ public class BoxAndWhiskerPlotModel {
 
     public BoxAndWhiskerPlotModel(Project project) {
         this.project = project;
-        modelTypeName = new ArrayList<>(); // TODO ???
         modelTypeName = listModelTypeName();
         statisticValues = new HashMap<>();
         calculateStatValues();
@@ -52,7 +52,7 @@ public class BoxAndWhiskerPlotModel {
                 List<MetricType> metricType = simulationItem.getMetricTypes();
                 double mean = 0.0;
                 for (MetricType metricTypeItem : metricType) {
-                    if (metricTypeItem.getName().contains("FitnessVolume")) {
+                    if (metricTypeItem.getName().contains("FitnessTotal")) {
                         mean = metricTypeItem.getMean();
                     }
                 }

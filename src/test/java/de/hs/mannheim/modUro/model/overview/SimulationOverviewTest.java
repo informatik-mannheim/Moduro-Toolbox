@@ -86,8 +86,8 @@ public class SimulationOverviewTest {
     public void listOfMetricTypesInSimulation() {
         List<String> metricTypeList = new ArrayList<String>() {{
             add("FitnessArrangement");
-            add("FitnessPlot");
             add("FitnessVolume");
+            add("FitnessTotal");
         }};
 
         Assert.assertEquals("Simulation should have other MetricType names.", metricTypeList, simulationOverview.getMetricTypesName());

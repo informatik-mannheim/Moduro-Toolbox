@@ -18,6 +18,7 @@ package de.hs.mannheim.modUro.creator;
 import de.hs.mannheim.modUro.config.*;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -183,7 +184,8 @@ public class SimulationCreator {
         File[] txtFiles = dir.listFiles(
                 (parent, name) ->
                         (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) &&
-                                !name.equals(FileName.PARAMETER_DUMP.getName()))
+                                !name.equals(FileName.PARAMETER_DUMP.getName()) &&
+                                !name.equals("FitnessPlot.dat")) // TODO
         );
         List<MetricType> metricTypeList = new ArrayList<>();
 
@@ -192,7 +194,43 @@ public class SimulationCreator {
             metricTypeCreator.createMetricType();
             metricTypeList.add(metricTypeCreator.getMetricType());
         }
+        // Now calculate the total fitness:
+        MetricType total = calcTotalFitness(metricTypeList);
+        if (total != null) {
+            metricTypeList.add(total);
+        }
         return metricTypeList;
+    }
+
+    private MetricType calcTotalFitness(List<MetricType> metricTypeList) {
+        MetricType vol = null, arr = null;
+        for (MetricType metric : metricTypeList) {
+            if (metric.getName().equals("FitnessVolume")) {
+                vol = metric;
+            }
+            if (metric.getName().equals("FitnessArrangement")) {
+                arr = metric;
+            }
+        }
+        if (vol == null || arr == null) {
+            return null; // No total fitness possible!
+        }
+        String name = "FitnessTotal";
+        int size = Math.min(vol.getMetricData().length, arr.getMetricData().length);
+        double[][] metricData = new double[size][2];
+        for (int i = 0; i < metricData.length; i++) {
+            metricData[i][0] = vol.getMetricData()[i][0];
+            metricData[i][1] = (vol.getMetricData()[i][1] +
+                    arr.getMetricData()[i][1]) / 2;
+        }
+
+        DescriptiveStatistics stats = new DescriptiveStatistics();
+        for (int i = 0; i < metricData.length; i++) {
+            stats.addValue(metricData[i][1]);
+        }
+        double mean = stats.getMean();
+        double deviation = stats.getStandardDeviation();
+        return new MetricType(name, metricData, mean, deviation);
     }
 
     /**
