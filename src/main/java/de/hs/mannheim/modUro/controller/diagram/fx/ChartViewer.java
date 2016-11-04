@@ -44,7 +44,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import de.hs.mannheim.modUro.MainApp;
+import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
+import de.hs.mannheim.modUro.model.StatisticValues;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
@@ -96,13 +102,20 @@ public class ChartViewer extends Control implements Skinnable,
      */
     private transient List<ChartMouseListenerFX> chartMouseListeners;
 
+    // TODO make it generic:
+    private BoxAndWhiskerPlotController controller;
+
     /**
      * Creates a new viewer to display the supplied chart in JavaFX.
      *
      * @param chart the chart ({@code null} not permitted).
      */
     public ChartViewer(JFreeChart chart) {
-        this(chart, true);
+        this(chart, true, null);
+    }
+
+    public ChartViewer(JFreeChart chart, BoxAndWhiskerPlotController c) {
+        this(chart, true, c);
     }
 
     /**
@@ -111,7 +124,9 @@ public class ChartViewer extends Control implements Skinnable,
      * @param chart              the chart ({@code null} not permitted).
      * @param contextMenuEnabled enable the context menu?
      */
-    public ChartViewer(JFreeChart chart, boolean contextMenuEnabled) {
+    public ChartViewer(JFreeChart chart, boolean contextMenuEnabled,
+                       BoxAndWhiskerPlotController c) {
+        controller = c;
         ParamChecks.nullNotPermitted(chart, "chart");
         this.chart = chart;
         getStyleClass().add("chart-control");
@@ -259,7 +274,7 @@ public class ChartViewer extends Control implements Skinnable,
         });
         export.getItems().add(jpegItem);
 
-        MenuItem tikzItem = new MenuItem("TIKZ ...");
+        MenuItem tikzItem = new MenuItem("Tikz ...");
         tikzItem.setOnAction((ActionEvent e) -> {
             handleExportToTikz();
         });
@@ -352,10 +367,55 @@ public class ChartViewer extends Control implements Skinnable,
     }
 
     /**
-     * A handler for the export to Tkiz option in the context menu.
+     * A handler for the export to Tikz option in the context menu.
      */
     private void handleExportToTikz() {
         //TODO implementation
+        Map<String, StatisticValues> stats = controller.stats;
+        Set<String> sModels = stats.keySet();
+        String ytickslabels = "yticklabels={" +
+                sModels.stream().map(Object::toString)
+                        .collect(Collectors.joining(", ")) +
+                "}";
+        List<String> yticksl = new ArrayList<>();
+        for (int i = 2; i <= sModels.size() + 1; i++) {
+            yticksl.add(i + "");
+        }
+        String ytick = "ytick={" +
+                yticksl.stream().map(Object::toString)
+                        .collect(Collectors.joining(", ")) +
+                "}";
+        String enn = "enn"; // ok.map(m = > m._1.toString + " = " + m._2.toString).mkString(", ")
+        String s = "% " + enn + "\n";
+        s = s + "\\begin{tikzpicture}\n" +
+                " \\begin{axis}[\n" +
+                " " + ytick + ",\n" +
+                " " + ytickslabels + ",\n " +
+                " height=.4*\\textwidth,\n" +
+                " xmin=0, xmax=1.0, width=.9*\\textwidth,\n" +
+                " xtick={0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1},\n" +
+                " xticklabels={0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1}\n" +
+                " ]\n";
+
+        int pos = 2;
+        for (String m : sModels) {
+            s = s +
+                    " \\addplot+[boxplot prepared={draw position=" + pos + ",\n" +
+                    "  lower whisker=" + stats.get(m).getMin() +
+                    ", lower quartile=" + stats.get(m).getFirstPercentile() + ",\n" +
+                    "  median=" + stats.get(m).getSecondPercentile() + ", upper quartile=" +
+                    stats.get(m).getLastPercentile() + ",\n" +
+                    "  upper whisker=" + stats.get(m).getMax() + ",\n" +
+                    "  every box/.style={draw=black},\n" +
+                    "  every whisker/.style={black},\n" +
+                    "  every median/.style={black}}]\n" +
+                    " coordinates {};\n";
+            pos++;
+        }
+        s = s + " \\end{axis}\n" +
+                "\\end{tikzpicture}\n" +
+                "\\caption{\\label{ComparisonBoxPlot} " + enn + "}";
+        System.out.println(s);
     }
 
     @Override

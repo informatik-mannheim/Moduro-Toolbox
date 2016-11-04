@@ -48,7 +48,7 @@ public class BoxAndWhiskerPlotController {
     private BorderPane boxWhiskerPane;
 
     private Set<String> models;
-    private Map<String, StatisticValues> stats;
+    public Map<String, StatisticValues> stats;
 
     public void init(Project project) {
         this.boxAndWhiskerPlotModel = new BoxAndWhiskerPlotModel(project);
@@ -77,7 +77,7 @@ public class BoxAndWhiskerPlotController {
                 true
         );
 
-        ChartViewer viewer = new ChartViewer(chart);
+        ChartViewer viewer = new ChartViewer(chart, this);
         boxWhiskerPane.setCenter(viewer);
     }
 
