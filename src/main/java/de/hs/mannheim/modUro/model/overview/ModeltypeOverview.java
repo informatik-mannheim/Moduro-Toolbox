@@ -21,7 +21,9 @@ import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class for Model Overview Model.
@@ -32,12 +34,12 @@ public class ModeltypeOverview {
 
     private ModelType modelType;
 
-    private List<String> metricTypeName;
+    private List<MetricType> metricTypes;
     private int numberOfSimulations;
     private int numberOfSteadyStateSimulation;
     private int numberOfAbortedSimulations;
     private int numberOfCompletedSimulations;
-    private List<StatisticValues> statisticValues;
+    private Map<String, StatisticValues> statisticValues;
 
     /**
      * Constructor.
@@ -46,8 +48,7 @@ public class ModeltypeOverview {
      */
     public ModeltypeOverview(ModelType modelType) {
         this.modelType = modelType;
-        metricTypeName = new ArrayList<>();
-        metricTypeName = listMetricTypeNames();
+        metricTypes = listMetricTypes();
         numberOfSimulations = modelType.getSimulations().size();
 
         countSteadyStateSimulation();
@@ -61,16 +62,16 @@ public class ModeltypeOverview {
      *
      * @return
      */
-    private List<String> listMetricTypeNames() {
-        List<String> metricTypeName = new ArrayList<>();
+    private List<MetricType> listMetricTypes() {
+        List<MetricType> metricTypes = new ArrayList<>();
         for (Simulation simulationItem : modelType.getSimulations()) {
             for (MetricType metricTypeItem : simulationItem.getMetricTypes()) {
-                if (!metricTypeName.contains(metricTypeItem.getName())) {
-                    metricTypeName.add(metricTypeItem.getName());
+                if (!metricTypes.contains(metricTypeItem)) {
+                    metricTypes.add(metricTypeItem);
                 }
             }
         }
-        return metricTypeName;
+        return metricTypes;
     }
 
     /**
@@ -113,23 +114,21 @@ public class ModeltypeOverview {
     }
 
     /**
-     * @param name
+     * @param metricType
      * @return
      */
-    private double[] getArrayByMetricName(String name) {
+    private double[] getArrayByMetricName(MetricType metricType) {
         List<Double> mean = new ArrayList<>();
 
         for (Simulation simulation : modelType.getSimulations()) {
             for (MetricType metricTypeItem : simulation.getMetricTypes()) {
-                if (metricTypeItem.getName().equals(name)) {
+                if (metricTypeItem.getName().equals(metricType.getName())) {
                     mean.add(metricTypeItem.getMean());
                 }
             }
         }
-
         double[] meanArray = new double[mean.size()];
         for (int i = 0; i < mean.size(); i++) meanArray[i] = mean.get(i);
-
         return meanArray;
     }
 
@@ -137,12 +136,13 @@ public class ModeltypeOverview {
      * Calculates statisticValues for each MetricType for LineDiagram.
      */
     private void calculateStatisticValues() {
-        statisticValues = new ArrayList<>();
+        statisticValues = new HashMap<>();
 
-        for (String name : metricTypeName) {
-            double[] array = getArrayByMetricName(name);
-            StatisticValues statValue = new StatisticValues(name, array);
-            statisticValues.add(statValue);
+        for (MetricType metricType : metricTypes) {
+            double[] array = getArrayByMetricName(metricType);
+            StatisticValues statValue =
+                    new StatisticValues(metricType.getName(), array);
+            statisticValues.put(metricType.getName(), statValue);
         }
     }
 
@@ -162,7 +162,7 @@ public class ModeltypeOverview {
         return numberOfCompletedSimulations;
     }
 
-    public List<StatisticValues> getStatisticValues() {
+    public Map<String, StatisticValues> getStatisticValues() {
         return statisticValues;
     }
 }

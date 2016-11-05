@@ -27,6 +27,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * ModeltypeOverviewController controls ModelOverviewView.
  *
@@ -52,7 +55,8 @@ public class ModeltypeOverviewController {
 
     public void init(ModelType modelType) {
         this.modeltypeOverview = new ModeltypeOverview(modelType);
-        metricData = FXCollections.observableArrayList(modeltypeOverview.getStatisticValues());
+        List<StatisticValues> l = new ArrayList(modeltypeOverview.getStatisticValues().values());
+        metricData = FXCollections.observableArrayList(l);
 
         setLabel();
         createTableData();

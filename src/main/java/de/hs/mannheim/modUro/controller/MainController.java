@@ -16,13 +16,16 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.controller;
 
 import de.hs.mannheim.modUro.MainApp;
+import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
 import de.hs.mannheim.modUro.controller.diagram.ModeltypeDiagramController;
 import de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController;
 import de.hs.mannheim.modUro.controller.overview.ModeltypeOverviewController;
 import de.hs.mannheim.modUro.controller.overview.ProjectOverviewController;
 import de.hs.mannheim.modUro.controller.overview.SimulationOverviewController;
+import de.hs.mannheim.modUro.fx.ModuroTreeItem;
 import de.hs.mannheim.modUro.model.*;
+import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,6 +34,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -128,7 +132,8 @@ public class MainController {
      *
      * @param path
      */
-    private void addViewToOverview(String path, TreeItem<String> selectedItem) {
+    private void addViewToOverview(String path, TreeItem<String> sItem) {
+        ModuroTreeItem selectedItem = (ModuroTreeItem) sItem;
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         try {
             overviewTab.setContent(loader.load()); //set FXML file to overviewTab.
@@ -136,45 +141,18 @@ public class MainController {
             if (loader.getController() instanceof ProjectOverviewController) {
                 //if controller is ProjectOverview, then load ProjectOverview FXML
                 projectOverviewController = loader.getController();
-                int indexOfProject = 0;  //index for selected project
-                for (Project project : projectData) {
-                    if (project.getName().equals(selectedItem.getValue())) {
-                        indexOfProject = projectData.indexOf(project);
-                    }
-                }
-                //load the overview with selected project.
-                projectOverviewController.init(projectData.get(indexOfProject));
+                projectOverviewController.init((Project) selectedItem.getObject());
             }
 
             if (loader.getController() instanceof SimulationOverviewController) {
                 //if controller is SimulationOverview, then load SimulationOverview FXML
                 simulationOverviewController = loader.getController();
-
-                //checking, which simulation is selected and load the simulation to the overview
-                for (Project project : projectData) {
-                    for (ModelType modelType : project.getModelTypeList()) {
-                        for (Simulation simulation : modelType.getSimulations()) {
-                            if (selectedItem.getValue().equals(simulation.getSimulationName())) {
-                                simulationOverviewController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)).getSimulations().get(modelType.getSimulations().indexOf(simulation)));
-                            }
-                        }
-                    }
-
-                }
+                simulationOverviewController.init((Simulation) selectedItem.getObject());
             }
 
             if (loader.getController() instanceof ModeltypeOverviewController) {
                 modeltypeOverviewController = loader.getController();
-
-                //checking, which modelType is selected and load the modelType to the overview
-                for (Project project : projectData) {
-                    for (ModelType modelType : project.getModelTypeList()) {
-                        if (selectedItem.getValue().equals(modelType.getName())) {
-                            modeltypeOverviewController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)));
-                        }
-                    }
-
-                }
+                modeltypeOverviewController.init((ModelType) selectedItem.getObject());
             }
 
         } catch (IOException e) {
@@ -187,7 +165,8 @@ public class MainController {
      *
      * @param path
      */
-    private void addViewToDiagram(String path, TreeItem<String> selectedItem) {
+    private void addViewToDiagram(String path, TreeItem<String> sItem) {
+        ModuroTreeItem selectedItem = (ModuroTreeItem) sItem;
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         try {
             diagramTab.setContent(loader.load()); //set FXML file to overviewTab.
@@ -195,46 +174,20 @@ public class MainController {
             if (loader.getController() instanceof BoxAndWhiskerPlotController) {
                 //if controller is BoxAndWhiskerPlot, then load BoxAndWhiskerPlot FXML
                 boxAndWhiskerPlotController = loader.getController();
-                int indexOfProject = 0;  //index for selected project
-                for (Project project : projectData) {
-                    if (project.getName().equals(selectedItem.getValue())) {
-                        indexOfProject = projectData.indexOf(project);
-                    }
-                }
-                //load the overview with selected project.
-                boxAndWhiskerPlotController.init(projectData.get(indexOfProject));
+                // Load the overview with selected project:
+                boxAndWhiskerPlotController.init((Project) selectedItem.getObject());
             }
 
             if (loader.getController() instanceof SimulationDiagramController) {
                 //if controller is SimulationDiagram, then load SimulationDiagram FXML
                 simulationDiagramController = loader.getController();
-
-                //checking, which simulation is selected and load the simulation to the overview
-                for (Project project : projectData) {
-                    for (ModelType modelType : project.getModelTypeList()) {
-                        for (Simulation simulation : modelType.getSimulations()) {
-                            if (selectedItem.getValue().equals(simulation.getSimulationName())) {
-                                simulationDiagramController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)).getSimulations().get(modelType.getSimulations().indexOf(simulation)));
-                            }
-                        }
-                    }
-                }
+                simulationDiagramController.init((Simulation) selectedItem.getObject());
             }
 
             if (loader.getController() instanceof ModeltypeDiagramController) {
                 modeltypeDiagramController = loader.getController();
-
-                //checking, which modelType is selected and load the modelType to the overview
-                for (Project project : projectData) {
-                    for (ModelType modelType : project.getModelTypeList()) {
-                        if (selectedItem.getValue().equals(modelType.getName())) {
-                            modeltypeDiagramController.init(projectData.get(projectData.indexOf(project)).getModelTypeList().get(project.getModelTypeList().indexOf(modelType)));
-                        }
-                    }
-
-                }
+                modeltypeDiagramController.init((ModelType) selectedItem.getObject());
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -244,62 +197,53 @@ public class MainController {
      * Creates ProjectTree with Project Data.
      */
     private void createTree() {
-        TreeItem<String> root = new TreeItem<String>("ProjectRoot");        //set root
+        ModuroTreeItem root = new ModuroTreeItem("ProjectRoot", null);        //set root
         root.setExpanded(true);                                             //root is expanded
         projectTree.setShowRoot(false);                                     //root is not shown, tree begins with first project
         this.projectTree.setRoot(root);
 
-        TreeItem<String> project;       //project: child of root
-        TreeItem<String> model;         //de.hs.mannheim.modUro.model: child of project
-        TreeItem<String> simulation;    //simulation: child of de.hs.mannheim.modUro.model
+        ModuroTreeItem project;       //project: child of root
+        ModuroTreeItem model;         //de.hs.mannheim.modUro.model: child of project
+        ModuroTreeItem simulation;    //simulation: child of de.hs.mannheim.modUro.model
 
         for (Project projectItem : projectData) {
             //treeitem: project
-            project = makeBranch(projectItem.getName(), root); //all project in the projectData will be set as child of the root
+            // All projects in the projectData will be set as child of the root:
+            project = makeBranch(projectItem.getName(), projectItem, root, null);
 
             //treeitem: modeltypes
             for (ModelType modelTypeItem : projectItem.getModelTypeList()) {
-                model = makeBranch(modelTypeItem.getName(), project);
+                // TODO Model item: add total fitness as info
+                ModeltypeOverview modeltypeOverview = new ModeltypeOverview(modelTypeItem);
+                double meanFitness = modeltypeOverview.getStatisticValues().
+                        get(FitnessName.TOTAL_FITNESS.getName()).getMean();
+                String meanFitnessS = String.format("%.2f", meanFitness);
+                String modelLabel = modelTypeItem.getName() + " (" + meanFitnessS + ")";
+                model = makeBranch(modelLabel, modelTypeItem, project, null);
 
                 //treeitem: simulation
                 for (Simulation simulationItem : modelTypeItem.getSimulations()) {
-                    // TODO check why this is there:
-                    // if (simulationItem.getSimulationName().contains(modelTypeItem.getName())) { //category check of simulation to its modeltype
-                        if (simulationItem.isAborted()) {
-                            simulation = makeBranchWithIcon(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
-                        } else {
-                            simulation = makeBranch(simulationItem.getSimulationName(), model); //simulation-title will be set as child of the de.hs.mannheim.modUro.model-root
-                        }
-                    // }
+                    Node node = null;
+                    if (simulationItem.isAborted()) {
+                        node = new ImageView(red);
+                    }
+                    simulation = makeBranch(simulationItem.getSimulationName(), simulationItem,
+                            model, node);
                 }
             }
         }
     }
 
     /**
-     * Makes a Branch.
+     * Makes a tree branch.
      *
      * @param title
      * @param parent
      * @return
      */
-    private TreeItem<String> makeBranch(String title, TreeItem<String> parent) {
-        TreeItem<String> item = new TreeItem<String>(title);
-        item.setExpanded(true);
-        parent.getChildren().add(item);
-        return item;
-    }
-
-    /**
-     * Makes a Branch with red Icon for aborted simulation.
-     *
-     * @param title
-     * @param parent
-     * @return
-     */
-    private TreeItem<String> makeBranchWithIcon(String title, TreeItem<String> parent) {
-
-        TreeItem<String> item = new TreeItem<String>(title, new ImageView(red));
+    private ModuroTreeItem makeBranch(String title, Object o,
+                                      TreeItem<String> parent, Node node) {
+        ModuroTreeItem item = new ModuroTreeItem(title, o, node);
         item.setExpanded(true);
         parent.getChildren().add(item);
         return item;
