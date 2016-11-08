@@ -18,14 +18,14 @@ package de.hs.mannheim.modUro.model;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 /**
- * Class for StaticticValues used in Box-Whisker-Plot.
+ * Class for statistical properties. Used among other things in Box-Whisker-Plot.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class StatisticValues {
 
-    private String metricTypeName;
+    private String name;
     private double mean;
     private double variance;
     private double stdDev;
@@ -37,8 +37,8 @@ public class StatisticValues {
 
     private DescriptiveStatistics stats = new DescriptiveStatistics();
 
-    public StatisticValues(String metricTypeName, double[] array) {
-        this.metricTypeName = metricTypeName;
+    public StatisticValues(String name, double[] array) {
+        this.name = name;
 
         for (int i = 0; i < array.length; i++) {
             stats.addValue(array[i]);
@@ -54,8 +54,8 @@ public class StatisticValues {
         this.max = stats.getMax();
     }
 
-    public String getMetricTypeName() {
-        return metricTypeName;
+    public String getName() {
+        return name;
     }
 
     public double getMean() {
@@ -96,5 +96,9 @@ public class StatisticValues {
 
     public String getStdDevAsString() {
         return String.format("%1$.2f", stdDev).toString();
+    }
+
+    public String toString() {
+        return name + ": " + getMeanAsString() + "+/-" + getStdDevAsString();
     }
 }

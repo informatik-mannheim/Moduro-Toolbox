@@ -79,13 +79,8 @@ public class SimulationOverviewController {
     @FXML
     private ImageView thirdImage;
 
-    private ObservableList<MetricType> metricData;
-
-
     public void init(Simulation simulation) {
         this.simulationOverview = new SimulationOverview(simulation);
-        metricData = FXCollections.observableArrayList(simulationOverview.getMetricTypes());
-
         setLabel();
         setImage();
         createTableContent();
@@ -132,19 +127,27 @@ public class SimulationOverviewController {
      * Creates table content.
      */
     private void createTableContent() {
+        ObservableList<MetricType> metricData =
+                FXCollections.observableArrayList(simulationOverview.getMetricTypes());
+
         TableColumn column1 = new TableColumn("MetricType");
         column1.setCellValueFactory(new PropertyValueFactory<MetricType, String>("name"));
+        //column1.setMinWidth(300.0);
 
         TableColumn column2 = new TableColumn("Mean");
         column2.setCellValueFactory(new PropertyValueFactory<MetricType, String>("meanAsString"));
+        //column2.setMinWidth(200.0);
 
         TableColumn column3 = new TableColumn("Standard Deviation");
         column3.setCellValueFactory(new PropertyValueFactory<MetricType, String>("deviationAsString"));
+        //column3.setMinWidth(200.0);
 
+        tableContent.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableContent.getColumns().clear();
-        tableContent.getColumns().setAll(column1, column2, column3);
+        tableContent.getColumns().addAll(column1, column2, column3);
         tableContent.setItems(metricData);
-        tableContent.setFixedCellSize(25);
+        // http://stackoverflow.com/questions/27945817/javafx-adapt-tableview-height-to-number-of-rows
+        tableContent.setFixedCellSize(30);
         tableContent.prefHeightProperty().bind(Bindings.size(tableContent.getItems()).multiply(tableContent.getFixedCellSize()).add(35));
     }
 

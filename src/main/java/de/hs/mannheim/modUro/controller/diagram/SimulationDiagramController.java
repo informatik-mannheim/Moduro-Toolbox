@@ -20,6 +20,7 @@ import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.diagram.SimulationDiagram;
+import de.hs.mannheim.modUro.reader.CellCycleStat;
 import de.hs.mannheim.modUro.reader.CelltimesReader;
 import de.hs.mannheim.modUro.reader.JCellCountDiagram;
 import de.hs.mannheim.modUro.reader.JCellcycletimeDiagram;
@@ -230,6 +231,11 @@ public class SimulationDiagramController extends DiagramController {
             // And this means cell cycle times.
             CelltimesReader ctr = simulation.getCellTimesReader();
             if (ctr != null) {
+                // TODO Q&D:
+                CellCycleStat stat =
+                        new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
+                System.out.println(stat);
+
                 JCellcycletimeDiagram ctd =
                         new JCellcycletimeDiagram(ctr.getCellTypes(), ctr.getCycletimes());
                 ChartViewer viewer = new ChartViewer(ctd.chart);

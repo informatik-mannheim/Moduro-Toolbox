@@ -93,7 +93,7 @@ public class ModeltypeOverviewTest {
         String mean = f.format(modeltypeOverview.getStatisticValues().get(1).getMean());
         String stdDev = f.format(modeltypeOverview.getStatisticValues().get(1).getStdDev());
 
-        Assert.assertEquals("Name of Metrictype should be 'FitnessPlot' and not: " + modeltypeOverview.getStatisticValues().get(1).getMetricTypeName(), "FitnessPlot", modeltypeOverview.getStatisticValues().get(1).getMetricTypeName());
+        Assert.assertEquals("Name of Metrictype should be 'FitnessPlot' and not: " + modeltypeOverview.getStatisticValues().get(1).getName(), "FitnessPlot", modeltypeOverview.getStatisticValues().get(1).getName());
         Assert.assertEquals("Mean of FitnessPlot should be '0,37' and not: " + mean, "0,38", mean);
         Assert.assertEquals("Standard Deviation of FitnessPlot should be '0,00' and not: " + stdDev, "0,00", stdDev);
     }
