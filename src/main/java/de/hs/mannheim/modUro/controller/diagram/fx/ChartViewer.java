@@ -40,32 +40,26 @@
 
 package de.hs.mannheim.modUro.controller.diagram.fx;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import de.hs.mannheim.modUro.MainApp;
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
+import de.hs.mannheim.modUro.controller.diagram.fx.interaction.ChartMouseEventFX;
+import de.hs.mannheim.modUro.controller.diagram.fx.interaction.ChartMouseListenerFX;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import javafx.event.ActionEvent;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Control;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Skinnable;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.JFreeChart;
-import de.hs.mannheim.modUro.controller.diagram.fx.interaction.ChartMouseEventFX;
-import de.hs.mannheim.modUro.controller.diagram.fx.interaction.ChartMouseListenerFX;
 import org.jfree.chart.util.ExportUtils;
 import org.jfree.chart.util.ParamChecks;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A control for displaying a {@link JFreeChart} in JavaFX (embeds a
@@ -370,15 +364,17 @@ public class ChartViewer extends Control implements Skinnable,
      * A handler for the export to Tikz option in the context menu.
      */
     private void handleExportToTikz() {
-        //TODO implementation
+        //TODO implementation is dependent of diagram content, not generic.
         Map<String, StatisticValues> stats = controller.stats;
-        Set<String> sModels = stats.keySet();
+        List<String> sortedModels = new ArrayList<>(stats.keySet());
+        //sortedModels.sort(String::compareTo);
+        sortedModels.sort((s1, s2) -> s2.compareTo(s1));
         String ytickslabels = "yticklabels={" +
-                sModels.stream().map(Object::toString)
+                sortedModels.stream().map(Object::toString)
                         .collect(Collectors.joining(", ")) +
                 "}";
         List<String> yticksl = new ArrayList<>();
-        for (int i = 2; i <= sModels.size() + 1; i++) {
+        for (int i = 2; i <= sortedModels.size() + 1; i++) {
             yticksl.add(i + "");
         }
         String ytick = "ytick={" +
@@ -398,7 +394,7 @@ public class ChartViewer extends Control implements Skinnable,
                 " ]\n";
 
         int pos = 2;
-        for (String m : sModels) {
+        for (String m : sortedModels) {
             s = s +
                     " \\addplot+[boxplot prepared={draw position=" + pos + ",\n" +
                     "  lower whisker=" + stats.get(m).getMin() +
