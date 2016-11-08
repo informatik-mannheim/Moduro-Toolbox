@@ -27,7 +27,6 @@ public class ModelType {
     private String name;
     private List<Simulation> simulations;
 
-
     public ModelType(String name, List<Simulation> simulations) {
         this.name = name;
         this.simulations = simulations;

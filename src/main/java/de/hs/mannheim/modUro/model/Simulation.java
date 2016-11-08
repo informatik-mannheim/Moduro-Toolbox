@@ -33,7 +33,7 @@ public class Simulation {
     private String modelType;               //modelType of this simulation
     private double duration;                //duration of this simulation
     private LocalDateTime startTime;        //starting time of this simulation
-    private List<MetricType> metricTypes;    //list of the metric types, which this simulation have
+    private List<StatisticValues> metricTypes;    //list of the metric types, which this simulation have
     private boolean isCompleted;            //simulation is done
     private boolean isAborted;              //simulation is cancelled
     private boolean isInSteadyState;        //simulation is in steadyState
@@ -52,13 +52,14 @@ public class Simulation {
      * @param dir
      * @param images
      */
-    public Simulation(/*int simulationID,*/ String simulationName, String modelType, double duration, LocalDateTime startTime, List<MetricType> metricTypes, boolean isCompleted, boolean isAborted, boolean isInSteadyState, File dir, List<File> images) {
+    public Simulation(/*int simulationID,*/ String simulationName, String modelType, double duration, LocalDateTime startTime, List<StatisticValues> metricTypes, boolean isCompleted, boolean isAborted, boolean isInSteadyState, File dir, List<File> images) {
         this.simulationID = simulationID;
         this.simulationName = simulationName;
         this.modelType = modelType;
         this.duration = duration;
         this.startTime = startTime;
         this.metricTypes = metricTypes;
+        this.metricTypes.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         this.isCompleted = isCompleted;
         this.isAborted = isAborted;
         this.isInSteadyState = isInSteadyState;
@@ -81,7 +82,7 @@ public class Simulation {
         return modelType;
     }
 
-    public List<MetricType> getMetricTypes() {
+    public List<StatisticValues> getMetricTypes() {
         return metricTypes;
     }
 

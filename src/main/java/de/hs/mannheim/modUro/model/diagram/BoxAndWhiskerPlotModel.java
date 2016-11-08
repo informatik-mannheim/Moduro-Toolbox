@@ -50,9 +50,9 @@ public class BoxAndWhiskerPlotModel {
         for (ModelType modelTypeItem : project.getModelTypeList()) {
             List<Double> meanOfSimulations = new ArrayList<>();
             for (Simulation simulationItem : modelTypeItem.getSimulations()) {
-                List<MetricType> metricType = simulationItem.getMetricTypes();
+                List<StatisticValues> metricType = simulationItem.getMetricTypes();
                 double mean = 0.0;
-                for (MetricType metricTypeItem : metricType) {
+                for (StatisticValues metricTypeItem : metricType) {
                     if (metricTypeItem.getName().contains(FitnessName.TOTAL_FITNESS.getName())) {
                         mean = metricTypeItem.getMean();
                     }

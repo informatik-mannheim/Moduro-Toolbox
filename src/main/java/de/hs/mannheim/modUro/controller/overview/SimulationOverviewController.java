@@ -17,6 +17,7 @@ package de.hs.mannheim.modUro.controller.overview;
 
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.overview.SimulationOverview;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -127,10 +128,10 @@ public class SimulationOverviewController {
      * Creates table content.
      */
     private void createTableContent() {
-        ObservableList<MetricType> metricData =
+        ObservableList<StatisticValues> metricData =
                 FXCollections.observableArrayList(simulationOverview.getMetricTypes());
 
-        TableColumn column1 = new TableColumn("MetricType");
+        TableColumn column1 = new TableColumn("Data Series");
         column1.setCellValueFactory(new PropertyValueFactory<MetricType, String>("name"));
         //column1.setMinWidth(300.0);
 
@@ -139,7 +140,7 @@ public class SimulationOverviewController {
         //column2.setMinWidth(200.0);
 
         TableColumn column3 = new TableColumn("Standard Deviation");
-        column3.setCellValueFactory(new PropertyValueFactory<MetricType, String>("deviationAsString"));
+        column3.setCellValueFactory(new PropertyValueFactory<MetricType, String>("stdDevAsString"));
         //column3.setMinWidth(200.0);
 
         tableContent.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

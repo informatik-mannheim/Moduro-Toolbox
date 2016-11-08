@@ -19,6 +19,7 @@ import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.SimulationDiagram;
 import de.hs.mannheim.modUro.reader.CellCycleStat;
 import de.hs.mannheim.modUro.reader.CelltimesReader;
@@ -171,7 +172,7 @@ public class SimulationDiagramController extends DiagramController {
 
     private List<String> choiceBoxMetrictypeNames() {
         List<String> name = new ArrayList<>();
-        for (MetricType metricTypeItem : simulationDiagram.getMetricTypes()) {
+        for (StatisticValues metricTypeItem : simulationDiagram.getMetricTypes()) {
             name.add(metricTypeItem.getName());
         }
         // Here we add - for now - the two generic diagram types:
@@ -244,7 +245,8 @@ public class SimulationDiagramController extends DiagramController {
                 // Cell count not available.
             }
         } else {
-            XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), simulationDiagram.getMetricTypes().get(selectedItemIndex).getMetricData());
+            double[][] data = ((MetricType) simulationDiagram.getMetricTypes().get(selectedItemIndex)).getMetricData();
+            XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), data);
             JFreeChart chart = createChart(dataset, simulationDiagram.getMetricTypes().get(selectedItemIndex).getName());
             ChartViewer viewer = new ChartViewer(chart);
             pane.setCenter(viewer);

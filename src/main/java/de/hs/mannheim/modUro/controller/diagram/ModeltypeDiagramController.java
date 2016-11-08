@@ -20,6 +20,7 @@ import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.ModeltypeDiagram;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -69,8 +70,8 @@ public class ModeltypeDiagramController extends DiagramController {
         } else {
             if (simulationContainsMetricType()) {
                 setChoiceBoxContent();
-                setLeftChartContent(modeltypeDiagram.getMetricTypeName().get(leftLastSelectedIndex));
-                setRightChartContent(modeltypeDiagram.getMetricTypeName().get(rightLastSelectedIndex));
+                setLeftChartContent(modeltypeDiagram.getMetricTypeNames().get(leftLastSelectedIndex));
+                setRightChartContent(modeltypeDiagram.getMetricTypeNames().get(rightLastSelectedIndex));
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -87,9 +88,9 @@ public class ModeltypeDiagramController extends DiagramController {
         leftMetricType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                setLeftChartContent(modeltypeDiagram.getMetricTypeName().get(newValue.intValue()));
+                setLeftChartContent(modeltypeDiagram.getMetricTypeNames().get(newValue.intValue()));
                 leftLastSelectedIndex = newValue.intValue();
-                leftLastSelectedMetrictypename = modeltypeDiagram.getMetricTypeName().get(leftLastSelectedIndex);
+                leftLastSelectedMetrictypename = modeltypeDiagram.getMetricTypeNames().get(leftLastSelectedIndex);
 
             }
         });
@@ -97,9 +98,9 @@ public class ModeltypeDiagramController extends DiagramController {
         rightMetricType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                setRightChartContent(modeltypeDiagram.getMetricTypeName().get(newValue.intValue()));
+                setRightChartContent(modeltypeDiagram.getMetricTypeNames().get(newValue.intValue()));
                 rightLastSelectedIndex = newValue.intValue();
-                rightLastSelectedMetrictypename = modeltypeDiagram.getMetricTypeName().get(rightLastSelectedIndex);
+                rightLastSelectedMetrictypename = modeltypeDiagram.getMetricTypeNames().get(rightLastSelectedIndex);
             }
         });
     }
@@ -111,7 +112,7 @@ public class ModeltypeDiagramController extends DiagramController {
      */
     private boolean simulationContainsMetricType() {
         boolean containsMetricType = false;
-        List<String> name = modeltypeDiagram.getMetricTypeName();
+        List<String> name = modeltypeDiagram.getMetricTypeNames();
 
         if (name.contains(leftLastSelectedMetrictypename) && name.contains(rightLastSelectedMetrictypename)) {
             containsMetricType = true;
@@ -124,7 +125,7 @@ public class ModeltypeDiagramController extends DiagramController {
      * Initializes Choicebox Content.
      */
     private void initializeChoiceboxContent() {
-        List<String> name = modeltypeDiagram.getMetricTypeName();
+        List<String> name = modeltypeDiagram.getMetricTypeNames();
 
         int left = 0;
         int right = 0;
@@ -159,7 +160,7 @@ public class ModeltypeDiagramController extends DiagramController {
      * Sets Content of Choicebox.
      */
     private void setChoiceBoxContent() {
-        List<String> name = modeltypeDiagram.getMetricTypeName();
+        List<String> name = modeltypeDiagram.getMetricTypeNames();
 
         leftMetricType.setItems(FXCollections.observableArrayList(name));
         rightMetricType.setItems(FXCollections.observableArrayList(name));
@@ -210,11 +211,12 @@ public class ModeltypeDiagramController extends DiagramController {
         for (Simulation simualtionItem : simulationList) {
             XYSeries xySerie = new XYSeries(simualtionItem.getSimulationName());
 
-            for (MetricType metricTypeItem : simualtionItem.getMetricTypes()) {
+            for (StatisticValues metricTypeItem : simualtionItem.getMetricTypes()) {
                 if (metricTypeItem.getName().equals(selectedItem)) {
                     double x;
                     double y;
-                    double[][] fitnessArray = metricTypeItem.getMetricData();
+                    double[][] fitnessArray =
+                            ((MetricType) metricTypeItem).getMetricData();
 
                     for (int i = 0; i < fitnessArray.length; i++) {
                         x = fitnessArray[i][0];

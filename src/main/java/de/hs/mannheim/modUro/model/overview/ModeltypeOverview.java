@@ -34,7 +34,7 @@ public class ModeltypeOverview {
 
     private ModelType modelType;
 
-    private List<MetricType> metricTypes;
+    private List<StatisticValues> metricTypes;
     private int numberOfSimulations;
     private int numberOfSteadyStateSimulation;
     private int numberOfAbortedSimulations;
@@ -62,15 +62,16 @@ public class ModeltypeOverview {
      *
      * @return
      */
-    private List<MetricType> listMetricTypes() {
-        List<MetricType> metricTypes = new ArrayList<>();
+    private List<StatisticValues> listMetricTypes() {
+        List<StatisticValues> metricTypes = new ArrayList<>();
         for (Simulation simulationItem : modelType.getSimulations()) {
-            for (MetricType metricTypeItem : simulationItem.getMetricTypes()) {
+            for (StatisticValues metricTypeItem : simulationItem.getMetricTypes()) {
                 if (!metricTypes.contains(metricTypeItem)) {
                     metricTypes.add(metricTypeItem);
                 }
             }
         }
+        metricTypes.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         return metricTypes;
     }
 
@@ -117,11 +118,11 @@ public class ModeltypeOverview {
      * @param metricType
      * @return
      */
-    private double[] getArrayByMetricName(MetricType metricType) {
+    private double[] getArrayByMetricName(StatisticValues metricType) {
         List<Double> mean = new ArrayList<>();
 
         for (Simulation simulation : modelType.getSimulations()) {
-            for (MetricType metricTypeItem : simulation.getMetricTypes()) {
+            for (StatisticValues metricTypeItem : simulation.getMetricTypes()) {
                 if (metricTypeItem.getName().equals(metricType.getName())) {
                     mean.add(metricTypeItem.getMean());
                 }
@@ -138,7 +139,7 @@ public class ModeltypeOverview {
     private void calculateStatisticValues() {
         statisticValues = new HashMap<>();
 
-        for (MetricType metricType : metricTypes) {
+        for (StatisticValues metricType : metricTypes) {
             double[] array = getArrayByMetricName(metricType);
             StatisticValues statValue =
                     new StatisticValues(metricType.getName(), array);

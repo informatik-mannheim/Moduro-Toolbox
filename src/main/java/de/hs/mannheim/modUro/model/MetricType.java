@@ -24,41 +24,24 @@ import java.util.Locale;
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class MetricType {
+public class MetricType extends StatisticValues {
 
-    private String name;
     private double[][] metricData;
-    private double mean;
-    private double deviation;
 
-    public MetricType(String name, double[][] metricData, double mean, double deviation) {
-        this.name = name;
+    public MetricType(String name, double[][] metricData) {
+        super(name, extractColumn(metricData, 1));
         this.metricData = metricData;
-        this.mean = mean;
-        this.deviation = deviation;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public double[][] getMetricData() {
         return metricData;
     }
 
-    public double getMean() {
-        return mean;
-    }
-
-    public double getDeviation() {
-        return deviation;
-    }
-
-    public String getMeanAsString() {
-        return String.format("%1$.2f", mean).toString();
-    }
-
-    public String getDeviationAsString() {
-        return String.format("%1$.2f", deviation).toString();
+    private static double[] extractColumn(double[][] data, int idx) {
+        double[] a = new double[data.length];
+        for (int i = 0; i < data.length; i++) {
+            a[i] = data[i][idx];
+        }
+        return a;
     }
 }

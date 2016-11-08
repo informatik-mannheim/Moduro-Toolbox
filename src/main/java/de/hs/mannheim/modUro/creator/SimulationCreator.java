@@ -16,9 +16,13 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.creator;
 
 import de.hs.mannheim.modUro.config.*;
+import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import de.hs.mannheim.modUro.model.StatisticValues;
+import de.hs.mannheim.modUro.reader.CellCycleStat;
+import de.hs.mannheim.modUro.reader.CelltimesReader;
+import de.hs.mannheim.modUro.reader.JCellcycletimeDiagram;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -179,7 +183,7 @@ public class SimulationCreator {
      *
      * @return
      */
-    private List<MetricType> createMetricTypeList() {
+    private List<StatisticValues> createDataSeriesList() {
         // This is how fitness files are detected:
         File[] txtFiles = dir.listFiles(
                 (parent, name) ->
@@ -187,29 +191,43 @@ public class SimulationCreator {
                                 !name.equals(FileName.PARAMETER_DUMP.getName()) &&
                                 !name.equals("FitnessPlot.dat")) // TODO
         );
-        List<MetricType> metricTypeList = new ArrayList<>();
+        List<StatisticValues> dataSeriesList = new ArrayList<>();
 
         for (File file : txtFiles) {
             metricTypeCreator.setFile(file);
             metricTypeCreator.createMetricType();
-            metricTypeList.add(metricTypeCreator.getMetricType());
+            dataSeriesList.add(metricTypeCreator.getMetricType());
         }
         // Now calculate the total fitness:
-        MetricType total = calcTotalFitness(metricTypeList);
+        MetricType total = calcTotalFitness(dataSeriesList);
         if (total != null) {
-            metricTypeList.add(total);
+            dataSeriesList.add(total);
         }
-        return metricTypeList;
+        // Now calc other metrices:
+        // And this means cell cycle times.
+        try {
+            String file = dir.getAbsolutePath().toString() + "/Celltimes.daz";
+            CelltimesReader ctr = new CelltimesReader(file, 0.5, 2.0);
+            // TODO Q&D:
+            CellCycleStat ccstats =
+                    new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
+            for (String cellType : ccstats.getCellTypes()) {
+                dataSeriesList.add(ccstats.getStatValues(cellType));
+            }
+        } catch (Exception e) {
+            // No cell times.
+        }
+        return dataSeriesList;
     }
 
-    private MetricType calcTotalFitness(List<MetricType> metricTypeList) {
+    private MetricType calcTotalFitness(List<StatisticValues> dataSeriesList) {
         MetricType vol = null, arr = null;
-        for (MetricType metric : metricTypeList) {
-            if (metric.getName().equals(FitnessName.VOLUME_FITNESS.getName())) {
-                vol = metric;
+        for (StatisticValues data : dataSeriesList) {
+            if (data.getName().equals(FitnessName.VOLUME_FITNESS.getName())) {
+                vol = (MetricType) data;
             }
-            if (metric.getName().equals(FitnessName.ARRANGEMENT_FITNESS.getName())) {
-                arr = metric;
+            if (data.getName().equals(FitnessName.ARRANGEMENT_FITNESS.getName())) {
+                arr = (MetricType) data;
             }
         }
         if (vol == null || arr == null) {
@@ -223,14 +241,7 @@ public class SimulationCreator {
             metricData[i][1] = (vol.getMetricData()[i][1] +
                     arr.getMetricData()[i][1]) / 2;
         }
-
-        DescriptiveStatistics stats = new DescriptiveStatistics();
-        for (int i = 0; i < metricData.length; i++) {
-            stats.addValue(metricData[i][1]);
-        }
-        double mean = stats.getMean();
-        double deviation = stats.getStandardDeviation();
-        return new MetricType(name, metricData, mean, deviation);
+        return new MetricType(name, metricData);
     }
 
     /**
@@ -323,7 +334,7 @@ public class SimulationCreator {
                 createModelTypeName(),
                 calculateDuration(),
                 createTime(),
-                createMetricTypeList(),
+                createDataSeriesList(),
                 isCompleted(),
                 isAborted(),
                 isInSteadyState(),

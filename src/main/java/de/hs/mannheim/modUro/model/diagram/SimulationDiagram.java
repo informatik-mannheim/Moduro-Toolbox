@@ -17,8 +17,10 @@ package de.hs.mannheim.modUro.model.diagram;
 
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.model.StatisticValues;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class for SimulationDiagram Model.
@@ -34,9 +36,11 @@ public class SimulationDiagram {
 
     public SimulationDiagram(Simulation simulation) {
         this.simulation = simulation;
-        metricTypes = simulation.getMetricTypes();
+        metricTypes = simulation.getMetricTypes().stream().
+                filter(e -> e instanceof MetricType).
+                map(e -> (MetricType) e).collect(Collectors.toList());
+        metricTypes.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         simulationName = simulation.getSimulationName();
-
     }
 
     public List<MetricType> getMetricTypes() {

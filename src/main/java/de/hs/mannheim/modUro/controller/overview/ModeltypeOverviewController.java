@@ -56,6 +56,7 @@ public class ModeltypeOverviewController {
     public void init(ModelType modelType) {
         this.modeltypeOverview = new ModeltypeOverview(modelType);
         List<StatisticValues> l = new ArrayList(modeltypeOverview.getStatisticValues().values());
+        l.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         metricData = FXCollections.observableArrayList(l);
 
         setLabel();
@@ -77,7 +78,7 @@ public class ModeltypeOverviewController {
      */
     private void createTableData() {
 
-        TableColumn column1 = new TableColumn("MetricType");
+        TableColumn column1 = new TableColumn("Data Series");
         column1.setCellValueFactory(new PropertyValueFactory<StatisticValues, String>("name"));
 
         TableColumn column2 = new TableColumn("Mean");

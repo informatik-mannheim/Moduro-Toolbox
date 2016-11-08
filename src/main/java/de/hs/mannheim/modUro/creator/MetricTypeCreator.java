@@ -92,42 +92,11 @@ public class MetricTypeCreator {
     }
 
     /**
-     * Calculates mean of metric data.
-     *
-     * @return
-     */
-    private double calculateMean() {
-        // Add the data from the array
-        for (int i = 0; i < metricData.length; i++) {
-            stats.addValue(metricData[i][1]);
-        }
-        double mean = stats.getMean();
-        stats.clear();
-        return mean;
-    }
-
-    /**
-     * Calculates deviation of metric data.
-     *
-     * @return
-     */
-    private double calculateDeviation() {
-        // Add the data from the array
-        for (int i = 0; i < metricData.length; i++) {
-            stats.addValue(metricData[i][1]);
-        }
-        double stdDev = stats.getStandardDeviation();
-        stats.clear();
-        return stdDev;
-    }
-
-    /**
      * Creates a MetricType Instance.
      */
     public void createMetricType() {
         readMetricDataFromFile();
-        this.metricType = new MetricType(nameOfMetricType(),
-                metricData, calculateMean(), calculateDeviation());
+        this.metricType = new MetricType(nameOfMetricType(), metricData);
     }
 
     public File getFile() {

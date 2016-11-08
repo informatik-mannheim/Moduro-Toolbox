@@ -98,7 +98,7 @@ public class SimulationCreatorTest {
 
     @Test
     public void countMetricTypeOfSimulation() {
-        Assert.assertEquals("Simulation should have '3' MetricTypes and not: " + simulation.getMetricTypes().size(), 3, simulation.getMetricTypes().size());
+        Assert.assertEquals("Simulation should have '3' MetricTypes and not: " + simulation.getMetricTypes().size(), 7, simulation.getMetricTypes().size());
     }
 
     @Test
