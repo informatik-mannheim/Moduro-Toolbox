@@ -26,6 +26,7 @@ import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.BoxAndWhiskerToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
@@ -33,6 +34,7 @@ import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * BoxAndWhiskerPlotController controls BoxAndWhiskerView.
@@ -48,14 +50,12 @@ public class BoxAndWhiskerPlotController {
     private BorderPane boxWhiskerPane;
 
     private Set<String> models;
-    private Map<String, StatisticValues> stats;
+    public Map<String, StatisticValues> stats;
 
     public void init(Project project) {
         this.boxAndWhiskerPlotModel = new BoxAndWhiskerPlotModel(project);
         models = new HashSet<>(boxAndWhiskerPlotModel.getModelTypeName());
-        stats = new HashMap<>();
         stats = boxAndWhiskerPlotModel.getStatisticValues();
-
         boxWhiskerPlot();
     }
 
@@ -66,11 +66,15 @@ public class BoxAndWhiskerPlotController {
         BoxAndWhiskerCategoryDataset dataset = createDataset();
         CategoryAxis xAxis = new CategoryAxis("Model");
         NumberAxis yAxis = new NumberAxis("Fitness");
+        yAxis.setRange(0.0, 1.0);
 
         BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
         renderer.setFillBox(false);
+        renderer.setMaximumBarWidth(0.2);
+        renderer.setItemMargin(0.5);
         renderer.setToolTipGenerator(new BoxAndWhiskerToolTipGenerator());
         CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis, renderer);
+        plot.setOrientation(PlotOrientation.HORIZONTAL);
 
         final JFreeChart chart = new JFreeChart(
                 "Model comparison",
@@ -78,8 +82,9 @@ public class BoxAndWhiskerPlotController {
                 plot,
                 true
         );
+        chart.removeLegend();
 
-        ChartViewer viewer = new ChartViewer(chart);
+        ChartViewer viewer = new ChartViewer(chart, this);
         boxWhiskerPane.setCenter(viewer);
     }
 
@@ -90,12 +95,16 @@ public class BoxAndWhiskerPlotController {
      */
     private BoxAndWhiskerCategoryDataset createDataset() {
 
-        DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
+        DefaultBoxAndWhiskerCategoryDataset dataset =
+                new DefaultBoxAndWhiskerCategoryDataset();
 
-        for (String model : models) {
+        List<String> sortedModels = new ArrayList<>(models);
+        sortedModels.sort(String::compareTo);
+        for (String model : sortedModels) {
             StatisticValues stat = stats.get(model);
             BoxAndWhiskerItem item = new BoxAndWhiskerItem(stat.getMean(), stat.getSecondPercentile(), stat.getFirstPercentile(), stat.getLastPercentile(), stat.getMin(), stat.getMax(), stat.getMin(), stat.getMax(), new ArrayList<>());
-            dataset.add(item, model, model);
+            // Second parameter is the row key (?), using always the same works:
+            dataset.add(item, "", model);
         }
         return dataset;
     }

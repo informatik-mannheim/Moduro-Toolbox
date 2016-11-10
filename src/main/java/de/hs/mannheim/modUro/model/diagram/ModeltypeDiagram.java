@@ -18,6 +18,7 @@ package de.hs.mannheim.modUro.model.diagram;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.model.StatisticValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ModeltypeDiagram {
 
     private ModelType modelType;
 
-    private List<String> metricTypeName;
+    private List<String> metricTypeNames;
     private List<Simulation> simulationList;
 
     public ModeltypeDiagram(ModelType modelType) {
@@ -46,21 +47,23 @@ public class ModeltypeDiagram {
      * Creates a list of all MetricTypes in Modeltype.
      */
     private void createMetricTypeNameList() {
-        metricTypeName = new ArrayList<>();
+        metricTypeNames = new ArrayList<>();
 
         for (Simulation simulationItem : modelType.getSimulations()) {
-            for (MetricType metricTypeItem : simulationItem.getMetricType()) {
-
-                if (!metricTypeName.contains(metricTypeItem.getName())) {
-                    metricTypeName.add(metricTypeItem.getName());
+            for (StatisticValues sv : simulationItem.getMetricTypes()) {
+                if (sv instanceof MetricType) {
+                    MetricType metricType = (MetricType) sv;
+                    if (!metricTypeNames.contains(metricType.getName())) {
+                        metricTypeNames.add(metricType.getName());
+                    }
                 }
-
             }
         }
+        metricTypeNames.sort(String::compareTo);
     }
 
-    public List<String> getMetricTypeName() {
-        return metricTypeName;
+    public List<String> getMetricTypeNames() {
+        return metricTypeNames;
     }
 
     public List<Simulation> getSimulationList() {

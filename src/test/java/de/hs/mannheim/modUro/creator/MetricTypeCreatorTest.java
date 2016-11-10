@@ -47,7 +47,7 @@ public class MetricTypeCreatorTest {
         project = projectList.get(0);
         modelType = project.getModelTypeList().get(0);
         simulation = modelType.getSimulations().get(0);
-        metricType = simulation.getMetricType().get(0);
+        metricType = (MetricType) simulation.getMetricTypes().get(4);
     }
 
     @Test
@@ -73,6 +73,6 @@ public class MetricTypeCreatorTest {
 
     @Test
     public void stdDevOfSimulation() {
-        Assert.assertEquals("Standard deviation of simulation should be '1.7320508075688772' and not: " + metricType.getDeviation(), 1.7320508075688772, metricType.getDeviation(), DELTA);
+        Assert.assertEquals("Standard deviation of simulation should be '1.7320508075688772' and not: " + metricType.getStdDev(), 1.7320508075688772, metricType.getStdDev(), DELTA);
     }
 }

@@ -81,7 +81,8 @@ public class ProjectOverviewTest {
         //PAS-IN-DAE_cc3d_01_15_2015_12_46_01 -> toTime:4.5  => notCompleted
         //PAS-IN-RA_cc3d_12_04_2014_11_03_08  -> toTime:702.0 => completed
 
-        Assert.assertEquals("Project should have '1' completed simulations and not: " + projectOverview.getNumberOfCompletedSimulations(), 1, projectOverview.getNumberOfCompletedSimulations());
+        Assert.assertEquals("Project should have '1' completed simulations and not: " + projectOverview.getNumberOfCompletedSimulations(),
+                1, projectOverview.getNumberOfCompletedSimulations());
     }
 
     @Test

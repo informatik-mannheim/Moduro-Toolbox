@@ -16,59 +16,55 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.model.diagram;
 
 
+import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Class for BoxAndWhiskerPlotModel.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
+ * @auhor Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class BoxAndWhiskerPlotModel {
 
-    Project project;
+    private Project project;
 
-    List<String> modelTypeName;
-    Map<String, StatisticValues> statisticValues;
+    private List<String> modelTypeName;
+    private Map<String, StatisticValues> statisticValues;
 
     public BoxAndWhiskerPlotModel(Project project) {
         this.project = project;
-        modelTypeName = new ArrayList<>();
         modelTypeName = listModelTypeName();
         statisticValues = new HashMap<>();
-
         calculateStatValues();
     }
 
     private void calculateStatValues() {
-        List<Double> meanOfSimulations = new ArrayList<>();
 
-        for (String value : modelTypeName) {
-            for (ModelType modelTypeItem : project.getModelTypeList()) {
-                if (modelTypeItem.getName().equals(value)) {
-                    for (Simulation simultionItem : modelTypeItem.getSimulations()) {
-                        List<MetricType> metricType = simultionItem.getMetricType();
-                        double mean = 0.0;
-                        for (MetricType metricTypeItem : metricType) {
-                            if (metricTypeItem.getName().contains("Plot")) {
-                                mean = metricTypeItem.getMean();
-
-                            }
-                        }
-                        meanOfSimulations.add(mean);
-
+        for (ModelType modelTypeItem : project.getModelTypeList()) {
+            List<Double> meanOfSimulations = new ArrayList<>();
+            for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+                List<StatisticValues> metricType = simulationItem.getMetricTypes();
+                double mean = 0.0;
+                for (StatisticValues metricTypeItem : metricType) {
+                    if (metricTypeItem.getName().contains(FitnessName.TOTAL_FITNESS.getName())) {
+                        mean = metricTypeItem.getMean();
                     }
-                    double[] meanArrayOfMeans = new double[meanOfSimulations.size()];
-                    for (int i = 0; i < meanOfSimulations.size(); i++) meanArrayOfMeans[i] = meanOfSimulations.get(i);
-
-                    StatisticValues stat = new StatisticValues(meanArrayOfMeans);
-                    statisticValues.put(value, stat);
                 }
+                meanOfSimulations.add(mean);
             }
+            Double[] a = meanOfSimulations.toArray(new Double[0]);
+            double[] meanArrayOfMeans = Stream.of(a).mapToDouble(Double::doubleValue).toArray();
+
+            StatisticValues stat =
+                    new StatisticValues(modelTypeItem.getName(), meanArrayOfMeans);
+            statisticValues.put(modelTypeItem.getName(), stat);
         }
     }
 

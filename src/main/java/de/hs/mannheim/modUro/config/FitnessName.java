@@ -20,16 +20,17 @@ package de.hs.mannheim.modUro.config;
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public enum FileName {
+public enum FitnessName {
     /**
-     * The default fitness file that is required in every simulation run.
+     * The overall fitness that is being calculated.
      */
-    DEFAULT_FITNESS_FILE("FitnessVolume.dat"),
-    PARAMETER_DUMP("ParameterDump.dat");
+    TOTAL_FITNESS("FitnessTotal"),
+    VOLUME_FITNESS("FitnessVolume"),
+    ARRANGEMENT_FITNESS("FitnessArrangement");
 
     private final String name;
 
-    FileName(String name) {
+    FitnessName(String name) {
         this.name = name;
     }
 

@@ -24,10 +24,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,12 +92,13 @@ public class SimulationCreatorTest {
     public void startTimeMissingInSecondModelTypeFirstSimulation() {
         LocalDateTime dateTime = LocalDateTime.now();
 
-        Assert.assertEquals("Starttime of Simulation should be '" + dateTime + "' and not: " + simulation1.getStartTime(), dateTime, simulation1.getStartTime());
+        Assert.assertEquals("Starttime of Simulation should be '" + dateTime + "' and not: " + simulation1.getStartTime(),
+                dateTime, simulation1.getStartTime());
     }
 
     @Test
     public void countMetricTypeOfSimulation() {
-        Assert.assertEquals("Simulation should have '3' MetricTypes and not: " + simulation.getMetricType().size(), 3, simulation.getMetricType().size());
+        Assert.assertEquals("Simulation should have '3' MetricTypes and not: " + simulation.getMetricTypes().size(), 7, simulation.getMetricTypes().size());
     }
 
     @Test

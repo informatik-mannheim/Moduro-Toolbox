@@ -27,6 +27,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * ModeltypeOverviewController controls ModelOverviewView.
  *
@@ -52,7 +55,9 @@ public class ModeltypeOverviewController {
 
     public void init(ModelType modelType) {
         this.modeltypeOverview = new ModeltypeOverview(modelType);
-        metricData = FXCollections.observableArrayList(modeltypeOverview.getStatisticValues());
+        List<StatisticValues> l = new ArrayList(modeltypeOverview.getStatisticValues().values());
+        l.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
+        metricData = FXCollections.observableArrayList(l);
 
         setLabel();
         createTableData();
@@ -73,8 +78,8 @@ public class ModeltypeOverviewController {
      */
     private void createTableData() {
 
-        TableColumn column1 = new TableColumn("MetricType");
-        column1.setCellValueFactory(new PropertyValueFactory<StatisticValues, String>("metricTypeName"));
+        TableColumn column1 = new TableColumn("Data Series");
+        column1.setCellValueFactory(new PropertyValueFactory<StatisticValues, String>("name"));
 
         TableColumn column2 = new TableColumn("Mean");
         column2.setCellValueFactory(new PropertyValueFactory<StatisticValues, Double>("meanAsString"));
@@ -82,9 +87,10 @@ public class ModeltypeOverviewController {
         TableColumn column3 = new TableColumn("Standard Deviation");
         column3.setCellValueFactory(new PropertyValueFactory<StatisticValues, Double>("stdDevAsString"));
 
+        metricDataTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         metricDataTable.getColumns().setAll(column1, column2, column3);
         metricDataTable.setItems(metricData);
-        metricDataTable.setFixedCellSize(25);
+        metricDataTable.setFixedCellSize(30);
         metricDataTable.prefHeightProperty().bind(Bindings.size(metricDataTable.getItems()).multiply(metricDataTable.getFixedCellSize()).add(35));
     }
 }

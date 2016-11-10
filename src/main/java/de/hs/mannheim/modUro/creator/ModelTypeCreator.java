@@ -70,8 +70,8 @@ public class ModelTypeCreator {
 
         SimulationCreator simulationCreator = new SimulationCreator();
         for (File file : fileList) {
-            if (file.isDirectory() && direcotryContainsTotalFitnessFile(file) && directoryContainsMetricDataFile(file)) {
-                simulationCreator.setFile(file);
+            if (file.isDirectory() && directoryContainsMetricDataFile(file)) {
+                simulationCreator.setDir(file);
                 simulationCreator.createSimulation();
                 simulationList.add(simulationCreator.getSimulation());
             }
@@ -80,24 +80,7 @@ public class ModelTypeCreator {
     }
 
     /**
-     * Checks if directory contains total fitness file
-     *
-     * @param file
-     * @return
-     */
-    private boolean direcotryContainsTotalFitnessFile(File file) {
-        boolean containsFitnessPlot = false;
-        File[] allFiles = file.listFiles();
-        for (File fileItem : allFiles) {
-            if (fileItem.getName().equals(FileName.TOTAL_FITNESS_FILE.getName())) {
-                containsFitnessPlot = true;
-            }
-        }
-        return containsFitnessPlot;
-    }
-
-    /**
-     * Checks if directory contains metric data file
+     * Checks if directory contains a parameter dump file
      *
      * @param file
      * @return
@@ -106,7 +89,7 @@ public class ModelTypeCreator {
         boolean containsFitnessPlot = false;
         File[] allFiles = file.listFiles();
         for (File fileItem : allFiles) {
-            if (fileItem.getName().equals(FileName.METRIC_DATA_FILE.getName())) {
+            if (fileItem.getName().equals(FileName.PARAMETER_DUMP.getName())) {
                 containsFitnessPlot = true;
             }
         }

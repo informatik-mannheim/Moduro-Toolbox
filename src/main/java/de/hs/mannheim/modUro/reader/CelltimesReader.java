@@ -131,9 +131,6 @@ public class CelltimesReader {
                 cellcountList.add(ce);
             }
         }
-
-        // System.out.println(time + ", " + op+ ", " + cellType);
-        // System.out.println(cellcount);
         switch (op) {
             case "+": {
                 cellTypes.add(cellType); // Remember this cell type.

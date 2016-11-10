@@ -15,12 +15,11 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model.overview;
 
-import de.hs.mannheim.modUro.model.MainModel;
-import de.hs.mannheim.modUro.model.ModelType;
-import de.hs.mannheim.modUro.model.Project;
-import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.config.FitnessName;
+import de.hs.mannheim.modUro.model.*;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -31,7 +30,9 @@ import java.util.List;
 
 /**
  * JUnit Test for SimulationOverviewTest.
- * Test data: 2nd project (Project2)-> 2nd Modeltype (PAS-IN-RA)-> first simulation (PAS-IN-RA_cc3d_12_04_2014_11_03_08)
+ * Test data: 2nd project (Project2)->
+ * 2nd Modeltype (PAS-IN-RA)->
+ * first simulation (PAS-IN-RA_cc3d_12_04_2014_11_03_08)
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
@@ -70,9 +71,8 @@ public class SimulationOverviewTest {
 
     @Test
     public void durationOfSimulation() {
-        //?????
-
-        Assert.assertEquals("Duration of simulation should be '702.0' and not: " + simulationOverview.getDuration(), 702.0, simulationOverview.getDuration(), DELTA);
+        Assert.assertEquals("Duration of simulation should be '702.0' and not: " + simulationOverview.getDuration(),
+                702.0, simulationOverview.getDuration(), DELTA);
     }
 
     @Test
@@ -85,11 +85,12 @@ public class SimulationOverviewTest {
     }
 
     @Test
+    @Ignore
     public void listOfMetricTypesInSimulation() {
         List<String> metricTypeList = new ArrayList<String>() {{
-            add("FitnessArrangement");
-            add("FitnessPlot");
-            add("FitnessVolume");
+            add(FitnessName.ARRANGEMENT_FITNESS.getName());
+            add(FitnessName.VOLUME_FITNESS.getName());
+            add(FitnessName.TOTAL_FITNESS.getName());
         }};
 
         Assert.assertEquals("Simulation should have other MetricType names.", metricTypeList, simulationOverview.getMetricTypesName());
@@ -146,5 +147,24 @@ public class SimulationOverviewTest {
         File file = new File("src/test/resources/Simulationdata/Projekt2/node1/PAS-IN-RA_cc3d_12_04_2014_11_03_08");
 
         Assert.assertEquals("Path of the Simulation should be " + file + " and not: " + simulationOverview.getDirectory(), file, simulationOverview.getDirectory());
+    }
+
+    @Test
+    public void statVolumeFitness() {
+        // See file src\test\resources\Simulationdata\Projekt2\node1\PAS-IN-RA_cc3d_12_04_2014_11_03_08\FitnessVolume.dat
+        double shouldAvg = 0.807011741; // According to excel.
+        double isAvg = 0;
+        double shouldStdev = 0.268832719; // According to excel.
+        double isStdev = 0;
+        for (StatisticValues sim : simulation.getMetricTypes()) {
+            if (sim.getName().contains(FitnessName.VOLUME_FITNESS.getName())) {
+                isAvg = sim.getMean();
+                isStdev = sim.getStdDev();
+            }
+        }
+        Assert.assertEquals("Mean volume fitness should be " + shouldAvg + " and not: " + isAvg,
+                shouldAvg, isAvg, 1E-8);
+        Assert.assertEquals("Stdev volume fitness should be " + shouldStdev + " and not: " + isStdev,
+                shouldStdev, isStdev, 1E-8);
     }
 }

@@ -15,10 +15,13 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.controller.diagram;
 
+import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.SimulationDiagram;
+import de.hs.mannheim.modUro.reader.CellCycleStat;
 import de.hs.mannheim.modUro.reader.CelltimesReader;
 import de.hs.mannheim.modUro.reader.JCellCountDiagram;
 import de.hs.mannheim.modUro.reader.JCellcycletimeDiagram;
@@ -142,12 +145,12 @@ public class SimulationDiagramController extends DiagramController {
         int right = 0;
 
         for (String val : name) {
-            if (val.equals("FitnessArrangement")) {
-                left = name.indexOf("FitnessArrangement");
+            if (val.equals(FitnessName.ARRANGEMENT_FITNESS.getName())) {
+                left = name.indexOf(FitnessName.ARRANGEMENT_FITNESS.getName());
             }
 
-            if (val.equals("FitnessVolume")) {
-                right = name.indexOf("FitnessVolume");
+            if (val.equals(FitnessName.VOLUME_FITNESS.getName())) {
+                right = name.indexOf(FitnessName.VOLUME_FITNESS.getName());
             }
         }
 
@@ -169,7 +172,7 @@ public class SimulationDiagramController extends DiagramController {
 
     private List<String> choiceBoxMetrictypeNames() {
         List<String> name = new ArrayList<>();
-        for (MetricType metricTypeItem : simulationDiagram.getMetricTypes()) {
+        for (StatisticValues metricTypeItem : simulationDiagram.getMetricTypes()) {
             name.add(metricTypeItem.getName());
         }
         // Here we add - for now - the two generic diagram types:
@@ -229,6 +232,11 @@ public class SimulationDiagramController extends DiagramController {
             // And this means cell cycle times.
             CelltimesReader ctr = simulation.getCellTimesReader();
             if (ctr != null) {
+                // TODO Q&D:
+                CellCycleStat stat =
+                        new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
+                System.out.println(stat);
+
                 JCellcycletimeDiagram ctd =
                         new JCellcycletimeDiagram(ctr.getCellTypes(), ctr.getCycletimes());
                 ChartViewer viewer = new ChartViewer(ctd.chart);
@@ -237,7 +245,8 @@ public class SimulationDiagramController extends DiagramController {
                 // Cell count not available.
             }
         } else {
-            XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), simulationDiagram.getMetricTypes().get(selectedItemIndex).getMetricData());
+            double[][] data = ((MetricType) simulationDiagram.getMetricTypes().get(selectedItemIndex)).getMetricData();
+            XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), data);
             JFreeChart chart = createChart(dataset, simulationDiagram.getMetricTypes().get(selectedItemIndex).getName());
             ChartViewer viewer = new ChartViewer(chart);
             pane.setCenter(viewer);
