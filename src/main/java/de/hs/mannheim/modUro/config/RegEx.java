@@ -22,12 +22,10 @@ package de.hs.mannheim.modUro.config;
  */
 public enum RegEx {
 
-    //RegEx for parse de.hs.mannheim.modUro.model type in dir; e.x. CM-IN-RA_cc3d_01_15_2015_15_21_21 --> CM-IN-RA
-    //Model_TYPE_NAME_SUFFIX("(([A-Z]{2,4}-?){2,})");
-
     // This suffix will be appended to the model-type directory of a node, to seperate the name of the model type
     // and additional data (e.g. timestamps and other stuff
-    Model_TYPE_NAME_SUFFIX("_");
+    Model_TYPE_NAME_SUFFIX_UNDERSCORE("_"),
+    Model_TYPE_NAME_SUFFIX_SCORE("-");
 
     private final String name;
 

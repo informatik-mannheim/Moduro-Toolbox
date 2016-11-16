@@ -151,7 +151,7 @@ public class ProjectCreator {
                 // and the count of directories it was able to convert into a name. If the count doesn't match
                 // the programm will crash. Feel free to improve.
 
-                String[] tokenValue = file.getName().split(RegEx.Model_TYPE_NAME_SUFFIX.getName());
+                String[] tokenValue = file.getName().split(RegEx.Model_TYPE_NAME_SUFFIX_UNDERSCORE.getName());
                 System.out.println("ModelType name is: "+ tokenValue[0]);
                 String name = tokenValue[0];
 

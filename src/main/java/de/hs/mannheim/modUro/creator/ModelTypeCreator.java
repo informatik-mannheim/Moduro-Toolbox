@@ -57,7 +57,7 @@ public class ModelTypeCreator {
         }
 
         // todo: kann man hier nicht den ModelTypeName direkt setzen?
-        return  fileList.get(0).getName().split(RegEx.Model_TYPE_NAME_SUFFIX.getName())[0];
+        return  fileList.get(0).getName().split(RegEx.Model_TYPE_NAME_SUFFIX_UNDERSCORE.getName())[0];
     }
 
     /**

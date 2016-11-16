@@ -16,15 +16,16 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.creator;
 
 import de.hs.mannheim.modUro.config.*;
-import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.reader.CellCycleStat;
 import de.hs.mannheim.modUro.reader.CelltimesReader;
-import de.hs.mannheim.modUro.reader.JCellcycletimeDiagram;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class SimulationCreator {
      */
     private String createModelTypeName() {
         String name;
-        String[] tokenValue = dir.getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
+        String[] tokenValue = dir.getName().split(RegEx.Model_TYPE_NAME_SUFFIX_UNDERSCORE.getName());
         name = tokenValue[0];
         return name;
     }

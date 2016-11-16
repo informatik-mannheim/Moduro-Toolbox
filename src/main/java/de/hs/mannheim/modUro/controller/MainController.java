@@ -27,9 +27,9 @@ import de.hs.mannheim.modUro.model.MainModel;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.Simulation;
-import de.hs.mannheim.modUro.optimizer.cmd.OptimizationProcessHelper;
+import de.hs.mannheim.modUro.optimizer.OptimizationParameterHandler;
+import de.hs.mannheim.modUro.optimizer.OptimizationProcessHelper;
 import de.hs.mannheim.modUro.fx.ModuroTreeItem;
-import de.hs.mannheim.modUro.model.*;
 import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -42,7 +42,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -384,9 +383,12 @@ public class MainController {
             public void handle(ActionEvent event) {
                 System.out.println("CC3D-path opens!");
                 //todo: if paramaters are set, open the cc3d-model path
-                OptimizationProcessHelper.receiveParameters();
-                //This happens in "receiveParameters"
-                //OptimizationProcessHelper.openModel();
+                try {
+                    OptimizationParameterHandler getOptInputParam = new OptimizationParameterHandler();
+                    getOptInputParam.receiveOptInputParametersFromGui();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -395,8 +397,8 @@ public class MainController {
         //add action
 
         // todo: move to config file. Don't use static strings as path config
+        //final String cc3dExecutionPath = ("CompuCell3D/compucell3d.bat");
         final String cc3dExecutionPath = "C:/Program Files (x86)/CompuCell3D/compucell3d.bat";
-        //final String cc3dExecutionCommandWindows = "cmd /C \"" + cc3dExecutionPath + "\"";
         startCc3dButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -407,7 +409,9 @@ public class MainController {
                     return;
                 }
                 System.out.println("CC3D path found. executing path " + cc3dExecutionPath);
-                    OptimizationProcessHelper.openCompuCell();
+                OptimizationProcessHelper optimizationProcessHelper = new OptimizationProcessHelper();
+                System.out.println("open CompuCell");
+                optimizationProcessHelper.openCompuCell();
             }
         });
 

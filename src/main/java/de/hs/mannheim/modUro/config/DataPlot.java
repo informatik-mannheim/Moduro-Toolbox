@@ -22,7 +22,7 @@ package de.hs.mannheim.modUro.config;
  */
 public enum DataPlot {
 
-    MIN_TIME(40.0),     //min Time of a simulation to be in steady state
+    MIN_TIME(50.0),     //min Time of a simulation to be in steady state
     MAX_TIME(700.0);    //max Time of a simulation to be done
 
     private final double value;
