@@ -23,14 +23,15 @@ import de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController;
 import de.hs.mannheim.modUro.controller.overview.ModeltypeOverviewController;
 import de.hs.mannheim.modUro.controller.overview.ProjectOverviewController;
 import de.hs.mannheim.modUro.controller.overview.SimulationOverviewController;
+import de.hs.mannheim.modUro.fx.ModuroTreeItem;
 import de.hs.mannheim.modUro.model.MainModel;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.Simulation;
-import de.hs.mannheim.modUro.optimizer.OptimizationParameterHandler;
-import de.hs.mannheim.modUro.optimizer.OptimizationProcessHelper;
-import de.hs.mannheim.modUro.fx.ModuroTreeItem;
 import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
+import de.hs.mannheim.modUro.optimizer.gui.OptimizationParameterHandler;
+import de.hs.mannheim.modUro.optimizer.compucell.process.CompuCellExecutionHelper;
+import de.hs.mannheim.modUro.optimizer.compucell.process.CompuCellExecutionHelperImpl;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -41,8 +42,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -396,22 +397,24 @@ public class MainController {
         grid.add(startCc3dButton, 1,2);
         //add action
 
-        // todo: move to config file. Don't use static strings as path config
-        //final String cc3dExecutionPath = ("CompuCell3D/compucell3d.bat");
-        final String cc3dExecutionPath = "C:/Program Files (x86)/CompuCell3D/compucell3d.bat";
         startCc3dButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Bin of cc3d: " +cc3dExecutionPath);
-                File targetPathFile = new File(cc3dExecutionPath);
-                System.out.println(targetPathFile.exists() ? "cc3d path found" : "cc3d path not found.Can't start cc3d");
-                if(!targetPathFile.exists()){
+                CompuCellExecutionHelper compuCellExecutionHelper = new CompuCellExecutionHelperImpl();
+                ProcessBuilder compuCellProcessBuilder = compuCellExecutionHelper.getCompuCellProcessBuilder();
+                if (compuCellProcessBuilder == null) {
+                    System.err.println("CompucellPRocessbuilder could not be created. Cc3d won't get started.");
                     return;
                 }
-                System.out.println("CC3D path found. executing path " + cc3dExecutionPath);
-                OptimizationProcessHelper optimizationProcessHelper = new OptimizationProcessHelper();
+                try {
+                    System.out.println("Starting CompuCell3D");
+                    compuCellProcessBuilder.inheritIO().start();
+                } catch (IOException e) {
+                    System.err.println(e.getMessage());
+                }
+
                 System.out.println("open CompuCell");
-                optimizationProcessHelper.openCompuCell();
+                //optimizationProcessHelper.openCompuCell();
             }
         });
 
