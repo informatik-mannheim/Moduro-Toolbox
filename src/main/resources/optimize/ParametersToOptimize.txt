@@ -1,0 +1,27 @@
+This file lists all Parameters which will be optimized on base of a ParameterDump.dat file which will
+be provided by CC3D after a Model has been executed.
+
+
+CellTypes are identified by fields "id" and "name". Depending on the name, the CellType will be optimized or not.
+Also the type of fields which will be optimized for each CellType will depend on the name of the CellType.
+
+
+
+ExecConfig: []
+
+SdBpaCdiInDa(Model):[adhEnergy,adhFactor]
+
+CellType ("Medium"): []
+
+CellType ("BasalMembrane"): []
+
+CellType ("Stem"): [growthVolumePerDay(double),necrosisProb(double),nutrientRequirement(double),surFit(double),volFit(double)]
+
+CellType ("Basal"): [growthVolumePerDay(double),necrosisProb(double),nutrientRequirement(double),surFit(double),volFit(double)]
+
+CellType ("Intermediate"): [growthVolumePerDay(double),necrosisProb(double),nutrientRequirement(double),surFit(double),volFit(double)]
+
+CellType ("Umbrella"): [growthVolumePerDay(double),necrosisProb(double),nutrientRequirement(double),surFit(double),volFit(double)]
+
+
+
