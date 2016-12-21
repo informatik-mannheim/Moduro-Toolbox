@@ -73,10 +73,7 @@ public class MainApp extends Application {
             //Load main layout from fxml file.
             System.out.println("loading main layout at: " + MAIN_LAYOUT_RESOURCE_PATH);
             URL mainLayoutResource = this.getClass().getResource(MAIN_LAYOUT_RESOURCE_PATH);
-            File mainLayoutResourceFile = new File(mainLayoutResource.getFile());
-            if (!mainLayoutResourceFile.exists() || !mainLayoutResourceFile.isFile()) {
-                throw new RuntimeException("Could not load mainLayout at " + MAIN_LAYOUT_RESOURCE_PATH);
-            }
+            System.out.println("mainLayoutResource.getFile returns: " + mainLayoutResource.getFile());
 
             FXMLLoader loader = new FXMLLoader();
             System.out.println("Setting location for mainLayout: " + mainLayoutResource.getFile());
