@@ -1,32 +1,218 @@
 package de.hs.mannheim.modUro.optimizer.conf.model;
 
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+
 public class ParameterDumpCellType implements ParameterDumpEntry {
 
+    @ParameterDumpValue(key = "apoptosisTimeInDays", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double apoptosisTimeInDays;
+
+    @ParameterDumpValue(key = "consumPerCell", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double consumPerCell;
 
-    // will be parsed only
+    @ParameterDumpValue(key = "descendants", type = ParameterDumpValue.ParameterDumpValueType.STRING)
     private String descendants;
 
+    @ParameterDumpValue(key = "divides", type = ParameterDumpValue.ParameterDumpValueType.BOOLEAN)
     private Boolean divides;
+
+    @ParameterDumpValue(key = "frozen", type = ParameterDumpValue.ParameterDumpValueType.BOOLEAN)
     private Boolean frozen;
+
+    @ParameterDumpValue(key = "growthVolumePerDay", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double growthVolumePerDay;
+
+    @ParameterDumpValue(key = "id", type = ParameterDumpValue.ParameterDumpValueType.INT)
     private Integer id;
+
+    @ParameterDumpValue(key = "maxDiameter", type = ParameterDumpValue.ParameterDumpValueType.INT)
     private Integer maxDiameter;
+
+    @ParameterDumpValue(key = "maxVol", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double maxVol;
+
+    @ParameterDumpValue(key = "minDiameter", type = ParameterDumpValue.ParameterDumpValueType.INT)
     private Integer minDiameter;
+
+    @ParameterDumpValue(key = "minVol", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double minVol;
-    private ParameterDumpCellTypeName parameterDumpCellTypeName;
+
+    @ParameterDumpValue(key = "name", type = ParameterDumpValue.ParameterDumpValueType.STRING)
+    private String name;
+
+    @ParameterDumpValue(key = "necrosisProb", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double necrosisProb;
+
+    @ParameterDumpValue(key = "nutrientRequirement", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double nutrientRequirement;
+    @ParameterDumpValue(key = "surFit", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double surFit;
+    @ParameterDumpValue(key = "volFit", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double volFit;
+
+    public ParameterDumpCellType(Map<String, String> parsedBlock) throws IllegalAccessException {
+        Field[] fieldsOfCellType = this.getClass().getDeclaredFields();
+        for (Field field : fieldsOfCellType) {
+            ParameterDumpValue parameterDumpValueAnnotation
+                    = field.getDeclaredAnnotation(ParameterDumpValue.class);
+            String hashmapKey = parameterDumpValueAnnotation.key();
+            String hashMapValue = parsedBlock.get(hashmapKey);
+            switch (parameterDumpValueAnnotation.type()) {
+                case BOOLEAN:
+                    field.set(this, Boolean.parseBoolean(hashMapValue));
+                    break;
+                case DOUBLE:
+                    field.set(this, Double.parseDouble(hashMapValue));
+                    break;
+                case INT:
+                    field.set(this, Integer.parseInt(hashMapValue));
+                    break;
+                case STRING:
+                    field.set(this, hashMapValue);
+                    break;
+                default:
+                    throw new IllegalStateException("Type is not allowed for field: " + field.getName());
+            }
+        }
+    }
 
     // todo: impl
     @Override
     public Boolean isComplete() {
-        return null;
+        throw new NotImplementedException();
+    }
+
+    public Double getApoptosisTimeInDays() {
+        return apoptosisTimeInDays;
+    }
+
+    public void setApoptosisTimeInDays(Double apoptosisTimeInDays) {
+        this.apoptosisTimeInDays = apoptosisTimeInDays;
+    }
+
+    public Double getConsumPerCell() {
+        return consumPerCell;
+    }
+
+    public void setConsumPerCell(Double consumPerCell) {
+        this.consumPerCell = consumPerCell;
+    }
+
+    public String getDescendants() {
+        return descendants;
+    }
+
+    public void setDescendants(String descendants) {
+        this.descendants = descendants;
+    }
+
+    public Boolean getDivides() {
+        return divides;
+    }
+
+    public void setDivides(Boolean divides) {
+        this.divides = divides;
+    }
+
+    public Boolean getFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(Boolean frozen) {
+        this.frozen = frozen;
+    }
+
+    public Double getGrowthVolumePerDay() {
+        return growthVolumePerDay;
+    }
+
+    public void setGrowthVolumePerDay(Double growthVolumePerDay) {
+        this.growthVolumePerDay = growthVolumePerDay;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getMaxDiameter() {
+        return maxDiameter;
+    }
+
+    public void setMaxDiameter(Integer maxDiameter) {
+        this.maxDiameter = maxDiameter;
+    }
+
+    public Double getMaxVol() {
+        return maxVol;
+    }
+
+    public void setMaxVol(Double maxVol) {
+        this.maxVol = maxVol;
+    }
+
+    public Integer getMinDiameter() {
+        return minDiameter;
+    }
+
+    public void setMinDiameter(Integer minDiameter) {
+        this.minDiameter = minDiameter;
+    }
+
+    public Double getMinVol() {
+        return minVol;
+    }
+
+    public void setMinVol(Double minVol) {
+        this.minVol = minVol;
+    }
+
+
+    public Double getNecrosisProb() {
+        return necrosisProb;
+    }
+
+    public void setNecrosisProb(Double necrosisProb) {
+        this.necrosisProb = necrosisProb;
+    }
+
+    public Double getNutrientRequirement() {
+        return nutrientRequirement;
+    }
+
+    public void setNutrientRequirement(Double nutrientRequirement) {
+        this.nutrientRequirement = nutrientRequirement;
+    }
+
+    public Double getSurFit() {
+        return surFit;
+    }
+
+    public void setSurFit(Double surFit) {
+        this.surFit = surFit;
+    }
+
+    public Double getVolFit() {
+        return volFit;
+    }
+
+    public void setVolFit(Double volFit) {
+        this.volFit = volFit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 

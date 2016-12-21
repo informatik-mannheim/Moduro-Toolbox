@@ -1,4 +1,10 @@
-package de.hs.mannheim.modUro.optimizer.conf;
+package de.hs.mannheim.modUro.optimizer.parameters;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import de.hs.mannheim.modUro.optimizer.conf.model.ParameterDump;
+import de.hs.mannheim.modUro.optimizer.conf.model.ParameterDumpCellType;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,91 +12,92 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 
-/**
- * Created by Station on 04.12.2016.
- */
-public class ParameterDumpReader {
 
-    static List<Double> doubleParams = new ArrayList<Double>();
-
-    public double[] parseParamDump() {
-        String paramDumpExample = "Foo:\nValue1: MeinWert1\nValue2:MeinWert2\n\nFoo2:\nValue1: MeinWert1\n";
-        // ubu
-        //String pathToParameterDumpFile = "/home/Station/Dokumente/ParameterDump.dat";
-        String pathToParameterDumpFile = "ParameterDump.dat";
-        ParameterDumpReader parameterDumpReader = new ParameterDumpReader();
-
-        // final List<String> strings = parameterDumpReader.readFile("/home/rolli/Dokumente/ParameterDump.txt");
-        parameterDumpReader.splitParameterDumpTest(pathToParameterDumpFile);
-        double[] doubleArrayToOptimize = new double[doubleParams.size()];
-        return doubleArrayToOptimize;
-
-    }
-
-
-    String paramDump = "Foo:\nValue1: MeinWert1\nValue2:MeinWert2\n\nFoo2:\nValue1: MeinWert1\n";
+public class ParameterDumpReaderImpl implements ParameterDumpReader {
     private final String KEY_VALUE_SEPERATOR_CHAR = ":";
     private final String KEY_ENTRIES_SEPERATOR_CHAR = "\n";
+    private final String PARAMETER_DUMP_PARSED_MASTER_KEY_KEY = "masterKey";
+    private final String BLOCK_TYPE_CELLTYPE_MASTER_KEY_VALUE = "CellType";
+    private final String BLOCK_TYPE_EXECCONFIG_MASTER_KEY_VALUE = "ExecConfig";
 
-    public void splitParamDumpTest() {
-        // erst mal alle leerzeichen raus
-        paramDump = paramDump.trim();
+    private final Integer CONDITION_NUMBER_OF_CELLTYPES = 6;
 
-        final String[] paramDumpSplitByNewLine = paramDump.split(KEY_ENTRIES_SEPERATOR_CHAR);
-        // jetzt ist jede Spalte für sich im array
-        printParamEntries(paramDumpSplitByNewLine);
+    @Override
+    public ParameterDump parseParamDump(File parameterDumpFile) {
+        Collection<Map<String, String>> parameterDumpBlockCollection = getParameterDumpBlocks(parameterDumpFile);
+        System.out.println("Number of Blocks for parameterDump file: " + parameterDumpBlockCollection.size());
 
-        printSeperatingLine();
-        // iterieren über jede Spalte und nachsehen, was drin steht
-        for (String s : paramDumpSplitByNewLine) {
-            final String[] keyValueSplit = s.split(":");
-            System.out.println(
-                    "[" + keyValueSplit[0] + "]" + " hat " + (keyValueSplit.length > 1 ? "einen" : "keinen") + " wert");
+        Collection<Map<String, String>> cellTypeBlocks = Collections2.filter(
+                parameterDumpBlockCollection, new Predicate<Map<String, String>>() {
+                    @Override
+                    public boolean apply(Map<String, String> parameterDumpBlockMap) {
+                        if (!parameterDumpBlockMap.keySet().contains(PARAMETER_DUMP_PARSED_MASTER_KEY_KEY)) {
+                            throw new RuntimeException("Missing key 'masterkey' in ParameterDump Block: ");
+                        }
 
-            if (isMasterKey(keyValueSplit)) {
-                System.out.println("[" + keyValueSplit[0] + "] ist ein master key");
+                        String masterKeyValue = parameterDumpBlockMap.get(PARAMETER_DUMP_PARSED_MASTER_KEY_KEY);
+                        return StringUtils.equalsIgnoreCase(BLOCK_TYPE_CELLTYPE_MASTER_KEY_VALUE, masterKeyValue);
+                    }
+                });
 
-                // todo: hier- alles was danach kommt, bis zur leerzeile gehört zusammen
-                Map<String, String> masterKeyHashmap = new HashMap<String, String>();
-                masterKeyHashmap.put("masterKey", keyValueSplit[0]);
-
-            }
-
+        System.out.println("Count of CellTypes found in ParameterDump: " + cellTypeBlocks.size());
+        if (cellTypeBlocks.size() != CONDITION_NUMBER_OF_CELLTYPES) {
+            throw new RuntimeException("Count of CellTypes does not match " + CONDITION_NUMBER_OF_CELLTYPES);
         }
 
+        System.out.println("Deserializing CellTypes");
+        Collection<ParameterDumpCellType> deSerializedCellTypes = new ArrayList<>();
+
+        for (Map<String, String> cellTypeBlock : cellTypeBlocks) {
+            try {
+                ParameterDumpCellType cellType = new ParameterDumpCellType(cellTypeBlock);
+                System.out.println("deserialized cellType");
+                deSerializedCellTypes.add(cellType);
+            } catch (IllegalAccessException e) {
+                System.err.println("Could not Convert CellType properly. aborting");
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        }
+
+        System.out.println("deserialized all Celltypes");
+
+        ParameterDump parameterDumpResult = new ParameterDump();
+        parameterDumpResult.setParameterDumpCellTypeList(deSerializedCellTypes);
+        System.err.println("currently only celltypes are supported for parsing / deserializing.");
+        // TODO: add execonfig and model-data etc.
+        return parameterDumpResult;
     }
 
-    public void splitParameterDumpTest(String pathToParameterDumpDatFile) {
 
-        final List<String> parameterDumpLinesCollection = readFile(pathToParameterDumpDatFile);
-
-        if (parameterDumpLinesCollection.size() == 0) {
-            System.err.println("No valid parameterdump.dat input could be loaded. aborting");
-            return;
+    private Collection<Map<String, String>> getParameterDumpBlocks(File parameterDumpDatFile) {
+        System.out.println("splitting ParameterDump file.");
+        if (parameterDumpDatFile == null || !parameterDumpDatFile.exists()) {
+            throw new RuntimeException("Could not load ParameterDump file at: " + parameterDumpDatFile);
         }
 
-        // hier eine convertierung zu string array, weil zuvor immer mit einem array gearbeitet wurde. Bitte glatt ziehen (am besten array in der
-        // readfile zurückgeben)
+        final List<String> parameterDumpLinesCollection = readParameterDumpFile(parameterDumpDatFile.getPath());
+        System.out.println(String.format("ParameterDump: {}", StringUtils.join(parameterDumpLinesCollection, ";")));
+        if (parameterDumpLinesCollection.size() == 0) {
+            System.err.println("No valid parameterdump.dat input could be loaded. aborting");
+            return null;
+        }
 
         String[] parameterDumpLines = parameterDumpLinesCollection.toArray(new String[]{});
-
-        // die files.readlines methode hat bereits alle lines in eine Liste gehauen. darum kein aufruf mehr von
-        // "getparameterlines"
-
-        printParamEntries(parameterDumpLines);
+        //printParamEntries(parameterDumpLines);
         System.out.println("getting indices of mainKey which introduce datablocks");
         final Collection<Integer> indicesOfParentEntries = getParameterDumpParentEntriesIndices(parameterDumpLines);
-
+        System.out.println(String.format("Indices of ParentElements: %s", indicesOfParentEntries.toString()));
+        Collection<Map<String, String>> parameterDumpParsedBlocksCollection = new ArrayList<>();
         for (Integer parentEntryIndice : indicesOfParentEntries) {
             System.out.println("getting all parameters which belong to entry: " + parameterDumpLines[parentEntryIndice]);
             final Collection<String> parameterDumpDataBlock = getParameterDumpEntriesForBlock(parentEntryIndice,
                     parameterDumpLines);
-            printParamEntries(parameterDumpDataBlock);
+            // printParamEntries(parameterDumpDataBlock);
             final Map<String, String> parameterDumpDataBlockHashMap = convertParameterDumpBlockToHashmap(
                     parameterDumpDataBlock);
-            printParamEntries(parameterDumpDataBlockHashMap);
+            parameterDumpParsedBlocksCollection.add(parameterDumpDataBlockHashMap);
         }
-
+        return parameterDumpParsedBlocksCollection;
     }
 
     private void printParamEntries(String[] entries) {
@@ -130,12 +137,11 @@ public class ParameterDumpReader {
     /**
      * returns a collection of Integer which represent indices. each indice represents an line in the parameterDump.dat
      * array, which indicates the begin of a so called "block".
-     *
+     * <p>
      * A block is a collection of parameters which represent an object that will be used to configure cc3d. e.g.
      * "CellType" or "ExecConfig"
      *
      * @param parameterDumpLines
-     *
      * @return collection of indices which represents the beginning of a data block of the parameterDumpBlock
      */
     public Collection<Integer> getParameterDumpParentEntriesIndices(String[] parameterDumpLines) {
@@ -170,7 +176,7 @@ public class ParameterDumpReader {
         if (indexOfMainKey == null || indexOfMainKey < 0 || indexOfMainKey > parameterDumpLines.length - 1) {
             System.err.println("could not extract parameters from entrie block, since given index is not valid: [" +
                     indexOfMainKey + "]. length of parameterDumpLines is " + parameterDumpLines.length);
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
 
         Collection<String> mainKeyValues = new ArrayList<String>();
@@ -214,17 +220,6 @@ public class ParameterDumpReader {
             keyValuePairResults.put(keyValuePair[0].trim(), keyValuePair[1].trim());
         }
         System.out.println("hashmap contains " + keyValuePairResults.size() + " elements");
-
-        for(Map.Entry<String, String> hashmapIterator: keyValuePairResults.entrySet()){
-            if(hashmapIterator.getKey().contains("volFit")){
-                double paramEntry = Double.parseDouble(hashmapIterator.getValue());
-                //now put this double to an arraylist
-                doubleParams.add(paramEntry);
-            }
-            System.out.println("Key " + hashmapIterator.getKey());
-            System.out.println("Value " + hashmapIterator.getValue());
-        }
-
         return keyValuePairResults;
     }
 
@@ -232,7 +227,7 @@ public class ParameterDumpReader {
         System.out.println("#############################################################");
     }
 
-    public List<String> readFile(String filename) {
+    public List<String> readParameterDumpFile(String filename) {
         List<String> result = new ArrayList<>();
         File file = new File(filename);
         if (!file.exists() || file.isDirectory()) {

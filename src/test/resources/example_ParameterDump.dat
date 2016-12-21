@@ -1,0 +1,143 @@
+startTime: 2016-11-16 23:54:09.068000
+ExecConfig:
+MCSperDay: 500
+SEED: 5500
+boundary_x: Periodic
+debugOutputFrequency: 50000
+dimensions: 2
+flip2DimRatio: 0.5
+fluctuationAmplitude: 10.0
+initNutrientDiffusion: False
+latticeSizeInVoxel: 48000
+maxSteps: 360000
+neighborOrder: 1
+sampleIntervalInDays: 0.5
+sampleIntervalInMCS: 250
+simDurationDays: 720
+voxelDensity: 0.8
+xDimension: 400
+xLength: 500
+yDimension: 120
+yLength: 150
+zDimension: 1
+zLength: 0
+
+SdBpaCdiInDa:
+adhEnergy: 2.0
+adhFactor: 0.25
+cellID: 1
+cellLifeCycleLogger: <Logger.CellLifeCycleLogger.CellLifeCycleLogger object at 0x04830850>
+energyMatrix: [[0, 14, 14, 14, 14, 4], [0, -1, 1, 3, 12, 12], [0, 0, 6, 4, 8, 14], [0, 0, 0, 5, 8, 12], [0, 0, 0, 0, 6, 4], [0, 0, 0, 0, 0, 2]]
+name: SdBpaCdiInDa
+necrosisProbBasal: 8e-06
+necrosisProbIntermediate: 3e-05
+necrosisProbStem: 0.0
+necrosisProbUmbrella: 3.5e-05
+
+CellType:
+apoptosisTimeInDays: 0
+consumPerCell: 0.003
+descendants: []
+divides: False
+frozen: True
+growthVolumePerDay: 0
+id: 0
+maxDiameter: 0
+maxVol: 0.0
+minDiameter: 0
+minVol: 0.0
+name: Medium
+necrosisProb: 0.0
+nutrientRequirement: 0
+surFit: 1.0
+volFit: 1.0
+
+CellType:
+apoptosisTimeInDays: 180000
+consumPerCell: 0.003
+descendants: []
+divides: False
+frozen: True
+growthVolumePerDay: 0
+id: 1
+maxDiameter: 0
+maxVol: 0.0
+minDiameter: 0
+minVol: 0.0
+name: BasalMembrane
+necrosisProb: 0.0
+nutrientRequirement: 0
+surFit: 1.0
+volFit: 1.0
+
+CellType:
+apoptosisTimeInDays: 180000
+consumPerCell: 0.003
+descendants: [[1.0, [2, 3]]]
+divides: True
+frozen: False
+growthVolumePerDay: 68.0678408278
+id: 2
+maxDiameter: 10
+maxVol: 523.598775598
+minDiameter: 8
+minVol: 268.082573106
+name: Stem
+necrosisProb: 0.0
+nutrientRequirement: 1.0
+surFit: 0.5
+volFit: 0.9
+
+CellType:
+apoptosisTimeInDays: 180000.0
+consumPerCell: 0.003
+descendants: [[0.96, [3, 4]], [0.02, [3, 3]], [0.02, [4, 4]]]
+divides: True
+frozen: False
+growthVolumePerDay: 62.8318530718
+id: 3
+maxDiameter: 10
+maxVol: 523.598775598
+minDiameter: 9
+minVol: 381.703507411
+name: Basal
+necrosisProb: 8e-06
+nutrientRequirement: 1.0
+surFit: 0.5
+volFit: 0.9
+
+CellType:
+apoptosisTimeInDays: 180000.0
+consumPerCell: 0.003
+descendants: []
+divides: False
+frozen: False
+growthVolumePerDay: 194.386045441
+id: 4
+maxDiameter: 15
+maxVol: 1767.14586764
+minDiameter: 12
+minVol: 904.778684234
+name: Intermediate
+necrosisProb: 3e-05
+nutrientRequirement: 1.0
+surFit: 0.1
+volFit: 0.9
+
+CellType:
+apoptosisTimeInDays: 180000.0
+consumPerCell: 0.003
+descendants: []
+divides: False
+frozen: False
+growthVolumePerDay: 359.136400183
+id: 5
+maxDiameter: 19
+maxVol: 3591.36400183
+minDiameter: 15
+minVol: 1767.14586764
+name: Umbrella
+necrosisProb: 3.5e-05
+nutrientRequirement: 1.0
+surFit: 0.1
+volFit: 0.9
