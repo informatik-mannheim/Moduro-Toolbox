@@ -24,10 +24,7 @@ import de.hs.mannheim.modUro.controller.overview.ModeltypeOverviewController;
 import de.hs.mannheim.modUro.controller.overview.ProjectOverviewController;
 import de.hs.mannheim.modUro.controller.overview.SimulationOverviewController;
 import de.hs.mannheim.modUro.fx.ModuroTreeItem;
-import de.hs.mannheim.modUro.model.MainModel;
-import de.hs.mannheim.modUro.model.ModelType;
-import de.hs.mannheim.modUro.model.Project;
-import de.hs.mannheim.modUro.model.Simulation;
+import de.hs.mannheim.modUro.model.*;
 import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
 import de.hs.mannheim.modUro.optimizer.gui.OptimizationParameterHandler;
 import de.hs.mannheim.modUro.optimizer.compucell.process.CompuCellExecutionHelper;
@@ -53,9 +50,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Controller controls the MainLayout.
@@ -209,6 +208,7 @@ public class MainController {
      * Creates ProjectTree with Project Data.
      */
     private void createTree() {
+        System.out.println("Creating Tree...");
         ModuroTreeItem root = new ModuroTreeItem("ProjectRoot", null);        //set root
         root.setExpanded(true);                                             //root is expanded
         projectTree.setShowRoot(false);                                     //root is not shown, tree begins with first project
@@ -219,16 +219,34 @@ public class MainController {
         ModuroTreeItem simulation;    //simulation: child of de.hs.mannheim.modUro.model
 
         for (Project projectItem : projectData) {
+            System.out.println("Iterating project " + projectItem.getName());
+
             //treeitem: project
             // All projects in the projectData will be set as child of the root:
             project = makeBranch(projectItem.getName(), projectItem, root, null);
 
             //treeitem: modeltypes
             for (ModelType modelTypeItem : projectItem.getModelTypeList()) {
+                System.out.println("iterating modelType " + modelTypeItem.getName());
+
                 // TODO Model item: add total fitness as info
                 ModeltypeOverview modeltypeOverview = new ModeltypeOverview(modelTypeItem);
-                double meanFitness = modeltypeOverview.getStatisticValues().
-                        get(FitnessName.TOTAL_FITNESS.getName()).getMean();
+                Double meanFitness = null;
+                Map<String, StatisticValues> statisticValues = modeltypeOverview.getStatisticValues();
+                System.out.println(statisticValues.size() + " statisticValues found");
+                String totalFitnessNameString = FitnessName.TOTAL_FITNESS.getName();
+                if (statisticValues.keySet().contains(totalFitnessNameString)) {
+                    System.out.println(totalFitnessNameString + " is available for modeltype");
+                    meanFitness = statisticValues.get(totalFitnessNameString).getMean();
+                }
+
+                if (meanFitness == null) {
+                    String errorMsg = String.format("Could not retrieve statistic value '%s' for modelType: %s." +
+                                    "Available statistic values for ModelType are: %s",
+                            totalFitnessNameString, modelTypeItem.getName(), StringUtils.join(statisticValues,";"));
+                    throw new RuntimeException(errorMsg);
+                }
+
                 String meanFitnessS = String.format("%.2f", meanFitness);
                 String modelLabel = modelTypeItem.getName() + " (" + meanFitnessS + ")";
                 model = makeBranch(modelLabel, modelTypeItem, project, null);

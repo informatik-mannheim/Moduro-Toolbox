@@ -21,8 +21,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -37,6 +39,8 @@ public class MainApp extends Application {
     private Stage primaryStage;
     private BorderPane mainLayout;
     public static String VERSION = "UNKNOWN";
+    final String MAIN_LAYOUT_RESOURCE_PATH = "/FXML/MainLayout.fxml";
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -67,8 +71,16 @@ public class MainApp extends Application {
     private void initRootLayout() {
         try {
             //Load main layout from fxml file.
+            System.out.println("loading main layout at: " + MAIN_LAYOUT_RESOURCE_PATH);
+            URL mainLayoutResource = this.getClass().getResource(MAIN_LAYOUT_RESOURCE_PATH);
+            File mainLayoutResourceFile = new File(mainLayoutResource.getFile());
+            if (!mainLayoutResourceFile.exists() || !mainLayoutResourceFile.isFile()) {
+                throw new RuntimeException("Could not load mainLayout at " + MAIN_LAYOUT_RESOURCE_PATH);
+            }
+
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("/FXML/MainLayout.fxml"));
+            System.out.println("Setting location for mainLayout: " + mainLayoutResource.getFile());
+            loader.setLocation(mainLayoutResource);
             mainLayout = (BorderPane) loader.load();
 
             // Show the scene containing the root layout.
