@@ -6,7 +6,7 @@
 
     <groupId>hs.mannheim.de</groupId>
     <artifactId>moduro-toolbox</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0-SNAPSHOT</version>
 
     <name>ModUro Toolbox</name>
     <url>http://mi.informatik.hs-mannheim.de/gumbel/en/forschung/moduro/</url>
@@ -41,11 +41,6 @@
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.19</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
