@@ -4,6 +4,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import de.hs.mannheim.modUro.optimizer.conf.model.ParameterDump;
 import de.hs.mannheim.modUro.optimizer.conf.model.ParameterDumpCellType;
+import de.hs.mannheim.modUro.optimizer.conf.model.ParameterDumpExecConfig;
+import de.hs.mannheim.modUro.optimizer.conf.model.ParameterDumpModel;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -15,18 +17,61 @@ import java.util.*;
 
 public class ParameterDumpReaderImpl implements ParameterDumpReader {
     private final String KEY_VALUE_SEPERATOR_CHAR = ":";
-    private final String KEY_ENTRIES_SEPERATOR_CHAR = "\n";
     private final String PARAMETER_DUMP_PARSED_MASTER_KEY_KEY = "masterKey";
     private final String BLOCK_TYPE_CELLTYPE_MASTER_KEY_VALUE = "CellType";
     private final String BLOCK_TYPE_EXECCONFIG_MASTER_KEY_VALUE = "ExecConfig";
 
-    private final Integer CONDITION_NUMBER_OF_CELLTYPES = 6;
+    private final int CONDITION_NUMBER_OF_CELLTYPES = 6;
+    private final int CONDITION_NUMBER_OF_EXCEC_CONFIG = 1;
+    private final int CONDITION_NUMBER_OF_MODEL_CONFIG = 1;
 
     @Override
     public ParameterDump parseParamDump(File parameterDumpFile) {
-        Collection<Map<String, String>> parameterDumpBlockCollection = getParameterDumpBlocks(parameterDumpFile);
-        System.out.println("Number of Blocks for parameterDump file: " + parameterDumpBlockCollection.size());
+        try {
+            System.out.println("entering parseParamDump");
+            System.out.println("target file is: " + parameterDumpFile.getAbsolutePath());
 
+            ParameterDump parameterDumpResult = new ParameterDump();
+            Collection<Map<String, String>> parameterDumpBlockCollection = getParameterDumpBlocks(parameterDumpFile);
+            System.out.println("Number of Blocks for parameterDump file: " + parameterDumpBlockCollection.size());
+
+            parameterDumpResult.setParameterDumpCellTypeList(extractCellTypes(parameterDumpBlockCollection));
+            parameterDumpResult.setParameterDumpExecConfig(extractExecConfig(parameterDumpBlockCollection));
+            parameterDumpResult.setParameterDumpModel(extractModel(parameterDumpBlockCollection));
+            System.out.println("Extracted all data from " + parameterDumpFile.getAbsolutePath());
+            return parameterDumpResult;
+        } catch (IllegalAccessException e) {
+            System.err.println("Could not deserialize ParameterDumpFile: " + parameterDumpFile.getAbsolutePath());
+            throw new RuntimeException(e.getMessage(), e);
+        } finally {
+            System.out.println("quit parseParamDump");
+        }
+    }
+
+    private ParameterDumpExecConfig extractExecConfig(Collection<Map<String, String>>
+                                                              parameterDumpBlockCollection) throws IllegalAccessException {
+        Collection<Map<String, String>> paramDumpExecConfigMapCollection = Collections2.filter(parameterDumpBlockCollection, new Predicate<Map<String, String>>() {
+            @Override
+            public boolean apply(Map<String, String> parameterDumpBlockMap) {
+                String masterKeyValue = parameterDumpBlockMap.get(PARAMETER_DUMP_PARSED_MASTER_KEY_KEY);
+                return StringUtils.equalsIgnoreCase(BLOCK_TYPE_EXECCONFIG_MASTER_KEY_VALUE, masterKeyValue);
+            }
+        });
+        if (paramDumpExecConfigMapCollection.size() != CONDITION_NUMBER_OF_EXCEC_CONFIG) {
+            throw new RuntimeException("Invalid count of Elements for " + BLOCK_TYPE_EXECCONFIG_MASTER_KEY_VALUE);
+        }
+
+        System.out.println("found ExecConfig entry in ParameterDump");
+        for (Map<String, String> excecConfigMap : paramDumpExecConfigMapCollection) {
+            System.out.println("Iterating ExecConfig Block");
+            return new ParameterDumpExecConfig(excecConfigMap);
+        }
+
+        throw new RuntimeException("No Excecconfig could be created. No Entry was parsed.");
+    }
+
+    private Collection<ParameterDumpCellType> extractCellTypes(Collection<Map<String, String>>
+                                                                       parameterDumpBlockCollection) throws IllegalAccessException {
         Collection<Map<String, String>> cellTypeBlocks = Collections2.filter(
                 parameterDumpBlockCollection, new Predicate<Map<String, String>>() {
                     @Override
@@ -49,25 +94,40 @@ public class ParameterDumpReaderImpl implements ParameterDumpReader {
         Collection<ParameterDumpCellType> deSerializedCellTypes = new ArrayList<>();
 
         for (Map<String, String> cellTypeBlock : cellTypeBlocks) {
-            try {
-                ParameterDumpCellType cellType = new ParameterDumpCellType(cellTypeBlock);
-                System.out.println("deserialized cellType");
-                deSerializedCellTypes.add(cellType);
-            } catch (IllegalAccessException e) {
-                System.err.println("Could not Convert CellType properly. aborting");
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            ParameterDumpCellType cellType = new ParameterDumpCellType(cellTypeBlock);
+            System.out.println("deserialized cellType");
+            deSerializedCellTypes.add(cellType);
         }
-
         System.out.println("deserialized all Celltypes");
-
-        ParameterDump parameterDumpResult = new ParameterDump();
-        parameterDumpResult.setParameterDumpCellTypeList(deSerializedCellTypes);
-        System.err.println("currently only celltypes are supported for parsing / deserializing.");
-        // TODO: add execonfig and model-data etc.
-        return parameterDumpResult;
+        return deSerializedCellTypes;
     }
 
+
+    private ParameterDumpModel extractModel(Collection<Map<String, String>>
+                                                    parameterDumpBlockCollection) throws IllegalAccessException {
+        System.out.println("Filtering Blocks: " + StringUtils.join(Arrays.asList(BLOCK_TYPE_CELLTYPE_MASTER_KEY_VALUE,
+                BLOCK_TYPE_EXECCONFIG_MASTER_KEY_VALUE), ","));
+
+        Collection<Map<String, String>> modelDataMapCollection =
+                Collections2.filter(parameterDumpBlockCollection, new Predicate<Map<String, String>>() {
+            @Override
+            public boolean apply(Map<String, String> parameterDumpBlockMap) {
+                String masterKeyValue = parameterDumpBlockMap.get(PARAMETER_DUMP_PARSED_MASTER_KEY_KEY);
+                return !((StringUtils.equalsIgnoreCase(masterKeyValue, BLOCK_TYPE_CELLTYPE_MASTER_KEY_VALUE)
+                        || (StringUtils.equalsIgnoreCase(masterKeyValue, BLOCK_TYPE_EXECCONFIG_MASTER_KEY_VALUE))));
+            }
+        });
+
+        if (modelDataMapCollection.size() != CONDITION_NUMBER_OF_MODEL_CONFIG) {
+            throw new RuntimeException("Invalid count of blocks for ModelConfig: " + modelDataMapCollection.size());
+        }
+
+        for (Map<String, String> modelDataMap : modelDataMapCollection) {
+            return new ParameterDumpModel(modelDataMap);
+        }
+
+        throw new RuntimeException("Could not load ModelConfiguration of ParameterDump");
+    }
 
     private Collection<Map<String, String>> getParameterDumpBlocks(File parameterDumpDatFile) {
         System.out.println("splitting ParameterDump file.");
@@ -100,38 +160,10 @@ public class ParameterDumpReaderImpl implements ParameterDumpReader {
         return parameterDumpParsedBlocksCollection;
     }
 
-    private void printParamEntries(String[] entries) {
-        printSeperatingLine();
-        System.out.println("printing array values: ");
-        for (String s : entries) {
-            System.out.println("[" + s.trim() + "]");
-        }
-        printSeperatingLine();
-    }
-
-    private void printParamEntries(Collection<String> entries) {
-        printSeperatingLine();
-        for (String entry : entries) {
-            System.out.println(entry);
-        }
-        printSeperatingLine();
-    }
-
-    private void printParamEntries(Map<String, String> entries) {
-        for (String key : entries.keySet()) {
-            System.out.println("[" + key + "]: [" + entries.get(key) + "]");
-        }
-    }
-
     private Boolean isMasterKey(String[] parameterDumpLine) {
         return parameterDumpLine.length == 1
                 && parameterDumpLine[0] != null
                 && !parameterDumpLine[0].equals("");
-    }
-
-    private String[] getParameterDumpLines(String parameterDumpString) {
-        String trimmedString = parameterDumpString.trim();
-        return trimmedString.split(KEY_ENTRIES_SEPERATOR_CHAR);
     }
 
     /**
@@ -208,7 +240,7 @@ public class ParameterDumpReaderImpl implements ParameterDumpReader {
             final String[] keyValuePair = keyValueString.split(KEY_VALUE_SEPERATOR_CHAR);
             if (keyValuePair.length == 0) {
                 System.err.println("error splitting line value: " + keyValueString);
-                return new HashMap<String, String>();
+                return new HashMap<>();
             }
 
             if (keyValuePair.length == 1) {
@@ -223,18 +255,13 @@ public class ParameterDumpReaderImpl implements ParameterDumpReader {
         return keyValuePairResults;
     }
 
-    private void printSeperatingLine() {
-        System.out.println("#############################################################");
-    }
-
-    public List<String> readParameterDumpFile(String filename) {
+    private List<String> readParameterDumpFile(String filename) {
         List<String> result = new ArrayList<>();
         File file = new File(filename);
         if (!file.exists() || file.isDirectory()) {
             System.err.println("not a valid input file.");
             return result;
         }
-
         try {
             // using utf8 charset
             result = Files.readAllLines(file.toPath(), Charset.defaultCharset());

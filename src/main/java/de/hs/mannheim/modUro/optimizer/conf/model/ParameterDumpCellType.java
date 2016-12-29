@@ -3,10 +3,9 @@ package de.hs.mannheim.modUro.optimizer.conf.model;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
-public class ParameterDumpCellType implements ParameterDumpEntry {
+public class ParameterDumpCellType extends ParameterDumpBaseComponent implements ParameterDumpEntry {
 
     @ParameterDumpValue(key = "apoptosisTimeInDays", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double apoptosisTimeInDays;
@@ -26,16 +25,16 @@ public class ParameterDumpCellType implements ParameterDumpEntry {
     @ParameterDumpValue(key = "growthVolumePerDay", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double growthVolumePerDay;
 
-    @ParameterDumpValue(key = "id", type = ParameterDumpValue.ParameterDumpValueType.INT)
+    @ParameterDumpValue(key = "id", type = ParameterDumpValue.ParameterDumpValueType.INTEGER)
     private Integer id;
 
-    @ParameterDumpValue(key = "maxDiameter", type = ParameterDumpValue.ParameterDumpValueType.INT)
+    @ParameterDumpValue(key = "maxDiameter", type = ParameterDumpValue.ParameterDumpValueType.INTEGER)
     private Integer maxDiameter;
 
     @ParameterDumpValue(key = "maxVol", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double maxVol;
 
-    @ParameterDumpValue(key = "minDiameter", type = ParameterDumpValue.ParameterDumpValueType.INT)
+    @ParameterDumpValue(key = "minDiameter", type = ParameterDumpValue.ParameterDumpValueType.INTEGER)
     private Integer minDiameter;
 
     @ParameterDumpValue(key = "minVol", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
@@ -55,29 +54,7 @@ public class ParameterDumpCellType implements ParameterDumpEntry {
     private Double volFit;
 
     public ParameterDumpCellType(Map<String, String> parsedBlock) throws IllegalAccessException {
-        Field[] fieldsOfCellType = this.getClass().getDeclaredFields();
-        for (Field field : fieldsOfCellType) {
-            ParameterDumpValue parameterDumpValueAnnotation
-                    = field.getDeclaredAnnotation(ParameterDumpValue.class);
-            String hashmapKey = parameterDumpValueAnnotation.key();
-            String hashMapValue = parsedBlock.get(hashmapKey);
-            switch (parameterDumpValueAnnotation.type()) {
-                case BOOLEAN:
-                    field.set(this, Boolean.parseBoolean(hashMapValue));
-                    break;
-                case DOUBLE:
-                    field.set(this, Double.parseDouble(hashMapValue));
-                    break;
-                case INT:
-                    field.set(this, Integer.parseInt(hashMapValue));
-                    break;
-                case STRING:
-                    field.set(this, hashMapValue);
-                    break;
-                default:
-                    throw new IllegalStateException("Type is not allowed for field: " + field.getName());
-            }
-        }
+        super(parsedBlock);
     }
 
     // todo: impl

@@ -5,7 +5,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ParameterDumpValue {
-    enum ParameterDumpValueType {BOOLEAN, STRING, DOUBLE, INT }
+    enum ParameterDumpValueType {BOOLEAN, STRING, DOUBLE, INTEGER}
     String key();
     ParameterDumpValueType type();
 }
