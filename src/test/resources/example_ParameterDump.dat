@@ -1,4 +1,5 @@
 startTime: 2016-11-16 23:54:09.068000
+
 ExecConfig:
 MCSperDay: 500
 SEED: 5500
@@ -30,7 +31,7 @@ cellLifeCycleLogger: <Logger.CellLifeCycleLogger.CellLifeCycleLogger object at 0
 energyMatrix: [[0, 14, 14, 14, 14, 4], [0, -1, 1, 3, 12, 12], [0, 0, 6, 4, 8, 14], [0, 0, 0, 5, 8, 12], [0, 0, 0, 0, 6, 4], [0, 0, 0, 0, 0, 2]]
 name: SdBpaCdiInDa
 necrosisProbBasal: 8e-06
-necrosisProbIntermediate: 3e-05
+necrosisProbIntermediate: 0
 necrosisProbStem: 0.0
 necrosisProbUmbrella: 3.5e-05
 

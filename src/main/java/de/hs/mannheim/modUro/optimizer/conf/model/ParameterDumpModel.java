@@ -3,31 +3,55 @@ package de.hs.mannheim.modUro.optimizer.conf.model;
 
 import java.util.Map;
 
-public class ParameterDumpModel extends ParameterDumpBaseComponent implements ParameterDumpEntry{
+// todo: Hier liegt aktuelle in Problem bei den zu verarbeitenden Parameterdump files vor.
+// todo: Die Parameter für das Model unterscheiden sich aktuell in den vorliegenden Beispiel-Dateien.
+// todo: Es ist nicht ersichtlich mit welcher Version welche ParameterDump erzeugt wurde, darum kann man nicht
+// todo: sagen, ob es eine aktuelle Version gibt oder ob beide Versionen supported werden müssen
 
-    @ParameterDumpValue(key ="adhEnergy",type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+public class ParameterDumpModel extends ParameterDumpBaseComponent implements ParameterDumpEntry {
+
+    @ParameterDumpValue(key = "adhEnergy", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double adhEnergy;
-    @ParameterDumpValue(key ="adhFactor",type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+
+    @ParameterDumpValue(key = "adhFactor", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double adhFactor;
+
     @ParameterDumpValue(key = "cellID", type = ParameterDumpValue.ParameterDumpValueType.INTEGER)
     private Integer cellID;
+
     @ParameterDumpValue(key = "cellLifeCycleLogger", type = ParameterDumpValue.ParameterDumpValueType.STRING)
     private String cellLifeCycleLogger;
+
     @ParameterDumpValue(key = "energyMatrix", type = ParameterDumpValue.ParameterDumpValueType.STRING)
     private String energyMatrix;
+
     @ParameterDumpValue(key = "name", type = ParameterDumpValue.ParameterDumpValueType.STRING)
     private String name;
-    @ParameterDumpValue(key = "basalNecrosisProb", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+
+    // fixme: Parameter unterscheidet sich aktuell in den ParameterDumps: basalNecrosisProb und necrosisProbBasal
+    @ParameterDumpValue(key = "basalNecrosisProb,necrosisProbBasal", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double basalNecrosisProb;
-    @ParameterDumpValue(key = "intermediateNecrosisProb", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+
+    // fixme: Parameter unterscheidet sich aktuell in den ParameterDumps: intermediateNecrosisProb und necrosisProbIntermediate
+    @ParameterDumpValue(key = "intermediateNecrosisProb,necrosisProbIntermediate", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double intermediateNecrosisProb;
-    @ParameterDumpValue(key = "stemNecrosisProb", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+
+    // fixme: Parameter unterscheidet sich aktuell in den ParameterDumps: stemNecrosisProb und necrosisProbStem
+    @ParameterDumpValue(key = "stemNecrosisProb,necrosisProbStem", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double stemNecrosisProb;
-    @ParameterDumpValue(key = "umbrellaNecrosisProb", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+
+    // fixme: Parameter unterscheidet sich aktuell in den ParameterDumps: umbrellaNecrosisProb und necrosisProbUmbrella
+    @ParameterDumpValue(key = "umbrellaNecrosisProb,necrosisProbUmbrella", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
     private Double umbrellaNecrosisProb;
 
     public ParameterDumpModel(Map<String, String> parsedBlock) throws IllegalAccessException {
         super(parsedBlock);
+    }
+
+
+    public ParameterDumpModel() {
+        super();
+        System.out.println("Calling default construcor of ParameterDumpModel");
     }
 
     public Double getAdhEnergy() {
@@ -114,5 +138,13 @@ public class ParameterDumpModel extends ParameterDumpBaseComponent implements Pa
     @Override
     public Boolean isComplete() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append(": ").append("\n");
+        sb.append(super.toString());
+        return sb.toString();
     }
 }

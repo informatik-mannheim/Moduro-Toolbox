@@ -42,4 +42,5 @@ public class ParameterDump {
     public void setParameterDumpCellTypeList(Collection<ParameterDumpCellType> parameterDumpCellTypeList) {
         this.parameterDumpCellTypeList = parameterDumpCellTypeList;
     }
+
 }

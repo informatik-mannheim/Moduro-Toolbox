@@ -53,6 +53,18 @@ public class ParameterDumpExecConfig extends ParameterDumpBaseComponent implemen
         super(parsedBlock);
     }
 
+    public ParameterDumpExecConfig() {
+        super();
+        System.out.println("calling default constructor of ParameterDumpExecConfig");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ExecConfig:");
+        sb.append(super.toString());
+        return sb.toString();
+    }
 
     public Integer getMCSperDay() {
         return MCSperDay;
@@ -210,6 +222,10 @@ public class ParameterDumpExecConfig extends ParameterDumpBaseComponent implemen
 
     public void setzLength(Integer zLength) {
         this.zLength = zLength;
+    }
+
+    public Double getSampleIntervalInDays() {
+        return sampleIntervalInDays;
     }
 
     @Override

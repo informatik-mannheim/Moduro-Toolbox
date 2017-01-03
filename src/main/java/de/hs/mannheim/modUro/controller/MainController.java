@@ -388,12 +388,14 @@ public class MainController {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
+        final String descriptionText = "Functions: - Run CC3D with a custom set of parameters.\n " + "\n"
+                + "- Run CC3D" + "\n" + "- Optimize ParameterDump.dat-Files";
+        Text scenetitle = new Text(descriptionText);
 
-        Text scenetitle = new Text("Welcome to optimusPrime");
-        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
         grid.add(scenetitle, 0, 0, 2, 1);
 
-        Button selectModelButton = new Button("Select optimization parameters and a model");
+        Button selectModelButton = new Button("Run CC3D-Model with custom params");
         grid.add(selectModelButton, 1,1);
 
         // todo: impl
@@ -411,7 +413,7 @@ public class MainController {
             }
         });
 
-        Button startCc3dButton = new Button("Just start CC3D");
+        Button startCc3dButton = new Button("Run CC3D");
         grid.add(startCc3dButton, 1,2);
         //add action
 
@@ -421,7 +423,7 @@ public class MainController {
                 CompuCellExecutionHelper compuCellExecutionHelper = new CompuCellExecutionHelperImpl();
                 ProcessBuilder compuCellProcessBuilder = compuCellExecutionHelper.getCompuCellProcessBuilder();
                 if (compuCellProcessBuilder == null) {
-                    System.err.println("CompucellPRocessbuilder could not be created. Cc3d won't get started.");
+                    System.err.println("CompucellProcessbuilder could not be created. Cc3d won't get started.");
                     return;
                 }
                 try {
@@ -436,10 +438,19 @@ public class MainController {
             }
         });
 
+        // PARAMETER DUMP OPTIMIZATION START
+        Button parameterDumpOptimizationButton = new Button("Optimize ParameterDump");
+        grid.add(parameterDumpOptimizationButton, 1,3);
+
+
+        // PARAMETER DUMP OPTIMIZATION END
+
         Scene scene = new Scene(grid, 500, 275);
         optStage.setScene(scene);
         optStage.show();
     }
+
+
 
     /**
      * Loads About Dialog FXMl and opens it in a new Window.

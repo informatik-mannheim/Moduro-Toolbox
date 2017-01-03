@@ -1,60 +1,75 @@
 package de.hs.mannheim.modUro.optimizer.conf.model;
 
 
+import de.hs.mannheim.modUro.optimizer.conf.model.ParameterDumpValue.ParameterDumpValueType;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Map;
 
 public class ParameterDumpCellType extends ParameterDumpBaseComponent implements ParameterDumpEntry {
 
-    @ParameterDumpValue(key = "apoptosisTimeInDays", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+    @ParameterDumpValue(key = "apoptosisTimeInDays", type = ParameterDumpValueType.DOUBLE)
     private Double apoptosisTimeInDays;
 
-    @ParameterDumpValue(key = "consumPerCell", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+    @ParameterDumpValue(key = "consumPerCell", type = ParameterDumpValueType.DOUBLE)
     private Double consumPerCell;
 
-    @ParameterDumpValue(key = "descendants", type = ParameterDumpValue.ParameterDumpValueType.STRING)
+    @ParameterDumpValue(key = "descendants", type = ParameterDumpValueType.STRING)
     private String descendants;
 
-    @ParameterDumpValue(key = "divides", type = ParameterDumpValue.ParameterDumpValueType.BOOLEAN)
+    @ParameterDumpValue(key = "divides", type = ParameterDumpValueType.BOOLEAN)
     private Boolean divides;
 
-    @ParameterDumpValue(key = "frozen", type = ParameterDumpValue.ParameterDumpValueType.BOOLEAN)
+    @ParameterDumpValue(key = "frozen", type = ParameterDumpValueType.BOOLEAN)
     private Boolean frozen;
 
-    @ParameterDumpValue(key = "growthVolumePerDay", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+    @ParameterDumpValue(key = "growthVolumePerDay", type = ParameterDumpValueType.DOUBLE)
     private Double growthVolumePerDay;
 
-    @ParameterDumpValue(key = "id", type = ParameterDumpValue.ParameterDumpValueType.INTEGER)
+    @ParameterDumpValue(key = "id", type = ParameterDumpValueType.INTEGER)
     private Integer id;
 
-    @ParameterDumpValue(key = "maxDiameter", type = ParameterDumpValue.ParameterDumpValueType.INTEGER)
+    @ParameterDumpValue(key = "maxDiameter", type = ParameterDumpValueType.INTEGER)
     private Integer maxDiameter;
 
-    @ParameterDumpValue(key = "maxVol", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+    @ParameterDumpValue(key = "maxVol", type = ParameterDumpValueType.DOUBLE)
     private Double maxVol;
 
-    @ParameterDumpValue(key = "minDiameter", type = ParameterDumpValue.ParameterDumpValueType.INTEGER)
+    @ParameterDumpValue(key = "minDiameter", type = ParameterDumpValueType.INTEGER)
     private Integer minDiameter;
 
-    @ParameterDumpValue(key = "minVol", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+    @ParameterDumpValue(key = "minVol", type = ParameterDumpValueType.DOUBLE)
     private Double minVol;
 
-    @ParameterDumpValue(key = "name", type = ParameterDumpValue.ParameterDumpValueType.STRING)
+    @ParameterDumpValue(key = "name", type = ParameterDumpValueType.STRING)
     private String name;
 
-    @ParameterDumpValue(key = "necrosisProb", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+    @ParameterDumpValue(key = "necrosisProb", type = ParameterDumpValueType.DOUBLE)
     private Double necrosisProb;
 
-    @ParameterDumpValue(key = "nutrientRequirement", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+    @ParameterDumpValue(key = "nutrientRequirement", type = ParameterDumpValueType.DOUBLE)
     private Double nutrientRequirement;
-    @ParameterDumpValue(key = "surFit", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+
+    @ParameterDumpValue(key = "surFit", type = ParameterDumpValueType.DOUBLE)
     private Double surFit;
-    @ParameterDumpValue(key = "volFit", type = ParameterDumpValue.ParameterDumpValueType.DOUBLE)
+
+    @ParameterDumpValue(key = "volFit", type = ParameterDumpValueType.DOUBLE)
     private Double volFit;
 
     public ParameterDumpCellType(Map<String, String> parsedBlock) throws IllegalAccessException {
         super(parsedBlock);
+    }
+
+    public ParameterDumpCellType() {
+        System.out.println("Called Default Constructor of ParameterDumpCellType()");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CellType:").append("\n");
+        sb.append(super.toString());
+        return sb.toString();
     }
 
     // todo: impl
