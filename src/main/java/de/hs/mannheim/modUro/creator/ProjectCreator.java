@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.creator;
 
+import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Node;
 import de.hs.mannheim.modUro.model.Project;
@@ -71,6 +72,7 @@ public class ProjectCreator {
      * @return
      */
     private List<ModelType> createModelTypeList() {
+        ToolboxLogger.log.config("Scanning models again ...");
         ModelType modelType;
         List<ModelType> modelTypeList = new ArrayList<>();
         ModelTypeCreator modelTypeCreator = new ModelTypeCreator();
@@ -91,6 +93,7 @@ public class ProjectCreator {
             modelTypeList.add(modelType);
             dirList.clear();
         }
+        ToolboxLogger.log.config("Found " + modelTypeList.size() + " models.");
         return modelTypeList;
     }
 
@@ -100,6 +103,7 @@ public class ProjectCreator {
      * @return
      */
     private List<File> listAllDirInAllNodes() {
+        ToolboxLogger.log.config("Scanning simulation directories...");
         List<File> allDir = new ArrayList<>();
 
         for (Node node : settingFile.getNode()) {
@@ -108,7 +112,7 @@ public class ProjectCreator {
                 allDir.add(file);
             }
         }
-
+        ToolboxLogger.log.config("Found " + allDir.size() + " directories.");
         return allDir;
     }
 
@@ -118,11 +122,15 @@ public class ProjectCreator {
      * @return
      */
     private List<String> getAllModelTypeName() {
+        ToolboxLogger.log.config("Scanning models...");
+        int counter = 1;
+        int stepSize = 25;
         List<String> modelTypeNameList = new ArrayList<>();
 
         for (Node node : settingFile.getNode()) {
             File[] dirs = node.getPath().listFiles(f -> f.isDirectory());
             for (File file : dirs) {
+                counter++;
                 String name;
                 String[] tokenValue = file.getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
                 name = tokenValue[0];
@@ -130,9 +138,12 @@ public class ProjectCreator {
                 if (!modelTypeNameList.contains(name) && name.length() > 0) {
                     modelTypeNameList.add(name);
                 }
+                if (counter % stepSize == 0) {
+                    ToolboxLogger.log.config("Scanned " + counter + " files so far.");
+                }
             }
         }
-
+        ToolboxLogger.log.config("Found " + modelTypeNameList.size() + " models.");
         return modelTypeNameList;
     }
 

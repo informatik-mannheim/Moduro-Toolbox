@@ -17,6 +17,7 @@ package de.hs.mannheim.modUro.controller;
 
 import de.hs.mannheim.modUro.MainApp;
 import de.hs.mannheim.modUro.config.FitnessName;
+import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
 import de.hs.mannheim.modUro.controller.diagram.ModeltypeDiagramController;
 import de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController;
@@ -197,6 +198,9 @@ public class MainController {
      * Creates ProjectTree with Project Data.
      */
     private void createTree() {
+        ToolboxLogger.log.fine("Creating FX tree...");
+        int counter = 0;
+        int stepSize = 25;
         ModuroTreeItem root = new ModuroTreeItem("ProjectRoot", null);        //set root
         root.setExpanded(true);                                             //root is expanded
         projectTree.setShowRoot(false);                                     //root is not shown, tree begins with first project
@@ -229,9 +233,15 @@ public class MainController {
                     }
                     simulation = makeBranch(simulationItem.getSimulationName(), simulationItem,
                             model, node);
+                    counter++;
+                    if (counter % stepSize == 0) {
+                        ToolboxLogger.log.fine("Added " + counter +
+                                " items to the tree so far.");
+                    }
                 }
             }
         }
+        ToolboxLogger.log.fine("Creating FX tree done. " + counter + " items.");
     }
 
     /**
@@ -294,7 +304,7 @@ public class MainController {
             alert.setContentText(dir);
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    System.out.println("Delete " + dir);
+                    ToolboxLogger.log.info("Delete " + dir);
                     File dirFile = new File(dir);
                     deleteFolder(dirFile);
                 }

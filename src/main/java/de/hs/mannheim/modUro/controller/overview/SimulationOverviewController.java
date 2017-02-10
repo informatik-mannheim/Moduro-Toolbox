@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.controller.overview;
 
+import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
@@ -164,7 +165,7 @@ public class SimulationOverviewController {
             dirToOpen = new File(directoryHyperlink.getText());
             desktop.open(dirToOpen);
         } catch (IllegalArgumentException iae) {
-            System.out.println("File Not Found");
+            ToolboxLogger.log.warning("File Not Found");
         } catch (IOException e) {
             e.printStackTrace();
         }

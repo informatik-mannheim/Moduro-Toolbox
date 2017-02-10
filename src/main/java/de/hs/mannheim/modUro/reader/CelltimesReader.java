@@ -15,6 +15,8 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.reader;
 
+import de.hs.mannheim.modUro.config.ToolboxLogger;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -92,8 +94,8 @@ public class CelltimesReader {
                 addCountData(time, op, cellId, cellType, lifetime);
                 addCycleData(time, op, cellId, cellType, lifetime);
             } catch (NumberFormatException e) {
-                System.err.println("Error when reading cell times at line " + row);
-                System.err.println("Record is ignored.");
+                ToolboxLogger.log.severe("Error when reading cell times at line " + row);
+                ToolboxLogger.log.severe("Record is ignored.");
             }
             row++;
         }

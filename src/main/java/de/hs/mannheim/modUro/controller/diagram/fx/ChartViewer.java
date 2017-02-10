@@ -40,6 +40,7 @@
 
 package de.hs.mannheim.modUro.controller.diagram.fx;
 
+import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
 import de.hs.mannheim.modUro.controller.diagram.fx.interaction.ChartMouseEventFX;
 import de.hs.mannheim.modUro.controller.diagram.fx.interaction.ChartMouseListenerFX;
@@ -410,7 +411,7 @@ public class ChartViewer extends Control implements Skinnable,
         }
         s = s + " \\end{axis}\n" +
                 "\\end{tikzpicture}\n";
-        System.out.println(s);
+        ToolboxLogger.log.info(s);
     }
 
     @Override

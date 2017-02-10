@@ -104,7 +104,7 @@ public class SimulationCreator {
                         name.equals(FileName.DEFAULT_FITNESS_FILE.getName())
         );
         if (files.length == 0) {
-            System.err.println("Dir " + dir + " does not contain a " +
+            ToolboxLogger.log.warning("Dir " + dir + " does not contain a " +
                     FileName.DEFAULT_FITNESS_FILE.getName());
             return;
         }
