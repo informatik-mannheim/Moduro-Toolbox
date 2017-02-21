@@ -51,6 +51,9 @@ public class SimulationCreator {
     private double minTime = DataPlot.MIN_TIME.getValue();
     private double maxTime = DataPlot.MAX_TIME.getValue();
 
+    private LocalDateTime simulationTime;
+    private long seed;
+
     /**
      * Constructor
      */
@@ -62,9 +65,8 @@ public class SimulationCreator {
      *
      * @return
      */
-    private int createSimulationId() {
-        int id = 0;
-        return id;
+    private String createSimulationId() {
+        return Math.abs(seed * (long) simulationTime.hashCode()) + "";
     }
 
     /**
@@ -150,9 +152,13 @@ public class SimulationCreator {
      * @return
      */
     private LocalDateTime createTime() {
+        return simulationTime;
+    }
+
+    private void parseParameterDump() {
         String dateInString = null;
         String timeInString = null;
-        LocalDateTime simulationTime = null;
+        simulationTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         File parameterDumpFile = dir.listFiles((parent, name) -> (name.endsWith(FileEnding.METRIC_DATA_FILE.getFileEnding()) && name.contains(FileName.PARAMETER_DUMP.getName())))[0];
         try {
@@ -164,18 +170,18 @@ public class SimulationCreator {
                     String[] values = line.split(" ");
                     dateInString = values[1] + " ";
                     timeInString = values[2].split("\\.")[0];
-
                     simulationTime = LocalDateTime.parse(dateInString.concat(timeInString), formatter);
-                } else {
-                    simulationTime = LocalDateTime.now();
                 }
-                in.close();
+                if (line.contains("SEED:")) {
+                    String[] values = line.split(" ");
+                    seed = Long.parseLong(values[1]);
+                }
             }
+            in.close();
 
             //}catch( IOException ioException ) {}
         } catch (Exception exception) {
         }
-        return simulationTime;
     }
 
     /**
@@ -250,27 +256,19 @@ public class SimulationCreator {
      * @return
      */
     private boolean isCompleted() {
-        boolean isDone = false;
         double toTime = defaultFitnessTable[defaultFitnessTable.length - 1][0];
-        if (toTime >= maxTime) {
-            isDone = true;
-        }
-        return isDone;
+        return toTime >= maxTime;
     }
 
     /**
-     * Checks if simulation is Aborted.
+     * Checks if simulation is in state "Aborted".
      *
      * @return
      */
     private boolean isAborted() {
         double lastFitness = defaultFitnessTable[defaultFitnessTable.length - 1][1];
-        boolean isAborted = false;
-
-        if (lastFitness < 0.05 && isInSteadyState()) {
-            isAborted = true;
-        }
-        return isAborted;
+        // return lastFitness < 0.05;
+        return lastFitness < 0.05 && isInSteadyState();
     }
 
     /**
@@ -279,13 +277,8 @@ public class SimulationCreator {
      * @return
      */
     private boolean isInSteadyState() {
-
-        boolean isInSteadyState = false;
         double toTime = defaultFitnessTable[defaultFitnessTable.length - 1][0];
-        if (toTime >= minTime) {
-            isInSteadyState = true;
-        }
-        return isInSteadyState;
+        return toTime >= minTime;
     }
 
     /**
@@ -329,7 +322,7 @@ public class SimulationCreator {
      */
     public void createSimulation() {
         calcDefaultFitnessTable();
-        simulation = new Simulation(/*createSimulationId(),*/
+        simulation = new Simulation(createSimulationId(),
                 createsSimulationName(),
                 createModelTypeName(),
                 calculateDuration(),
@@ -353,6 +346,7 @@ public class SimulationCreator {
      */
     public void setDir(File dir) {
         this.dir = dir;
+        parseParameterDump();
     }
 
     public Simulation getSimulation() {
