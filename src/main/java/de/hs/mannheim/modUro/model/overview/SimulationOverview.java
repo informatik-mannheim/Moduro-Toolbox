@@ -33,7 +33,7 @@ public class SimulationOverview {
 
     private Simulation simulation;
 
-    private int simulationID;
+    private String simulationID;
     private String simulationName;
     private String modelType;
     private boolean isCompleted;
@@ -87,7 +87,7 @@ public class SimulationOverview {
         return simulation;
     }
 
-    public int getSimulationID() {
+    public String getSimulationID() {
         return simulationID;
     }
 

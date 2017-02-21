@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class Simulation {
 
-    private static int simulationID = 0;    //unique simulation ID
+    private String simulationID;
     private String simulationName;          //name of simulation
     private String modelType;               //modelType of this simulation
     private double duration;                //duration of this simulation
@@ -52,7 +52,7 @@ public class Simulation {
      * @param dir
      * @param images
      */
-    public Simulation(/*int simulationID,*/ String simulationName, String modelType, double duration, LocalDateTime startTime, List<StatisticValues> metricTypes, boolean isCompleted, boolean isAborted, boolean isInSteadyState, File dir, List<File> images) {
+    public Simulation(String simulationID, String simulationName, String modelType, double duration, LocalDateTime startTime, List<StatisticValues> metricTypes, boolean isCompleted, boolean isAborted, boolean isInSteadyState, File dir, List<File> images) {
         this.simulationID = simulationID;
         this.simulationName = simulationName;
         this.modelType = modelType;
@@ -65,12 +65,10 @@ public class Simulation {
         this.isInSteadyState = isInSteadyState;
         this.dir = dir;
         this.images = images;
-
-        simulationID++;
     }
 
     /*Getter and Setter*/
-    public int getSimulationID() {
+    public String getSimulationID() {
         return simulationID;
     }
 
