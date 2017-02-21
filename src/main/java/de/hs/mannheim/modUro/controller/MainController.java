@@ -61,12 +61,18 @@ public class MainController {
     private Tab diagramTab;
     @FXML
     private Label toolboxversion;
+    @FXML
+    private CheckBox completedCheckboxButton;
+    @FXML
+    private CheckBox inSteadyStateCheckButton;
 
     // List with projectData
     private ObservableList<Project> projectData;
 
     //RedIconForTreeItem
     Image red = new Image(getClass().getResourceAsStream("/images/red.png"));
+    // Image yellow = new Image(getClass().getResourceAsStream("/images/yellow.png"));
+    Image green = new Image(getClass().getResourceAsStream("/images/green.png"));
 
     //References to other Controllers
     ProjectOverviewController projectOverviewController = new ProjectOverviewController();
@@ -227,16 +233,29 @@ public class MainController {
 
                 //treeitem: simulation
                 for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+                    // Color the entries:
                     Node node = null;
                     if (simulationItem.isAborted()) {
                         node = new ImageView(red);
+                    } else if (simulationItem.isCompleted()) {
+                        node = new ImageView(green);
                     }
-                    simulation = makeBranch(simulationItem.getSimulationName(), simulationItem,
-                            model, node);
+                    // Filter the entries:
+                    boolean inResult = true;
+                    if (completedCheckboxButton.isSelected()) {
+                        inResult = simulationItem.isCompleted();
+                    }
+                    if (inSteadyStateCheckButton.isSelected()) {
+                        inResult = simulationItem.isInSteadyState();
+                    }
+                    if (inResult) {
+                        makeBranch(simulationItem.getSimulationName(),
+                                simulationItem, model, node);
+                    }
                     counter++;
                     if (counter % stepSize == 0) {
-                        ToolboxLogger.log.fine("Added " + counter +
-                                " items to the tree so far.");
+                        ToolboxLogger.log.fine("Processed " + counter +
+                                " items for the tree so far.");
                     }
                 }
             }
