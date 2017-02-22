@@ -57,6 +57,8 @@ public class SimulationOverviewController {
     @FXML
     private Label simulationName;
     @FXML
+    private Label simulationSeed;
+    @FXML
     private Label simulationModel;
     @FXML
     private Label isCompleted;
@@ -95,6 +97,7 @@ public class SimulationOverviewController {
         this.simulationID.setText(String.valueOf(simulationOverview.getSimulationID()));
         this.simulationName.setText(String.valueOf(simulationOverview.getSimulationName()));
         this.simulationModel.setText(simulationOverview.getModelType());
+        this.simulationSeed.setText(simulationOverview.getSeed());
         this.isCompleted.setText(String.valueOf(simulationOverview.isCompleted()));
         this.isAborted.setText(String.valueOf(simulationOverview.isAborted()));
         this.isInSteadyState.setText(String.valueOf(simulationOverview.isInSteadyState()));

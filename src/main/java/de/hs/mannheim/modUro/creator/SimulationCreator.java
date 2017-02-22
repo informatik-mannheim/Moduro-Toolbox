@@ -324,6 +324,7 @@ public class SimulationCreator {
         calcDefaultFitnessTable();
         simulation = new Simulation(createSimulationId(),
                 createsSimulationName(),
+                seed + "",
                 createModelTypeName(),
                 calculateDuration(),
                 createTime(),

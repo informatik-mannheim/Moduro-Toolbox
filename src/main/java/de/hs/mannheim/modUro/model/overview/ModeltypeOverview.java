@@ -39,6 +39,7 @@ public class ModeltypeOverview {
     private int numberOfSteadyStateSimulation;
     private int numberOfAbortedSimulations;
     private int numberOfCompletedSimulations;
+    private boolean isCompleted, isSteadState;
     private Map<String, StatisticValues> statisticValues;
 
     /**
@@ -46,8 +47,11 @@ public class ModeltypeOverview {
      *
      * @param modelType
      */
-    public ModeltypeOverview(ModelType modelType) {
+    public ModeltypeOverview(ModelType modelType, boolean isCompleted,
+                             boolean isSteadState) {
         this.modelType = modelType;
+        this.isCompleted = isCompleted;
+        this.isSteadState = isSteadState;
         metricTypes = listMetricTypes();
         numberOfSimulations = modelType.getSimulations().size();
 
@@ -122,9 +126,20 @@ public class ModeltypeOverview {
         List<Double> mean = new ArrayList<>();
 
         for (Simulation simulation : modelType.getSimulations()) {
-            for (StatisticValues metricTypeItem : simulation.getMetricTypes()) {
-                if (metricTypeItem.getName().equals(metricType.getName())) {
-                    mean.add(metricTypeItem.getMean());
+            // Filter:
+            boolean addResults = true;
+            if (isCompleted) {
+                addResults = addResults && simulation.isCompleted();
+            }
+            if (isSteadState) {
+                addResults = addResults && simulation.isInSteadyState();
+            }
+
+            if (addResults) {
+                for (StatisticValues metricTypeItem : simulation.getMetricTypes()) {
+                    if (metricTypeItem.getName().equals(metricType.getName())) {
+                        mean.add(metricTypeItem.getMean());
+                    }
                 }
             }
         }

@@ -33,6 +33,8 @@ import java.util.Properties;
  */
 public class MainApp extends Application {
 
+    public static Scene scene;
+
     // Main window of the application.
     private Stage primaryStage;
     private BorderPane mainLayout;
@@ -72,7 +74,7 @@ public class MainApp extends Application {
             mainLayout = (BorderPane) loader.load();
 
             // Show the scene containing the root layout.
-            Scene scene = new Scene(mainLayout);
+            scene = new Scene(mainLayout);
             primaryStage.setScene(scene);
             primaryStage.setMinHeight(650);
             primaryStage.setMinWidth(970);
