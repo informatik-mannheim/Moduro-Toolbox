@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+Template. Please rename to moduro-toolbox-settings.xml and
+adjust content.
+-->
+<root>
+    <project>
+        <name>A project</name>
+        <node>
+            <name>A node</name>
+            <path>c:\Users\Markus\CC3DWorkspace\</path>
+        </node>
+        <node>
+            <name>Another node</name>
+            <path>c:\Users\Markus\CC3DWorkspace2\</path>
+        </node>
+    </project>
+    <project>
+        <name>Another project</name>
+        <node>
+            <name>A node</name>
+            <path>c:\Users\Markus\CC3DWorkspace\</path>
+        </node>
+    </project>
+</root>
