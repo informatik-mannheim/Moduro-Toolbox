@@ -35,6 +35,7 @@ public class SimulationOverview {
 
     private String simulationID;
     private String simulationName;
+    private String simulationSeed;
     private String modelType;
     private boolean isCompleted;
     private boolean isAborted;
@@ -54,6 +55,7 @@ public class SimulationOverview {
     public SimulationOverview(Simulation simulation) {
         this.simulation = simulation;
         this.simulationName = simulation.getSimulationName();
+        this.simulationSeed = simulation.getSimulationSeed();
         this.simulationID = simulation.getSimulationID();
         this.modelType = simulation.getModelType();
         this.isCompleted = simulation.isCompleted();
@@ -89,6 +91,10 @@ public class SimulationOverview {
 
     public String getSimulationID() {
         return simulationID;
+    }
+
+    public String getSeed() {
+        return simulationSeed;
     }
 
     public String getModelType() {

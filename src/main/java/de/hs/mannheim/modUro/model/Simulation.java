@@ -30,6 +30,7 @@ public class Simulation {
 
     private String simulationID;
     private String simulationName;          //name of simulation
+    private String simulationSeed;          //seed number
     private String modelType;               //modelType of this simulation
     private double duration;                //duration of this simulation
     private LocalDateTime startTime;        //starting time of this simulation
@@ -52,9 +53,10 @@ public class Simulation {
      * @param dir
      * @param images
      */
-    public Simulation(String simulationID, String simulationName, String modelType, double duration, LocalDateTime startTime, List<StatisticValues> metricTypes, boolean isCompleted, boolean isAborted, boolean isInSteadyState, File dir, List<File> images) {
+    public Simulation(String simulationID, String simulationName, String seed, String modelType, double duration, LocalDateTime startTime, List<StatisticValues> metricTypes, boolean isCompleted, boolean isAborted, boolean isInSteadyState, File dir, List<File> images) {
         this.simulationID = simulationID;
         this.simulationName = simulationName;
+        this.simulationSeed = seed;
         this.modelType = modelType;
         this.duration = duration;
         this.startTime = startTime;
@@ -74,6 +76,10 @@ public class Simulation {
 
     public String getSimulationName() {
         return simulationName;
+    }
+
+    public String getSimulationSeed() {
+        return simulationSeed;
     }
 
     public String getModelType() {

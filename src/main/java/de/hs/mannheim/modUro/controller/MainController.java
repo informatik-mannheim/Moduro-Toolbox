@@ -224,7 +224,10 @@ public class MainController {
             //treeitem: modeltypes
             for (ModelType modelTypeItem : projectItem.getModelTypeList()) {
                 // TODO Model item: add total fitness as info
-                ModeltypeOverview modeltypeOverview = new ModeltypeOverview(modelTypeItem);
+                ModeltypeOverview modeltypeOverview =
+                        new ModeltypeOverview(modelTypeItem,
+                                completedCheckboxButton.isSelected(),
+                                inSteadyStateCheckButton.isSelected());
                 double meanFitness = modeltypeOverview.getStatisticValues().
                         get(FitnessName.TOTAL_FITNESS.getName()).getMean();
                 String meanFitnessS = String.format("%.2f", meanFitness);

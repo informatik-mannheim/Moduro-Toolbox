@@ -43,7 +43,7 @@ public class ModeltypeOverview2Test {
         MainModel mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         Project project = mainModel.getProjectData().get(0);
         ModelType modelType = project.getModelTypeList().get(0);
-        modeltypeOverview = new ModeltypeOverview(modelType);
+        modeltypeOverview = new ModeltypeOverview(modelType, false, false);
     }
 
     @Test

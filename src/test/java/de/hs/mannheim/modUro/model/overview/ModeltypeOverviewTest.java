@@ -50,7 +50,7 @@ public class ModeltypeOverviewTest {
         project = projectList.get(1);
         modelType = project.getModelTypeList().get(1);
 
-        modeltypeOverview = new ModeltypeOverview(modelType);
+        modeltypeOverview = new ModeltypeOverview(modelType, false, false);
     }
 
     @Test

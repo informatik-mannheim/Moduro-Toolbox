@@ -15,6 +15,8 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.controller.overview;
 
+import de.hs.mannheim.modUro.MainApp;
+import de.hs.mannheim.modUro.controller.MainController;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
@@ -22,6 +24,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -52,9 +55,20 @@ public class ModeltypeOverviewController {
     private Label numberOfAbortedSimulation;
     @FXML
     private Label numberOfCompletedSimulations;
+    @FXML
+    private CheckBox completedCheckboxButton;
+    @FXML
+    private CheckBox inSteadyStateCheckButton;
 
     public void init(ModelType modelType) {
-        this.modeltypeOverview = new ModeltypeOverview(modelType);
+        // Has to be initialized here, otherwise MainApp.scene is null:
+        completedCheckboxButton =
+                (CheckBox) MainApp.scene.lookup("#completedCheckboxButton");
+        inSteadyStateCheckButton =
+                (CheckBox) MainApp.scene.lookup("#inSteadyStateCheckButton");
+        this.modeltypeOverview = new ModeltypeOverview(modelType,
+                completedCheckboxButton.isSelected(),
+                inSteadyStateCheckButton.isSelected());
         List<StatisticValues> l = new ArrayList(modeltypeOverview.getStatisticValues().values());
         l.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         metricData = FXCollections.observableArrayList(l);
