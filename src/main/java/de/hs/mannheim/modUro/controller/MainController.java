@@ -65,6 +65,10 @@ public class MainController {
     private CheckBox completedCheckboxButton;
     @FXML
     private CheckBox inSteadyStateCheckButton;
+    @FXML
+    private DatePicker fromDate;
+    @FXML
+    private DatePicker toDate;
 
     // List with projectData
     private ObservableList<Project> projectData;
@@ -96,6 +100,8 @@ public class MainController {
         FilterOption filterOption =
                 new FilterOption(inSteadyStateCheckButton.isSelected(),
                         completedCheckboxButton.isSelected());
+        filterOption.fromDate = fromDate.getValue();
+        filterOption.toDate = toDate.getValue();
         mainModel = new MainModel("moduro-toolbox-settings.xml", filterOption);
         //get the Project Data from Main Model
         this.projectData = FXCollections.observableArrayList(mainModel.getProjectData());

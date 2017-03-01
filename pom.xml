@@ -6,7 +6,7 @@
 
     <groupId>hs.mannheim.de</groupId>
     <artifactId>moduro-toolbox</artifactId>
-    <version>0.4.3-SNAPSHOT</version>
+    <version>0.5.0</version>
 
     <name>ModUro Toolbox</name>
     <url>http://mi.informatik.hs-mannheim.de/gumbel/en/forschung/moduro/</url>

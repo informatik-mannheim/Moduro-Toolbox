@@ -82,6 +82,16 @@ public class ModuroModel {
                 if (filterOption.steadyState) {
                     inResult = inResult && simulation.isInSteadyState();
                 }
+                if (filterOption.fromDate != null) {
+                    inResult = inResult &&
+                            filterOption.fromDate.
+                            isBefore(simulation.getStartTime().toLocalDate());
+                }
+                if (filterOption.toDate != null) {
+                    inResult = inResult &&
+                            filterOption.toDate.
+                                    isAfter(simulation.getStartTime().toLocalDate());
+                }
                 if (inResult) {
                     simulationList.add(simulation);
                 }
