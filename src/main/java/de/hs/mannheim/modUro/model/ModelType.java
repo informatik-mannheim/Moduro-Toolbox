@@ -17,7 +17,6 @@ package de.hs.mannheim.modUro.model;
 
 import de.hs.mannheim.modUro.config.FileName;
 import de.hs.mannheim.modUro.config.RegEx;
-import de.hs.mannheim.modUro.creator.SimulationCreator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ import java.util.List;
  * Model class for a ModelType.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class ModelType {
 
@@ -68,12 +68,10 @@ public class ModelType {
     private List<Simulation> createSimulationList() {
         List<Simulation> simulationList = new ArrayList<>();
 
-        SimulationCreator simulationCreator = new SimulationCreator();
         for (File file : dirList) {
             if (file.isDirectory() && directoryContainsMetricDataFile(file)) {
-                simulationCreator.setDir(file);
-                simulationCreator.createSimulation();
-                simulationList.add(simulationCreator.getSimulation());
+                Simulation simulation = new Simulation(file);
+                simulationList.add(simulation);
             }
         }
         return simulationList;
