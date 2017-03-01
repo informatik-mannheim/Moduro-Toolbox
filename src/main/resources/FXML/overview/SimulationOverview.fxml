@@ -14,27 +14,25 @@
           <children>
             <Label text="Simulation-ID:" />
             <Label fx:id="simulationID" GridPane.columnIndex="2" />
-            <Label text="Simulation-Name:" GridPane.rowIndex="1" />
-            <Label fx:id="simulationName" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label text="Simulation-Model:" GridPane.rowIndex="2" />
-            <Label fx:id="simulationModel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label fx:id="simulationSeed" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label text="Seed:" GridPane.rowIndex="3" />
-            <Label text="in SteadyState:" GridPane.rowIndex="4" />
-            <Label fx:id="isInSteadyState" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-            <Label text="Completed:" GridPane.rowIndex="5" />
-            <Label fx:id="isCompleted" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <Label text="Aborted:" GridPane.rowIndex="6" />
-            <Label fx:id="isAborted" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-            <Label text="Start-time:" GridPane.rowIndex="7" />
-            <Label fx:id="starttime" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-            <Label text="Duration:" GridPane.rowIndex="8" />
-            <Label fx:id="duration" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-            <Label text="Directory" GridPane.rowIndex="9" />
-            <Label text="Metric Types:" GridPane.rowIndex="10" />
-            <Label fx:id="metricTypes" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-            <Hyperlink fx:id="directoryHyperlink" onAction="#handleHyperlinkOnlicked" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-            <Button mnemonicParsing="false" onAction="#handleImagesToVideo" text="ImagesToVideo" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+            <Label text="Simulation-Model:" GridPane.rowIndex="1" />
+            <Label fx:id="simulationModel" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label text="Seed:" GridPane.rowIndex="2" />
+            <Label fx:id="simulationSeed" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label text="in SteadyState:" GridPane.rowIndex="3" />
+            <Label fx:id="isInSteadyState" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label text="Completed:" GridPane.rowIndex="4" />
+            <Label fx:id="isCompleted" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label text="Aborted:" GridPane.rowIndex="5" />
+            <Label fx:id="isAborted" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Label text="Start-time:" GridPane.rowIndex="6" />
+            <Label fx:id="starttime" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Label text="Duration:" GridPane.rowIndex="7" />
+            <Label fx:id="duration" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <Label text="Directory" GridPane.rowIndex="8" />
+            <Label text="Metric Types:" GridPane.rowIndex="9" />
+            <Label fx:id="metricTypes" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+            <Hyperlink fx:id="directoryHyperlink" onAction="#handleHyperlinkOnlicked" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <Button mnemonicParsing="false" onAction="#handleImagesToVideo" text="ImagesToVideo" GridPane.columnIndex="2" GridPane.rowIndex="11" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="24.0" />
