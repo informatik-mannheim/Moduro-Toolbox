@@ -15,7 +15,15 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -26,7 +34,17 @@ import java.util.Locale;
  */
 public class MetricType extends StatisticValues {
 
+    //Input file of a metric type txt file
+    private File file;
+
     private double[][] metricData;
+
+    public MetricType(File file) {
+        super(getName(file));
+        this.file = file;
+        metricData = readMetricDataFromFile();
+        init(extractColumn(metricData, 1));
+    }
 
     public MetricType(String name, double[][] metricData) {
         super(name, extractColumn(metricData, 1));
@@ -43,5 +61,56 @@ public class MetricType extends StatisticValues {
             a[i] = data[i][idx];
         }
         return a;
+    }
+
+    /**
+     * Parses name of MetricType.
+     *
+     * @return
+     */
+    private static String getName(File file) {
+        String name = null;
+        int pos = file.getName().lastIndexOf(".");  //searches the pos of last index of "."
+        if (pos != -1) {
+            name = file.getName().substring(0, pos);   //substring the Filename at the last "."
+        }
+        return name;
+    }
+
+
+    /**
+     * Reads and parse MetricData from File.
+     * TODO This is redundant with subroutine in Simulation!
+     */
+    private double[][] readMetricDataFromFile() {
+        //initialize matrix length with line length of file
+        double[][] metricData = new double[1][2];
+        String line;
+        int row = 0;
+
+        List<Double> times = new ArrayList<>();
+        List<Double> fitness = new ArrayList<>();
+        BufferedReader buffer = null;
+        try {
+            buffer = new BufferedReader(new FileReader(file.getAbsolutePath()));
+            while ((line = buffer.readLine()) != null) {
+                String[] vals = line.trim().split(" ");
+                times.add(Double.parseDouble(vals[0]));
+                fitness.add(Double.parseDouble(vals[1]));
+                row++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        metricData = new double[row][2];
+        for (int i = 0; i < row; i++) {
+            metricData[i][0] = times.get(i);
+            metricData[i][1] = fitness.get(i);
+        }
+        return metricData;
+    }
+
+    public File getFile() {
+        return file;
     }
 }

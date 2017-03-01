@@ -15,15 +15,22 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
-import de.hs.mannheim.modUro.config.*;
-import de.hs.mannheim.modUro.creator.MetricTypeCreator;
+import static de.hs.mannheim.modUro.config.FileName.*;
+import static de.hs.mannheim.modUro.config.FileEnding.*;
+import static de.hs.mannheim.modUro.config.FitnessName.ARRANGEMENT_FITNESS;
+import static de.hs.mannheim.modUro.config.FitnessName.TOTAL_FITNESS;
+import static de.hs.mannheim.modUro.config.FitnessName.VOLUME_FITNESS;
+
+import de.hs.mannheim.modUro.config.DataPlot;
+import de.hs.mannheim.modUro.config.ImageReader;
+import de.hs.mannheim.modUro.config.RegEx;
+import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.reader.CellCycleStat;
 import de.hs.mannheim.modUro.reader.CelltimesReader;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,28 +54,21 @@ public class Simulation {
     private List<StatisticValues> metricTypes;    //list of the metric types, which this simulation have
     private List<File> images;              //Filepath of Images
 
-    MetricTypeCreator metricTypeCreator = new MetricTypeCreator();
-
     // Data for Plotting
     private double minTime = DataPlot.MIN_TIME.getValue();
     private double maxTime = DataPlot.MAX_TIME.getValue();
 
-    /**
-     * Gets time value of FitnessPlot first column in matrix.
-     *
-     * @return
-     */
     private double[][] defaultFitnessTable;
 
     /**
      * Create a simulation run based on the information found
      * in the given directory.
+     *
      * @param dir
      */
     public Simulation(File dir) {
         this.dir = dir;
         parseParameterDump();
-        calcDefaultFitnessTable();
         this.simulationID = createSimulationId();
         // The name is retrieved from the directory. I.e. the simulation
         // should exists alone.
@@ -87,7 +87,9 @@ public class Simulation {
         return dir.getName();
     }
 
-    public String getSimulationSeed() { return seed + ""; }
+    public String getSimulationSeed() {
+        return seed + "";
+    }
 
     public String getModelType() {
         return modelType;
@@ -182,50 +184,12 @@ public class Simulation {
         return tokenValue[0];
     }
 
-    private void calcDefaultFitnessTable() {
-        defaultFitnessTable = new double[1][2]; // Empty table so far.
-
-        File[] files = dir.listFiles(
-                (parent, name) ->
-                        name.equals(FileName.DEFAULT_FITNESS_FILE.getName())
-        );
-        if (files.length == 0) {
-            ToolboxLogger.log.warning("Dir " + dir + " does not contain a " +
-                    FileName.DEFAULT_FITNESS_FILE.getName());
-            return;
-        }
-        File fitnessPlotFile = files[0];
-
-        String line;
-        int row = 0;
-
-        List<Double> times = new ArrayList<>();
-        List<Double> fitness = new ArrayList<>();
-        BufferedReader buffer = null;
-        try {
-            buffer = new BufferedReader(new FileReader(fitnessPlotFile.getAbsolutePath()));
-            while ((line = buffer.readLine()) != null) {
-                String[] vals = line.trim().split(" ");
-                times.add(Double.parseDouble(vals[0]));
-                fitness.add(Double.parseDouble(vals[1]));
-                row++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        defaultFitnessTable = new double[row][2];
-        for (int i = 0; i < row; i++) {
-            defaultFitnessTable[i][0] = times.get(i);
-            defaultFitnessTable[i][1] = fitness.get(i);
-        }
-    }
-
     private void parseParameterDump() {
         String dateInString = null;
         String timeInString = null;
         startTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        File parameterDumpFile = dir.listFiles((parent, name) -> (name.endsWith(FileEnding.METRIC_DATA_FILE.getFileEnding()) && name.contains(FileName.PARAMETER_DUMP.getName())))[0];
+        File parameterDumpFile = dir.listFiles((parent, name) -> (name.endsWith(METRIC_DATA_FILE.getFileEnding()) && name.contains(PARAMETER_DUMP.getName())))[0];
         try {
             BufferedReader in = new BufferedReader(new FileReader(parameterDumpFile.getAbsolutePath()));    //reading files in specified directory
             String line;
@@ -258,16 +222,23 @@ public class Simulation {
         // This is how fitness files are detected:
         File[] txtFiles = dir.listFiles(
                 (parent, name) ->
-                        (name.endsWith(FileEnding.METRICTYPE_FILE.getFileEnding()) &&
-                                !name.equals(FileName.PARAMETER_DUMP.getName()) &&
+                        (name.endsWith(METRICTYPE_FILE.getFileEnding()) &&
+                                !name.equals(PARAMETER_DUMP.getName()) &&
                                 !name.equals("FitnessPlot.dat")) // TODO
         );
         List<StatisticValues> dataSeriesList = new ArrayList<>();
 
         for (File file : txtFiles) {
-            metricTypeCreator.setFile(file);
-            metricTypeCreator.createMetricType();
-            dataSeriesList.add(metricTypeCreator.getMetricType());
+            MetricType metricType = new MetricType(file);
+            dataSeriesList.add(metricType);
+            if ((metricType.getName() + ".dat").
+                    equals(DEFAULT_FITNESS_FILE.getName())) {
+                defaultFitnessTable = metricType.getMetricData();
+            }
+        }
+        if (defaultFitnessTable == null) {
+            ToolboxLogger.log.warning("Dir " + dir + " does not contain a " +
+                    DEFAULT_FITNESS_FILE.getName());
         }
         // Now calculate the total fitness:
         MetricType total = calcTotalFitness(dataSeriesList);
@@ -294,17 +265,17 @@ public class Simulation {
     private MetricType calcTotalFitness(List<StatisticValues> dataSeriesList) {
         MetricType vol = null, arr = null;
         for (StatisticValues data : dataSeriesList) {
-            if (data.getName().equals(FitnessName.VOLUME_FITNESS.getName())) {
+            if (data.getName().equals(VOLUME_FITNESS.getName())) {
                 vol = (MetricType) data;
             }
-            if (data.getName().equals(FitnessName.ARRANGEMENT_FITNESS.getName())) {
+            if (data.getName().equals(ARRANGEMENT_FITNESS.getName())) {
                 arr = (MetricType) data;
             }
         }
         if (vol == null || arr == null) {
             return null; // No total fitness possible!
         }
-        String name = FitnessName.TOTAL_FITNESS.getName();
+        String name = TOTAL_FITNESS.getName();
         int size = Math.min(vol.getMetricData().length, arr.getMetricData().length);
         double[][] metricData = new double[size][2];
         for (int i = 0; i < metricData.length; i++) {
@@ -323,7 +294,7 @@ public class Simulation {
     private List<File> createImages() {
         List<File> imagePath = new ArrayList<>();
 
-        File[] images = dir.listFiles((parent, name) -> name.endsWith(FileEnding.IMAGEFILE.getFileEnding()));
+        File[] images = dir.listFiles((parent, name) -> name.endsWith(IMAGEFILE.getFileEnding()));
 
         if (images.length != 0) {
             int count = images.length;
