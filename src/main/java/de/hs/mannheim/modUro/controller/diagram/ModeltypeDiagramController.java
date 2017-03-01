@@ -216,7 +216,7 @@ public class ModeltypeDiagramController extends DiagramController {
                     double x;
                     double y;
                     double[][] fitnessArray =
-                            ((TimeSeries) metricTypeItem).getMetricData();
+                            ((TimeSeries) metricTypeItem).getData();
 
                     for (int i = 0; i < fitnessArray.length; i++) {
                         x = fitnessArray[i][0];

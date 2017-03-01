@@ -233,7 +233,7 @@ public class Simulation {
             dataSeriesList.add(timeSeries);
             if ((timeSeries.getName() + ".dat").
                     equals(DEFAULT_FITNESS_FILE.getName())) {
-                defaultFitnessTable = timeSeries.getMetricData();
+                defaultFitnessTable = timeSeries.getData();
             }
         }
         if (defaultFitnessTable == null) {
@@ -276,12 +276,12 @@ public class Simulation {
             return null; // No total fitness possible!
         }
         String name = TOTAL_FITNESS.getName();
-        int size = Math.min(vol.getMetricData().length, arr.getMetricData().length);
+        int size = Math.min(vol.getData().length, arr.getData().length);
         double[][] metricData = new double[size][2];
         for (int i = 0; i < metricData.length; i++) {
-            metricData[i][0] = vol.getMetricData()[i][0];
-            metricData[i][1] = (vol.getMetricData()[i][1] +
-                    arr.getMetricData()[i][1]) / 2;
+            metricData[i][0] = vol.getData()[i][0];
+            metricData[i][1] = (vol.getData()[i][1] +
+                    arr.getData()[i][1]) / 2;
         }
         return new TimeSeries(name, metricData);
     }

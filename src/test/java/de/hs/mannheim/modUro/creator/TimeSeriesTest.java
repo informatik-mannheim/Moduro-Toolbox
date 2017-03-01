@@ -63,7 +63,7 @@ public class TimeSeriesTest {
                 {1.5, 0.5}
         };
 
-        Assert.assertArrayEquals("Metric data does not equals.", metricData, timeSeries.getMetricData());
+        Assert.assertArrayEquals("Metric data does not equals.", metricData, timeSeries.getData());
     }
 
     @Test

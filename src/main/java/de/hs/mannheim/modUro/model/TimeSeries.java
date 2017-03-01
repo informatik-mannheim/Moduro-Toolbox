@@ -47,7 +47,7 @@ public class TimeSeries extends StatisticValues {
         this.metricData = metricData;
     }
 
-    public double[][] getMetricData() {
+    public double[][] getData() {
         return metricData;
     }
 
@@ -73,10 +73,8 @@ public class TimeSeries extends StatisticValues {
         return name;
     }
 
-
     /**
-     * Reads and parse MetricData from File.
-     * TODO This is redundant with subroutine in Simulation!
+     * Reads and parse TimeSeries data from file.
      */
     private double[][] readMetricDataFromFile() {
         //initialize matrix length with line length of file

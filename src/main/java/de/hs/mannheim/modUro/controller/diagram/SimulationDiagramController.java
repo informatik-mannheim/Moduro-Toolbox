@@ -238,7 +238,7 @@ public class SimulationDiagramController extends DiagramController {
                 // Cell count not available.
             }
         } else {
-            double[][] data = ((TimeSeries) simulationDiagram.getTimeSeries().get(selectedItemIndex)).getMetricData();
+            double[][] data = ((TimeSeries) simulationDiagram.getTimeSeries().get(selectedItemIndex)).getData();
             XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), data);
             JFreeChart chart = createChart(dataset, simulationDiagram.getTimeSeries().get(selectedItemIndex).getName());
             ChartViewer viewer = new ChartViewer(chart);
