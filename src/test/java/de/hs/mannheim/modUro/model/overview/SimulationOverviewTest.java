@@ -93,7 +93,7 @@ public class SimulationOverviewTest {
             add(FitnessName.TOTAL_FITNESS.getName());
         }};
 
-        Assert.assertEquals("Simulation should have other MetricType names.", metricTypeList, simulationOverview.getMetricTypesName());
+        Assert.assertEquals("Simulation should have other TimeSeries names.", metricTypeList, simulationOverview.getMetricTypesName());
     }
 
     @Test

@@ -24,12 +24,12 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * JUnit Test for ProjectCreatorTest.
+ * JUnit Test for ProjectTest.
  * Test data: first project (Project1)
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class ProjectCreatorTest {
+public class ProjectTest {
 
     MainModel mainModel;
     Project project;

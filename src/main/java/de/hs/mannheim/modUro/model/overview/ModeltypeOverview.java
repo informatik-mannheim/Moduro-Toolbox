@@ -15,7 +15,6 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model.overview;
 
-import de.hs.mannheim.modUro.model.MetricType;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
@@ -149,7 +148,7 @@ public class ModeltypeOverview {
     }
 
     /**
-     * Calculates statisticValues for each MetricType for LineDiagram.
+     * Calculates statisticValues for each TimeSeries for LineDiagram.
      */
     private void calculateStatisticValues() {
         statisticValues = new HashMap<>();

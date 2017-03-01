@@ -25,12 +25,12 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * JUnit Test for ModeltypeCreatorTest.
+ * JUnit Test for ModeltypeTest.
  * Test data: first project (Project1)-> first Modeltype (CM-IN-DAE)
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class ModeltypeCreatorTest {
+public class ModeltypeTest {
     MainModel mainModel;
     Project project;
     List<Project> projectList;

@@ -29,12 +29,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * JUnit Test for SimulationCreatorTest.
+ * JUnit Test for SimulationTest.
  * Test data: first project (Project1)-> first Modeltype (CM-IN-DAE)-> first simulation (CM-IN-DAE_cc3d_01_15_2015_12_53_49)
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class SimulationCreatorTest {
+public class SimulationTest {
     final double DELTA = 1e-15;
 
     MainModel mainModel;

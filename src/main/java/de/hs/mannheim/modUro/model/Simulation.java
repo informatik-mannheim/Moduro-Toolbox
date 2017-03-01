@@ -229,11 +229,11 @@ public class Simulation {
         List<StatisticValues> dataSeriesList = new ArrayList<>();
 
         for (File file : txtFiles) {
-            MetricType metricType = new MetricType(file);
-            dataSeriesList.add(metricType);
-            if ((metricType.getName() + ".dat").
+            TimeSeries timeSeries = new TimeSeries(file);
+            dataSeriesList.add(timeSeries);
+            if ((timeSeries.getName() + ".dat").
                     equals(DEFAULT_FITNESS_FILE.getName())) {
-                defaultFitnessTable = metricType.getMetricData();
+                defaultFitnessTable = timeSeries.getMetricData();
             }
         }
         if (defaultFitnessTable == null) {
@@ -241,7 +241,7 @@ public class Simulation {
                     DEFAULT_FITNESS_FILE.getName());
         }
         // Now calculate the total fitness:
-        MetricType total = calcTotalFitness(dataSeriesList);
+        TimeSeries total = calcTotalFitness(dataSeriesList);
         if (total != null) {
             dataSeriesList.add(total);
         }
@@ -262,14 +262,14 @@ public class Simulation {
         return dataSeriesList;
     }
 
-    private MetricType calcTotalFitness(List<StatisticValues> dataSeriesList) {
-        MetricType vol = null, arr = null;
+    private TimeSeries calcTotalFitness(List<StatisticValues> dataSeriesList) {
+        TimeSeries vol = null, arr = null;
         for (StatisticValues data : dataSeriesList) {
             if (data.getName().equals(VOLUME_FITNESS.getName())) {
-                vol = (MetricType) data;
+                vol = (TimeSeries) data;
             }
             if (data.getName().equals(ARRANGEMENT_FITNESS.getName())) {
-                arr = (MetricType) data;
+                arr = (TimeSeries) data;
             }
         }
         if (vol == null || arr == null) {
@@ -283,7 +283,7 @@ public class Simulation {
             metricData[i][1] = (vol.getMetricData()[i][1] +
                     arr.getMetricData()[i][1]) / 2;
         }
-        return new MetricType(name, metricData);
+        return new TimeSeries(name, metricData);
     }
 
     /**

@@ -16,7 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.controller.overview;
 
 import de.hs.mannheim.modUro.config.ToolboxLogger;
-import de.hs.mannheim.modUro.model.MetricType;
+import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.overview.SimulationOverview;
@@ -38,8 +38,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.StringWriter;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -133,15 +131,15 @@ public class SimulationOverviewController {
                 FXCollections.observableArrayList(simulationOverview.getMetricTypes());
 
         TableColumn column1 = new TableColumn("Data Series");
-        column1.setCellValueFactory(new PropertyValueFactory<MetricType, String>("name"));
+        column1.setCellValueFactory(new PropertyValueFactory<TimeSeries, String>("name"));
         //column1.setMinWidth(300.0);
 
         TableColumn column2 = new TableColumn("Mean");
-        column2.setCellValueFactory(new PropertyValueFactory<MetricType, String>("meanAsString"));
+        column2.setCellValueFactory(new PropertyValueFactory<TimeSeries, String>("meanAsString"));
         //column2.setMinWidth(200.0);
 
         TableColumn column3 = new TableColumn("Standard Deviation");
-        column3.setCellValueFactory(new PropertyValueFactory<MetricType, String>("stdDevAsString"));
+        column3.setCellValueFactory(new PropertyValueFactory<TimeSeries, String>("stdDevAsString"));
         //column3.setMinWidth(200.0);
 
         tableContent.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

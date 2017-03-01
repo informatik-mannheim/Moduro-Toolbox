@@ -23,13 +23,13 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * JUnit Test for MetricTypeCreatorTest.
+ * JUnit Test for TimeSeriesTest.
  * Test data: first project (Project1)-> first Modeltype (CM-IN-DAE)-> first simulation (CM-IN-DAE_cc3d_01_15_2015_12_53_49)
- * -> first MetricType (FitnessArrangement.dat)
+ * -> first TimeSeries (FitnessArrangement.dat)
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class MetricTypeCreatorTest {
+public class TimeSeriesTest {
 
     final double DELTA = 1e-15;
 
@@ -38,7 +38,7 @@ public class MetricTypeCreatorTest {
     List<Project> projectList;
     ModelType modelType;
     Simulation simulation;
-    MetricType metricType;
+    TimeSeries timeSeries;
 
     @Before
     public void setUp() {
@@ -47,12 +47,12 @@ public class MetricTypeCreatorTest {
         project = projectList.get(0);
         modelType = project.getModelTypeList().get(0);
         simulation = modelType.getSimulations().get(0);
-        metricType = (MetricType) simulation.getMetricTypes().get(4);
+        timeSeries = (TimeSeries) simulation.getMetricTypes().get(4);
     }
 
     @Test
     public void metricTypeName() {
-        Assert.assertEquals("Name of metrictype should be 'FitnessArrangement' and not: " + metricType.getName(), "FitnessArrangement", metricType.getName());
+        Assert.assertEquals("Name of metrictype should be 'FitnessArrangement' and not: " + timeSeries.getName(), "FitnessArrangement", timeSeries.getName());
     }
 
     @Test
@@ -63,16 +63,16 @@ public class MetricTypeCreatorTest {
                 {1.5, 0.5}
         };
 
-        Assert.assertArrayEquals("Metric data does not equals.", metricData, metricType.getMetricData());
+        Assert.assertArrayEquals("Metric data does not equals.", metricData, timeSeries.getMetricData());
     }
 
     @Test
     public void meanOfSimulation() {
-        Assert.assertEquals("Mean of simulation should be '1.5' and not: " + metricType.getMean(), 1.5, metricType.getMean(), DELTA);
+        Assert.assertEquals("Mean of simulation should be '1.5' and not: " + timeSeries.getMean(), 1.5, timeSeries.getMean(), DELTA);
     }
 
     @Test
     public void stdDevOfSimulation() {
-        Assert.assertEquals("Standard deviation of simulation should be '1.7320508075688772' and not: " + metricType.getStdDev(), 1.7320508075688772, metricType.getStdDev(), DELTA);
+        Assert.assertEquals("Standard deviation of simulation should be '1.7320508075688772' and not: " + timeSeries.getStdDev(), 1.7320508075688772, timeSeries.getStdDev(), DELTA);
     }
 }

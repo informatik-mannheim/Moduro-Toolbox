@@ -15,7 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model.diagram;
 
-import de.hs.mannheim.modUro.model.MetricType;
+import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
@@ -51,10 +51,10 @@ public class ModeltypeDiagram {
 
         for (Simulation simulationItem : modelType.getSimulations()) {
             for (StatisticValues sv : simulationItem.getMetricTypes()) {
-                if (sv instanceof MetricType) {
-                    MetricType metricType = (MetricType) sv;
-                    if (!metricTypeNames.contains(metricType.getName())) {
-                        metricTypeNames.add(metricType.getName());
+                if (sv instanceof TimeSeries) {
+                    TimeSeries timeSeries = (TimeSeries) sv;
+                    if (!metricTypeNames.contains(timeSeries.getName())) {
+                        metricTypeNames.add(timeSeries.getName());
                     }
                 }
             }

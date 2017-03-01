@@ -17,7 +17,7 @@ package de.hs.mannheim.modUro.controller.diagram;
 
 import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
-import de.hs.mannheim.modUro.model.MetricType;
+import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
@@ -216,7 +216,7 @@ public class ModeltypeDiagramController extends DiagramController {
                     double x;
                     double y;
                     double[][] fitnessArray =
-                            ((MetricType) metricTypeItem).getMetricData();
+                            ((TimeSeries) metricTypeItem).getMetricData();
 
                     for (int i = 0; i < fitnessArray.length; i++) {
                         x = fitnessArray[i][0];

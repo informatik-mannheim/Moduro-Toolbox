@@ -17,7 +17,7 @@ package de.hs.mannheim.modUro.controller.diagram;
 
 import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
-import de.hs.mannheim.modUro.model.MetricType;
+import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.SimulationDiagram;
@@ -32,18 +32,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.BorderPane;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.block.BlockBorder;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.HorizontalAlignment;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,7 +165,7 @@ public class SimulationDiagramController extends DiagramController {
 
     private List<String> choiceBoxMetrictypeNames() {
         List<String> name = new ArrayList<>();
-        for (StatisticValues metricTypeItem : simulationDiagram.getMetricTypes()) {
+        for (StatisticValues metricTypeItem : simulationDiagram.getTimeSeries()) {
             name.add(metricTypeItem.getName());
         }
         // Here we add - for now - the two generic diagram types:
@@ -217,7 +210,7 @@ public class SimulationDiagramController extends DiagramController {
     private void setChartContent(int selectedItemIndex, BorderPane pane) {
         // Very quick and dirty: TODO
         // New diagrams obtain size and size+1.
-        if (selectedItemIndex == simulationDiagram.getMetricTypes().size()) {
+        if (selectedItemIndex == simulationDiagram.getTimeSeries().size()) {
             // This means cell count.
             CelltimesReader ctr = simulation.getCellTimesReader();
             if (ctr != null) {
@@ -228,7 +221,7 @@ public class SimulationDiagramController extends DiagramController {
             } else {
                 // Cell count not available.
             }
-        } else if (selectedItemIndex == simulationDiagram.getMetricTypes().size() + 1) {
+        } else if (selectedItemIndex == simulationDiagram.getTimeSeries().size() + 1) {
             // And this means cell cycle times.
             CelltimesReader ctr = simulation.getCellTimesReader();
             if (ctr != null) {
@@ -245,9 +238,9 @@ public class SimulationDiagramController extends DiagramController {
                 // Cell count not available.
             }
         } else {
-            double[][] data = ((MetricType) simulationDiagram.getMetricTypes().get(selectedItemIndex)).getMetricData();
+            double[][] data = ((TimeSeries) simulationDiagram.getTimeSeries().get(selectedItemIndex)).getMetricData();
             XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), data);
-            JFreeChart chart = createChart(dataset, simulationDiagram.getMetricTypes().get(selectedItemIndex).getName());
+            JFreeChart chart = createChart(dataset, simulationDiagram.getTimeSeries().get(selectedItemIndex).getName());
             ChartViewer viewer = new ChartViewer(chart);
             pane.setCenter(viewer);
         }

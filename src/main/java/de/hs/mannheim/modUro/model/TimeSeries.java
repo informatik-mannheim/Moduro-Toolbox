@@ -15,38 +15,34 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * Model class for a MetricType.
+ * Model class for a TimeSeries.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class MetricType extends StatisticValues {
+public class TimeSeries extends StatisticValues {
 
     //Input file of a metric type txt file
     private File file;
 
     private double[][] metricData;
 
-    public MetricType(File file) {
+    public TimeSeries(File file) {
         super(getName(file));
         this.file = file;
         metricData = readMetricDataFromFile();
         init(extractColumn(metricData, 1));
     }
 
-    public MetricType(String name, double[][] metricData) {
+    public TimeSeries(String name, double[][] metricData) {
         super(name, extractColumn(metricData, 1));
         this.metricData = metricData;
     }
@@ -64,7 +60,7 @@ public class MetricType extends StatisticValues {
     }
 
     /**
-     * Parses name of MetricType.
+     * Parses name of TimeSeries.
      *
      * @return
      */
