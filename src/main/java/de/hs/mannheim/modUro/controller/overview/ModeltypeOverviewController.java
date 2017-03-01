@@ -16,8 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.controller.overview;
 
 import de.hs.mannheim.modUro.MainApp;
-import de.hs.mannheim.modUro.controller.MainController;
-import de.hs.mannheim.modUro.model.ModelType;
+import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
 import javafx.beans.binding.Bindings;
@@ -60,13 +59,13 @@ public class ModeltypeOverviewController {
     @FXML
     private CheckBox inSteadyStateCheckButton;
 
-    public void init(ModelType modelType) {
+    public void init(ModuroModel moduroModel) {
         // Has to be initialized here, otherwise MainApp.scene is null:
         completedCheckboxButton =
                 (CheckBox) MainApp.scene.lookup("#completedCheckboxButton");
         inSteadyStateCheckButton =
                 (CheckBox) MainApp.scene.lookup("#inSteadyStateCheckButton");
-        this.modeltypeOverview = new ModeltypeOverview(modelType,
+        this.modeltypeOverview = new ModeltypeOverview(moduroModel,
                 completedCheckboxButton.isSelected(),
                 inSteadyStateCheckButton.isSelected());
         List<StatisticValues> l = new ArrayList(modeltypeOverview.getStatisticValues().values());

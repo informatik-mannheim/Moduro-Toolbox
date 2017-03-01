@@ -13,7 +13,7 @@
       <Label fx:id="numberOfSimulation" GridPane.columnIndex="1" />
       <Label fx:id="abortedSimulation" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Label fx:id="completedSimulation" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label fx:id="modelType" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label fx:id="moduroModel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <Label text="Number of simulations in steady state:" GridPane.rowIndex="1" />
       <Label fx:id="numberOfSteadyStateSimulation" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>

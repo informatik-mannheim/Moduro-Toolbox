@@ -16,7 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.model.diagram;
 
 import de.hs.mannheim.modUro.model.TimeSeries;
-import de.hs.mannheim.modUro.model.ModelType;
+import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 
@@ -30,15 +30,15 @@ import java.util.List;
  */
 public class ModeltypeDiagram {
 
-    private ModelType modelType;
+    private ModuroModel moduroModel;
 
     private List<String> metricTypeNames;
     private List<Simulation> simulationList;
 
-    public ModeltypeDiagram(ModelType modelType) {
-        this.modelType = modelType;
+    public ModeltypeDiagram(ModuroModel moduroModel) {
+        this.moduroModel = moduroModel;
 
-        simulationList = modelType.getSimulations();
+        simulationList = moduroModel.getSimulations();
 
         createMetricTypeNameList();
     }
@@ -49,7 +49,7 @@ public class ModeltypeDiagram {
     private void createMetricTypeNameList() {
         metricTypeNames = new ArrayList<>();
 
-        for (Simulation simulationItem : modelType.getSimulations()) {
+        for (Simulation simulationItem : moduroModel.getSimulations()) {
             for (StatisticValues sv : simulationItem.getMetricTypes()) {
                 if (sv instanceof TimeSeries) {
                     TimeSeries timeSeries = (TimeSeries) sv;

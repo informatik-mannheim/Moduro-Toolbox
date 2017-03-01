@@ -15,7 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model.overview;
 
-import de.hs.mannheim.modUro.model.ModelType;
+import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.Simulation;
 
@@ -56,8 +56,8 @@ public class ProjectOverview {
      */
     private void countSimulations() {
         int count = 0;
-        for (ModelType modelTypeItem : project.getModelTypeList()) {
-            count = count + modelTypeItem.getSimulations().size();
+        for (ModuroModel moduroModelItem : project.getModuroModelList()) {
+            count = count + moduroModelItem.getSimulations().size();
         }
         this.numberOfSimulations = count;
     }
@@ -67,8 +67,8 @@ public class ProjectOverview {
      */
     private void countCompletedSimulations() {
         int count = 0;
-        for (ModelType modelTypeItem : project.getModelTypeList()) {
-            for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+        for (ModuroModel moduroModelItem : project.getModuroModelList()) {
+            for (Simulation simulationItem : moduroModelItem.getSimulations()) {
                 if (simulationItem.isCompleted()) {
                     count++;
                 }
@@ -82,8 +82,8 @@ public class ProjectOverview {
      */
     private void countAbortedSimulations() {
         int count = 0;
-        for (ModelType modelTypeItem : project.getModelTypeList()) {
-            for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+        for (ModuroModel moduroModelItem : project.getModuroModelList()) {
+            for (Simulation simulationItem : moduroModelItem.getSimulations()) {
                 if (simulationItem.isInSteadyState()) {
                     count++;
                 }
@@ -94,8 +94,8 @@ public class ProjectOverview {
 
     private void countSteadyStateSimulation() {
         int count = 0;
-        for (ModelType modelTypeItem : project.getModelTypeList()) {
-            for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+        for (ModuroModel moduroModelItem : project.getModuroModelList()) {
+            for (Simulation simulationItem : moduroModelItem.getSimulations()) {
                 if (simulationItem.isAborted()) {
                     count++;
                 }
@@ -109,8 +109,8 @@ public class ProjectOverview {
      */
     private void listKindsOfModelType() {
         this.kindsOfModelTypes = new ArrayList<>();
-        for (ModelType modelTypeItem : project.getModelTypeList()) {
-            this.kindsOfModelTypes.add(modelTypeItem.getName());
+        for (ModuroModel moduroModelItem : project.getModuroModelList()) {
+            this.kindsOfModelTypes.add(moduroModelItem.getName());
         }
     }
 

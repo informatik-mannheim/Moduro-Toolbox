@@ -23,19 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Model class for a ModelType.
+ * A moduro model.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class ModelType {
+public class ModuroModel {
 
     private String name;
     private List<Simulation> simulations;
     // List of all directories that contain this model:
     private List<File> dirList;
 
-    public ModelType(List<File> dirList) {
+    public ModuroModel(List<File> dirList) {
         this.dirList = dirList;
         this.name = createModelTypeName();
         this.simulations = createSimulationList();

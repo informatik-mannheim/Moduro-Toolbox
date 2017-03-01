@@ -17,8 +17,8 @@ package de.hs.mannheim.modUro.controller.diagram;
 
 import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
+import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.TimeSeries;
-import de.hs.mannheim.modUro.model.ModelType;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.ModeltypeDiagram;
@@ -62,7 +62,7 @@ public class ModeltypeDiagramController extends DiagramController {
     private static String rightLastSelectedMetrictypename;
 
 
-    public void init(ModelType modeltype) {
+    public void init(ModuroModel modeltype) {
         this.modeltypeDiagram = new ModeltypeDiagram(modeltype);
 
         if (leftLastSelectedIndex == null || rightLastSelectedIndex == null) {

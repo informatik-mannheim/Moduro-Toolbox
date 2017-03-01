@@ -40,7 +40,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -159,7 +158,7 @@ public class MainController {
 
             if (loader.getController() instanceof ModeltypeOverviewController) {
                 modeltypeOverviewController = loader.getController();
-                modeltypeOverviewController.init((ModelType) selectedItem.getObject());
+                modeltypeOverviewController.init((ModuroModel) selectedItem.getObject());
             }
 
         } catch (IOException e) {
@@ -193,7 +192,7 @@ public class MainController {
 
             if (loader.getController() instanceof ModeltypeDiagramController) {
                 modeltypeDiagramController = loader.getController();
-                modeltypeDiagramController.init((ModelType) selectedItem.getObject());
+                modeltypeDiagramController.init((ModuroModel) selectedItem.getObject());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -222,20 +221,20 @@ public class MainController {
             project = makeBranch(projectItem.getName(), projectItem, root, null);
 
             //treeitem: modeltypes
-            for (ModelType modelTypeItem : projectItem.getModelTypeList()) {
+            for (ModuroModel moduroModelItem : projectItem.getModuroModelList()) {
                 // TODO Model item: add total fitness as info
                 ModeltypeOverview modeltypeOverview =
-                        new ModeltypeOverview(modelTypeItem,
+                        new ModeltypeOverview(moduroModelItem,
                                 completedCheckboxButton.isSelected(),
                                 inSteadyStateCheckButton.isSelected());
                 double meanFitness = modeltypeOverview.getStatisticValues().
                         get(FitnessName.TOTAL_FITNESS.getName()).getMean();
                 String meanFitnessS = String.format("%.2f", meanFitness);
-                String modelLabel = modelTypeItem.getName() + " (" + meanFitnessS + ")";
-                model = makeBranch(modelLabel, modelTypeItem, project, null);
+                String modelLabel = moduroModelItem.getName() + " (" + meanFitnessS + ")";
+                model = makeBranch(modelLabel, moduroModelItem, project, null);
 
                 //treeitem: simulation
-                for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+                for (Simulation simulationItem : moduroModelItem.getSimulations()) {
                     // Color the entries:
                     Node node = null;
                     if (simulationItem.isAborted()) {
@@ -310,8 +309,8 @@ public class MainController {
         Simulation sim = null;
         // TODO associate data with Tree selection model.
         for (Project project : projectData) {
-            for (ModelType modelType : project.getModelTypeList()) {
-                for (Simulation simulation : modelType.getSimulations()) {
+            for (ModuroModel moduroModel : project.getModuroModelList()) {
+                for (Simulation simulation : moduroModel.getSimulations()) {
                     if (simId.equals(simulation.getSimulationName())) {
                         sim = simulation;
                     }

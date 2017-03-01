@@ -54,6 +54,6 @@ public class ProjectTest {
 
     @Test
     public void countModeltypes() {
-        Assert.assertEquals("Project should have '2' different Modeltypes and not: " + project.getModelTypeList().size(), 2, project.getModelTypeList().size());
+        Assert.assertEquals("Project should have '2' different Modeltypes and not: " + project.getModuroModelList().size(), 2, project.getModuroModelList().size());
     }
 }

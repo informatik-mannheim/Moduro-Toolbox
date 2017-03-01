@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class Project {
 
-    private List<ModelType> modelTypeList;
+    private List<ModuroModel> moduroModelList;
     private SettingFile settingFile;
     private List<File> allDirs;
     private List<String> modelTypeNames;
@@ -43,7 +43,7 @@ public class Project {
     public Project(SettingFile settingFile) {
         this.settingFile = settingFile;
         modelTypeNames = createAllModelTypeNames();
-        modelTypeList = createModelTypeList();
+        moduroModelList = createModelTypeList();
     }
 
     /**
@@ -65,8 +65,8 @@ public class Project {
      *
      * @return A list of all models part of this project.
      */
-    public List<ModelType> getModelTypeList() {
-        return modelTypeList;
+    public List<ModuroModel> getModuroModelList() {
+        return moduroModelList;
     }
 
     /**
@@ -74,9 +74,9 @@ public class Project {
      *
      * @return
      */
-    private List<ModelType> createModelTypeList() {
+    private List<ModuroModel> createModelTypeList() {
         ToolboxLogger.log.config("Building metrics ...");
-        List<ModelType> modelTypeList = new ArrayList<>();
+        List<ModuroModel> moduroModelList = new ArrayList<>();
         List<File> dirList = new ArrayList<>();
 
         for (String name : modelTypeNames) {
@@ -86,12 +86,12 @@ public class Project {
                 }
             }
             // Change here:
-            ModelType modelType = new ModelType(dirList);
-            modelTypeList.add(modelType);
+            ModuroModel moduroModel = new ModuroModel(dirList);
+            moduroModelList.add(moduroModel);
             dirList.clear();
         }
-        ToolboxLogger.log.config("Created " + modelTypeList.size() + " models.");
-        return modelTypeList;
+        ToolboxLogger.log.config("Created " + moduroModelList.size() + " models.");
+        return moduroModelList;
     }
 
     /**

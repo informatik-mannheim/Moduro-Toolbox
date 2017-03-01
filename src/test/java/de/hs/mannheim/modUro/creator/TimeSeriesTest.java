@@ -36,7 +36,7 @@ public class TimeSeriesTest {
     MainModel mainModel;
     Project project;
     List<Project> projectList;
-    ModelType modelType;
+    ModuroModel moduroModel;
     Simulation simulation;
     TimeSeries timeSeries;
 
@@ -45,8 +45,8 @@ public class TimeSeriesTest {
         mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         projectList = mainModel.getProjectData();
         project = projectList.get(0);
-        modelType = project.getModelTypeList().get(0);
-        simulation = modelType.getSimulations().get(0);
+        moduroModel = project.getModuroModelList().get(0);
+        simulation = moduroModel.getSimulations().get(0);
         timeSeries = (TimeSeries) simulation.getMetricTypes().get(4);
     }
 

@@ -37,7 +37,7 @@ public class ModeltypeOverviewTest {
     MainModel mainModel;
     List<Project> projectList;
     Project project;
-    ModelType modelType;
+    ModuroModel moduroModel;
 
     ModeltypeOverview modeltypeOverview;
     StatisticValues stats;
@@ -48,9 +48,9 @@ public class ModeltypeOverviewTest {
         mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         projectList = mainModel.getProjectData();
         project = projectList.get(1);
-        modelType = project.getModelTypeList().get(1);
+        moduroModel = project.getModuroModelList().get(1);
 
-        modeltypeOverview = new ModeltypeOverview(modelType, false, false);
+        modeltypeOverview = new ModeltypeOverview(moduroModel, false, false);
     }
 
     @Test

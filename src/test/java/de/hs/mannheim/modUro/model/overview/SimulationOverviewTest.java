@@ -43,7 +43,7 @@ public class SimulationOverviewTest {
     MainModel mainModel;
     List<Project> projectList;
     Project project;
-    ModelType modelType;
+    ModuroModel moduroModel;
     Simulation simulation;
 
     SimulationOverview simulationOverview;
@@ -53,8 +53,8 @@ public class SimulationOverviewTest {
         mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         projectList = mainModel.getProjectData();
         project = projectList.get(1);
-        modelType = project.getModelTypeList().get(1);
-        simulation = modelType.getSimulations().get(0);
+        moduroModel = project.getModuroModelList().get(1);
+        simulation = moduroModel.getSimulations().get(0);
 
         simulationOverview = new SimulationOverview(simulation);
     }

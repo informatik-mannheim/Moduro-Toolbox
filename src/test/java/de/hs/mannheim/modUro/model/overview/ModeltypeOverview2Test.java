@@ -17,16 +17,12 @@ package de.hs.mannheim.modUro.model.overview;
 
 import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.model.MainModel;
-import de.hs.mannheim.modUro.model.ModelType;
+import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.Project;
-import de.hs.mannheim.modUro.model.StatisticValues;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.text.DecimalFormat;
-import java.util.List;
 
 /**
  * JUnit Test for ModeltypeOverviewTest.
@@ -42,8 +38,8 @@ public class ModeltypeOverview2Test {
     public void setUp() {
         MainModel mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         Project project = mainModel.getProjectData().get(0);
-        ModelType modelType = project.getModelTypeList().get(0);
-        modeltypeOverview = new ModeltypeOverview(modelType, false, false);
+        ModuroModel moduroModel = project.getModuroModelList().get(0);
+        modeltypeOverview = new ModeltypeOverview(moduroModel, false, false);
     }
 
     @Test

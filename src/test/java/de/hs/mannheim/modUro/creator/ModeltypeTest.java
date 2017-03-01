@@ -16,7 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.creator;
 
 import de.hs.mannheim.modUro.model.MainModel;
-import de.hs.mannheim.modUro.model.ModelType;
+import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.Project;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,24 +34,24 @@ public class ModeltypeTest {
     MainModel mainModel;
     Project project;
     List<Project> projectList;
-    ModelType modelType;
+    ModuroModel moduroModel;
 
     @Before
     public void setUp() {
         mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         projectList = mainModel.getProjectData();
         project = projectList.get(0);
-        modelType = project.getModelTypeList().get(0);
+        moduroModel = project.getModuroModelList().get(0);
     }
 
     @Test
     public void nameOfFirstModeltypeInModeltypeList() {
-        Assert.assertEquals("Modeltype name should be 'CM-IN-DAE' and not: " + modelType.getName(), "CM-IN-DAE", modelType.getName());
+        Assert.assertEquals("Modeltype name should be 'CM-IN-DAE' and not: " + moduroModel.getName(), "CM-IN-DAE", moduroModel.getName());
     }
 
     @Test
     public void countSimulationInSpecificModeltype() {
-        Assert.assertEquals("Modeltype should have '2' Simulations and not: " + modelType.getSimulations().size(), 2, modelType.getSimulations().size());
+        Assert.assertEquals("Modeltype should have '2' Simulations and not: " + moduroModel.getSimulations().size(), 2, moduroModel.getSimulations().size());
     }
 }
 

@@ -16,7 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.creator;
 
 import de.hs.mannheim.modUro.model.MainModel;
-import de.hs.mannheim.modUro.model.ModelType;
+import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.Simulation;
 import org.junit.Assert;
@@ -40,12 +40,12 @@ public class SimulationTest {
     MainModel mainModel;
     Project project;
     List<Project> projectList;
-    ModelType modelType;
+    ModuroModel moduroModel;
     Simulation simulation;
     Simulation simulation2;
 
     //Test data for testing conditions
-    ModelType modelType2;
+    ModuroModel moduroModel2;
     Simulation simulation1;
 
     @Before
@@ -53,12 +53,12 @@ public class SimulationTest {
         mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         projectList = mainModel.getProjectData();
         project = projectList.get(0);
-        modelType = project.getModelTypeList().get(0);
-        simulation = modelType.getSimulations().get(0);
-        simulation2 = modelType.getSimulations().get(1);
+        moduroModel = project.getModuroModelList().get(0);
+        simulation = moduroModel.getSimulations().get(0);
+        simulation2 = moduroModel.getSimulations().get(1);
 
-        modelType2 = project.getModelTypeList().get(1);
-        simulation1 = modelType2.getSimulations().get(0);
+        moduroModel2 = project.getModuroModelList().get(1);
+        simulation1 = moduroModel2.getSimulations().get(0);
     }
 
     @Test

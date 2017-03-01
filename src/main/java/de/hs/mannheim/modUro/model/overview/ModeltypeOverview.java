@@ -15,7 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model.overview;
 
-import de.hs.mannheim.modUro.model.ModelType;
+import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class ModeltypeOverview {
 
-    private ModelType modelType;
+    private ModuroModel moduroModel;
 
     private List<StatisticValues> metricTypes;
     private int numberOfSimulations;
@@ -44,15 +44,15 @@ public class ModeltypeOverview {
     /**
      * Constructor.
      *
-     * @param modelType
+     * @param moduroModel
      */
-    public ModeltypeOverview(ModelType modelType, boolean isCompleted,
+    public ModeltypeOverview(ModuroModel moduroModel, boolean isCompleted,
                              boolean isSteadState) {
-        this.modelType = modelType;
+        this.moduroModel = moduroModel;
         this.isCompleted = isCompleted;
         this.isSteadState = isSteadState;
         metricTypes = listMetricTypes();
-        numberOfSimulations = modelType.getSimulations().size();
+        numberOfSimulations = moduroModel.getSimulations().size();
 
         countSteadyStateSimulation();
         countCompletedSimulations();
@@ -67,7 +67,7 @@ public class ModeltypeOverview {
      */
     private List<StatisticValues> listMetricTypes() {
         List<StatisticValues> metricTypes = new ArrayList<>();
-        for (Simulation simulationItem : modelType.getSimulations()) {
+        for (Simulation simulationItem : moduroModel.getSimulations()) {
             for (StatisticValues metricTypeItem : simulationItem.getMetricTypes()) {
                 if (!metricTypes.contains(metricTypeItem)) {
                     metricTypes.add(metricTypeItem);
@@ -83,7 +83,7 @@ public class ModeltypeOverview {
      */
     private void countCompletedSimulations() {
         int count = 0;
-        for (Simulation simulationItem : modelType.getSimulations()) {
+        for (Simulation simulationItem : moduroModel.getSimulations()) {
             if (simulationItem.isCompleted()) {
                 count++;
             }
@@ -96,7 +96,7 @@ public class ModeltypeOverview {
      */
     private void countAbortedSimulations() {
         int count = 0;
-        for (Simulation simulationItem : modelType.getSimulations()) {
+        for (Simulation simulationItem : moduroModel.getSimulations()) {
             if (simulationItem.isInSteadyState()) {
                 count++;
             }
@@ -109,7 +109,7 @@ public class ModeltypeOverview {
      */
     private void countSteadyStateSimulation() {
         int count = 0;
-        for (Simulation simulationItem : modelType.getSimulations()) {
+        for (Simulation simulationItem : moduroModel.getSimulations()) {
             if (simulationItem.isAborted()) {
                 count++;
             }
@@ -124,7 +124,7 @@ public class ModeltypeOverview {
     private double[] getArrayByMetricName(StatisticValues metricType) {
         List<Double> mean = new ArrayList<>();
 
-        for (Simulation simulation : modelType.getSimulations()) {
+        for (Simulation simulation : moduroModel.getSimulations()) {
             // Filter:
             boolean addResults = true;
             if (isCompleted) {

@@ -47,9 +47,9 @@ public class BoxAndWhiskerPlotModel {
 
     private void calculateStatValues() {
 
-        for (ModelType modelTypeItem : project.getModelTypeList()) {
+        for (ModuroModel moduroModelItem : project.getModuroModelList()) {
             List<Double> meanOfSimulations = new ArrayList<>();
-            for (Simulation simulationItem : modelTypeItem.getSimulations()) {
+            for (Simulation simulationItem : moduroModelItem.getSimulations()) {
                 List<StatisticValues> metricType = simulationItem.getMetricTypes();
                 double mean = 0.0;
                 for (StatisticValues metricTypeItem : metricType) {
@@ -63,8 +63,8 @@ public class BoxAndWhiskerPlotModel {
             double[] meanArrayOfMeans = Stream.of(a).mapToDouble(Double::doubleValue).toArray();
 
             StatisticValues stat =
-                    new StatisticValues(modelTypeItem.getName(), meanArrayOfMeans);
-            statisticValues.put(modelTypeItem.getName(), stat);
+                    new StatisticValues(moduroModelItem.getName(), meanArrayOfMeans);
+            statisticValues.put(moduroModelItem.getName(), stat);
         }
     }
 
@@ -75,9 +75,9 @@ public class BoxAndWhiskerPlotModel {
      */
     private List<String> listModelTypeName() {
         List<String> modeltypeName = new ArrayList<>();
-        for (ModelType modelTypeItem : project.getModelTypeList()) {
-            if (!modeltypeName.contains(modelTypeItem.getName())) {
-                modeltypeName.add(modelTypeItem.getName());
+        for (ModuroModel moduroModelItem : project.getModuroModelList()) {
+            if (!modeltypeName.contains(moduroModelItem.getName())) {
+                modeltypeName.add(moduroModelItem.getName());
             }
         }
         return modeltypeName;
