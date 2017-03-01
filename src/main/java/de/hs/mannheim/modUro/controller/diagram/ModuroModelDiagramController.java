@@ -21,7 +21,7 @@ import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
-import de.hs.mannheim.modUro.model.diagram.ModeltypeDiagram;
+import de.hs.mannheim.modUro.model.diagram.ModuroModelDiagram;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -37,14 +37,14 @@ import org.jfree.data.xy.XYSeriesCollection;
 import java.util.List;
 
 /**
- * ModeltypeDiagramController controls ModelDiagramView.
+ * ModuroModelDiagramController controls ModelDiagramView.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class ModeltypeDiagramController extends DiagramController {
+public class ModuroModelDiagramController extends DiagramController {
 
     //Reference to ModelDiagram
-    private ModeltypeDiagram modeltypeDiagram;
+    private ModuroModelDiagram moduroModelDiagram;
 
     @FXML
     private BorderPane leftPane;
@@ -63,15 +63,15 @@ public class ModeltypeDiagramController extends DiagramController {
 
 
     public void init(ModuroModel modeltype) {
-        this.modeltypeDiagram = new ModeltypeDiagram(modeltype);
+        this.moduroModelDiagram = new ModuroModelDiagram(modeltype);
 
         if (leftLastSelectedIndex == null || rightLastSelectedIndex == null) {
             initializeChoiceboxContent();
         } else {
             if (simulationContainsMetricType()) {
                 setChoiceBoxContent();
-                setLeftChartContent(modeltypeDiagram.getMetricTypeNames().get(leftLastSelectedIndex));
-                setRightChartContent(modeltypeDiagram.getMetricTypeNames().get(rightLastSelectedIndex));
+                setLeftChartContent(moduroModelDiagram.getMetricTypeNames().get(leftLastSelectedIndex));
+                setRightChartContent(moduroModelDiagram.getMetricTypeNames().get(rightLastSelectedIndex));
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -88,9 +88,9 @@ public class ModeltypeDiagramController extends DiagramController {
         leftMetricType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                setLeftChartContent(modeltypeDiagram.getMetricTypeNames().get(newValue.intValue()));
+                setLeftChartContent(moduroModelDiagram.getMetricTypeNames().get(newValue.intValue()));
                 leftLastSelectedIndex = newValue.intValue();
-                leftLastSelectedMetrictypename = modeltypeDiagram.getMetricTypeNames().get(leftLastSelectedIndex);
+                leftLastSelectedMetrictypename = moduroModelDiagram.getMetricTypeNames().get(leftLastSelectedIndex);
 
             }
         });
@@ -98,9 +98,9 @@ public class ModeltypeDiagramController extends DiagramController {
         rightMetricType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                setRightChartContent(modeltypeDiagram.getMetricTypeNames().get(newValue.intValue()));
+                setRightChartContent(moduroModelDiagram.getMetricTypeNames().get(newValue.intValue()));
                 rightLastSelectedIndex = newValue.intValue();
-                rightLastSelectedMetrictypename = modeltypeDiagram.getMetricTypeNames().get(rightLastSelectedIndex);
+                rightLastSelectedMetrictypename = moduroModelDiagram.getMetricTypeNames().get(rightLastSelectedIndex);
             }
         });
     }
@@ -112,7 +112,7 @@ public class ModeltypeDiagramController extends DiagramController {
      */
     private boolean simulationContainsMetricType() {
         boolean containsMetricType = false;
-        List<String> name = modeltypeDiagram.getMetricTypeNames();
+        List<String> name = moduroModelDiagram.getMetricTypeNames();
 
         if (name.contains(leftLastSelectedMetrictypename) && name.contains(rightLastSelectedMetrictypename)) {
             containsMetricType = true;
@@ -125,7 +125,7 @@ public class ModeltypeDiagramController extends DiagramController {
      * Initializes Choicebox Content.
      */
     private void initializeChoiceboxContent() {
-        List<String> name = modeltypeDiagram.getMetricTypeNames();
+        List<String> name = moduroModelDiagram.getMetricTypeNames();
 
         int left = 0;
         int right = 0;
@@ -160,7 +160,7 @@ public class ModeltypeDiagramController extends DiagramController {
      * Sets Content of Choicebox.
      */
     private void setChoiceBoxContent() {
-        List<String> name = modeltypeDiagram.getMetricTypeNames();
+        List<String> name = moduroModelDiagram.getMetricTypeNames();
 
         leftMetricType.setItems(FXCollections.observableArrayList(name));
         rightMetricType.setItems(FXCollections.observableArrayList(name));
@@ -175,7 +175,7 @@ public class ModeltypeDiagramController extends DiagramController {
      * @param selectedItem
      */
     private void setLeftChartContent(String selectedItem) {
-        XYDataset dataset = createDataset(modeltypeDiagram.getSimulationList(), selectedItem);
+        XYDataset dataset = createDataset(moduroModelDiagram.getSimulationList(), selectedItem);
         JFreeChart chart = createChart(dataset, selectedItem);
         chart.removeLegend();
 
@@ -190,7 +190,7 @@ public class ModeltypeDiagramController extends DiagramController {
      * @param selectedItem
      */
     private void setRightChartContent(String selectedItem) {
-        XYDataset dataset = createDataset(modeltypeDiagram.getSimulationList(), selectedItem);
+        XYDataset dataset = createDataset(moduroModelDiagram.getSimulationList(), selectedItem);
         JFreeChart chart = createChart(dataset, selectedItem);
         chart.removeLegend();
 

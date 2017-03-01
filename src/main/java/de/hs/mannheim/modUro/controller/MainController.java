@@ -19,7 +19,7 @@ import de.hs.mannheim.modUro.MainApp;
 import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
-import de.hs.mannheim.modUro.controller.diagram.ModeltypeDiagramController;
+import de.hs.mannheim.modUro.controller.diagram.ModuroModelDiagramController;
 import de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController;
 import de.hs.mannheim.modUro.controller.overview.ModeltypeOverviewController;
 import de.hs.mannheim.modUro.controller.overview.ProjectOverviewController;
@@ -80,7 +80,7 @@ public class MainController {
 
     BoxAndWhiskerPlotController boxAndWhiskerPlotController = new BoxAndWhiskerPlotController();
     SimulationDiagramController simulationDiagramController = new SimulationDiagramController();
-    ModeltypeDiagramController modeltypeDiagramController = new ModeltypeDiagramController();
+    ModuroModelDiagramController moduroModelDiagramController = new ModuroModelDiagramController();
 
     //Reference to the MainModel
     MainModel mainModel;
@@ -126,7 +126,7 @@ public class MainController {
                             addViewToDiagram("/FXML/diagram/SimulationDiagram.fxml", selectedItem);
 
                         } else {  //otherwise, it is a de.hs.mannheim.modUro.model-selection.
-                            addViewToOverview("/FXML/overview/ModeltypeOverview.fxml", selectedItem);
+                            addViewToOverview("/FXML/overview/ModuroModelOverview.fxml", selectedItem);
                             addViewToDiagram("/FXML/diagram/ModeltypeDiagram.fxml", selectedItem);
                         }
                     }
@@ -190,9 +190,9 @@ public class MainController {
                 simulationDiagramController.init((Simulation) selectedItem.getObject());
             }
 
-            if (loader.getController() instanceof ModeltypeDiagramController) {
-                modeltypeDiagramController = loader.getController();
-                modeltypeDiagramController.init((ModuroModel) selectedItem.getObject());
+            if (loader.getController() instanceof ModuroModelDiagramController) {
+                moduroModelDiagramController = loader.getController();
+                moduroModelDiagramController.init((ModuroModel) selectedItem.getObject());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -242,7 +242,7 @@ public class MainController {
                     } else if (simulationItem.isCompleted()) {
                         node = new ImageView(green);
                     }
-                    // Filter the entries:
+                    // Filter the entries: TODO
                     boolean inResult = true;
                     if (completedCheckboxButton.isSelected()) {
                         inResult = simulationItem.isCompleted();

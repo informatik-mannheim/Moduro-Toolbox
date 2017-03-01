@@ -24,18 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class for ModeltypeDiagram Model.
+ * Class for ModuroModelDiagram Model.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class ModeltypeDiagram {
+public class ModuroModelDiagram {
 
     private ModuroModel moduroModel;
 
     private List<String> metricTypeNames;
     private List<Simulation> simulationList;
 
-    public ModeltypeDiagram(ModuroModel moduroModel) {
+    public ModuroModelDiagram(ModuroModel moduroModel) {
         this.moduroModel = moduroModel;
 
         simulationList = moduroModel.getSimulations();
