@@ -17,7 +17,6 @@ package de.hs.mannheim.modUro.model;
 
 import de.hs.mannheim.modUro.config.RegEx;
 import de.hs.mannheim.modUro.config.ToolboxLogger;
-import de.hs.mannheim.modUro.creator.ModelTypeCreator;
 import de.hs.mannheim.modUro.model.dialog.SettingFile;
 
 import java.io.File;
@@ -77,9 +76,7 @@ public class Project {
      */
     private List<ModelType> createModelTypeList() {
         ToolboxLogger.log.config("Building metrics ...");
-        ModelType modelType;
         List<ModelType> modelTypeList = new ArrayList<>();
-        ModelTypeCreator modelTypeCreator = new ModelTypeCreator();
         List<File> dirList = new ArrayList<>();
 
         for (String name : modelTypeNames) {
@@ -88,9 +85,8 @@ public class Project {
                     dirList.add(file);
                 }
             }
-            modelTypeCreator.setFileList(dirList);
-            modelTypeCreator.createModelType();
-            modelType = modelTypeCreator.getModelType();
+            // Change here:
+            ModelType modelType = new ModelType(dirList);
             modelTypeList.add(modelType);
             dirList.clear();
         }

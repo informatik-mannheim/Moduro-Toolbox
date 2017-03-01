@@ -15,6 +15,12 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
+import de.hs.mannheim.modUro.config.FileName;
+import de.hs.mannheim.modUro.config.RegEx;
+import de.hs.mannheim.modUro.creator.SimulationCreator;
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,10 +32,13 @@ public class ModelType {
 
     private String name;
     private List<Simulation> simulations;
+    // List of all directories that contain this model:
+    private List<File> dirList;
 
-    public ModelType(String name, List<Simulation> simulations) {
-        this.name = name;
-        this.simulations = simulations;
+    public ModelType(List<File> dirList) {
+        this.dirList = dirList;
+        this.name = createModelTypeName();
+        this.simulations = createSimulationList();
     }
 
     public String getName() {
@@ -38,5 +47,52 @@ public class ModelType {
 
     public List<Simulation> getSimulations() {
         return simulations;
+    }
+
+    /**
+     * Creates name of Modeltype.
+     *
+     * @return
+     */
+    private String createModelTypeName() {
+        String[] tokenValue =
+                dirList.get(0).getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
+        return tokenValue[0];
+    }
+
+    /**
+     * Creates SimulationList of the modeltype.
+     *
+     * @return
+     */
+    private List<Simulation> createSimulationList() {
+        List<Simulation> simulationList = new ArrayList<>();
+
+        SimulationCreator simulationCreator = new SimulationCreator();
+        for (File file : dirList) {
+            if (file.isDirectory() && directoryContainsMetricDataFile(file)) {
+                simulationCreator.setDir(file);
+                simulationCreator.createSimulation();
+                simulationList.add(simulationCreator.getSimulation());
+            }
+        }
+        return simulationList;
+    }
+
+    /**
+     * Checks if directory contains a parameter dump file
+     *
+     * @param file
+     * @return
+     */
+    private boolean directoryContainsMetricDataFile(File file) {
+        boolean containsFitnessPlot = false;
+        File[] allFiles = file.listFiles();
+        for (File fileItem : allFiles) {
+            if (fileItem.getName().equals(FileName.PARAMETER_DUMP.getName())) {
+                containsFitnessPlot = true;
+            }
+        }
+        return containsFitnessPlot;
     }
 }
