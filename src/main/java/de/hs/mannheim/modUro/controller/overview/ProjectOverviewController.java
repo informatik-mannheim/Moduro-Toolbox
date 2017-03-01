@@ -39,7 +39,7 @@ public class ProjectOverviewController {
     @FXML
     private Label completedSimulation;
     @FXML
-    private Label modelType;
+    private Label moduroModels;
 
     public void init(Project project) {
 
@@ -55,6 +55,6 @@ public class ProjectOverviewController {
         this.numberOfSteadyStateSimulation.setText((String.valueOf(projectOverview.getNumberOfSteadyStateSimulation())));
         this.abortedSimulation.setText((String.valueOf(projectOverview.getNumberOfAbortedSimulations())));
         this.completedSimulation.setText((String.valueOf(projectOverview.getNumberOfCompletedSimulations())));
-        this.modelType.setText(projectOverview.getKindsOfModelTypes().toString());
+        this.moduroModels.setText(projectOverview.getKindsOfModelTypes().size() + "");
     }
 }

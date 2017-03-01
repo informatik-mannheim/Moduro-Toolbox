@@ -16,17 +16,18 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.controller;
 
 import de.hs.mannheim.modUro.MainApp;
+import de.hs.mannheim.modUro.config.FilterOption;
 import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
 import de.hs.mannheim.modUro.controller.diagram.ModuroModelDiagramController;
 import de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController;
-import de.hs.mannheim.modUro.controller.overview.ModeltypeOverviewController;
+import de.hs.mannheim.modUro.controller.overview.ModuroModelOverviewController;
 import de.hs.mannheim.modUro.controller.overview.ProjectOverviewController;
 import de.hs.mannheim.modUro.controller.overview.SimulationOverviewController;
 import de.hs.mannheim.modUro.fx.ModuroTreeItem;
 import de.hs.mannheim.modUro.model.*;
-import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
+import de.hs.mannheim.modUro.model.overview.ModuroModelOverview;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -76,7 +77,7 @@ public class MainController {
     //References to other Controllers
     ProjectOverviewController projectOverviewController = new ProjectOverviewController();
     SimulationOverviewController simulationOverviewController = new SimulationOverviewController();
-    ModeltypeOverviewController modeltypeOverviewController = new ModeltypeOverviewController();
+    ModuroModelOverviewController moduroModelOverviewController = new ModuroModelOverviewController();
 
     BoxAndWhiskerPlotController boxAndWhiskerPlotController = new BoxAndWhiskerPlotController();
     SimulationDiagramController simulationDiagramController = new SimulationDiagramController();
@@ -91,7 +92,11 @@ public class MainController {
      */
     @FXML
     private void initialize() {
-        mainModel = new MainModel("moduro-toolbox-settings.xml");
+        // Current filter settings:
+        FilterOption filterOption =
+                new FilterOption(inSteadyStateCheckButton.isSelected(),
+                        completedCheckboxButton.isSelected());
+        mainModel = new MainModel("moduro-toolbox-settings.xml", filterOption);
         //get the Project Data from Main Model
         this.projectData = FXCollections.observableArrayList(mainModel.getProjectData());
 
@@ -156,9 +161,9 @@ public class MainController {
                 simulationOverviewController.init((Simulation) selectedItem.getObject());
             }
 
-            if (loader.getController() instanceof ModeltypeOverviewController) {
-                modeltypeOverviewController = loader.getController();
-                modeltypeOverviewController.init((ModuroModel) selectedItem.getObject());
+            if (loader.getController() instanceof ModuroModelOverviewController) {
+                moduroModelOverviewController = loader.getController();
+                moduroModelOverviewController.init((ModuroModel) selectedItem.getObject());
             }
 
         } catch (IOException e) {
@@ -222,42 +227,34 @@ public class MainController {
 
             //treeitem: modeltypes
             for (ModuroModel moduroModelItem : projectItem.getModuroModelList()) {
-                // TODO Model item: add total fitness as info
-                ModeltypeOverview modeltypeOverview =
-                        new ModeltypeOverview(moduroModelItem,
-                                completedCheckboxButton.isSelected(),
-                                inSteadyStateCheckButton.isSelected());
-                double meanFitness = modeltypeOverview.getStatisticValues().
-                        get(FitnessName.TOTAL_FITNESS.getName()).getMean();
-                String meanFitnessS = String.format("%.2f", meanFitness);
-                String modelLabel = moduroModelItem.getName() + " (" + meanFitnessS + ")";
-                model = makeBranch(modelLabel, moduroModelItem, project, null);
+                // Only add item if there are simulations:
+                if (!moduroModelItem.getSimulations().isEmpty()) {
+                    // TODO Model item: add total fitness as info
+                    ModuroModelOverview moduroModelOverview =
+                            new ModuroModelOverview(moduroModelItem);
+                    StatisticValues sv = moduroModelOverview.getStatisticValues().
+                            get(FitnessName.TOTAL_FITNESS.getName());
+                    double meanFitness = sv == null ? Double.NaN : sv.getMean();
+                    String meanFitnessS = String.format("%.2f", meanFitness);
+                    String modelLabel = moduroModelItem.getName() + " (" + meanFitnessS + ")";
+                    model = makeBranch(modelLabel, moduroModelItem, project, null);
 
-                //treeitem: simulation
-                for (Simulation simulationItem : moduroModelItem.getSimulations()) {
-                    // Color the entries:
-                    Node node = null;
-                    if (simulationItem.isAborted()) {
-                        node = new ImageView(red);
-                    } else if (simulationItem.isCompleted()) {
-                        node = new ImageView(green);
-                    }
-                    // Filter the entries: TODO
-                    boolean inResult = true;
-                    if (completedCheckboxButton.isSelected()) {
-                        inResult = simulationItem.isCompleted();
-                    }
-                    if (inSteadyStateCheckButton.isSelected()) {
-                        inResult = simulationItem.isInSteadyState();
-                    }
-                    if (inResult) {
+                    //treeitem: simulation
+                    for (Simulation simulationItem : moduroModelItem.getSimulations()) {
+                        // Color the entries:
+                        Node node = null;
+                        if (simulationItem.isAborted()) {
+                            node = new ImageView(red);
+                        } else if (simulationItem.isCompleted()) {
+                            node = new ImageView(green);
+                        }
                         makeBranch(simulationItem.getSimulationName(),
                                 simulationItem, model, node);
-                    }
-                    counter++;
-                    if (counter % stepSize == 0) {
-                        ToolboxLogger.log.fine("Processed " + counter +
-                                " items for the tree so far.");
+                        counter++;
+                        if (counter % stepSize == 0) {
+                            ToolboxLogger.log.fine("Processed " + counter +
+                                    " items for the tree so far.");
+                        }
                     }
                 }
             }

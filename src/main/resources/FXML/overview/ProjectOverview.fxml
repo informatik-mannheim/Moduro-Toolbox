@@ -6,19 +6,19 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hs.mannheim.modUro.controller.overview.ProjectOverviewController">
    <children>
-      <Label text="Number of simulations:" />
-      <Label text="Number of aborted simulations:" GridPane.rowIndex="2" />
-      <Label text="Number of completed simulations:" GridPane.rowIndex="3" />
-      <Label text="Kinds of model types:" GridPane.rowIndex="4" />
+      <Label text="Simulations:" />
+      <Label text="Aborted:" GridPane.rowIndex="2" />
+      <Label text="Completed:" GridPane.rowIndex="3" />
+      <Label text="Kinds of models:" GridPane.rowIndex="4" />
       <Label fx:id="numberOfSimulation" GridPane.columnIndex="1" />
       <Label fx:id="abortedSimulation" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <Label fx:id="completedSimulation" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label fx:id="moduroModel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label text="Number of simulations in steady state:" GridPane.rowIndex="1" />
+      <Label fx:id="moduroModels" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label text="Steady state:" GridPane.rowIndex="1" />
       <Label fx:id="numberOfSteadyStateSimulation" GridPane.columnIndex="1" GridPane.rowIndex="1" />
    </children>
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints minWidth="130" hgrow="SOMETIMES" />
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
    <rowConstraints>

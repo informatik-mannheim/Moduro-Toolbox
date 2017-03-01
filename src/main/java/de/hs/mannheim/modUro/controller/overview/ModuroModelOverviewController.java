@@ -15,15 +15,13 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.controller.overview;
 
-import de.hs.mannheim.modUro.MainApp;
 import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.StatisticValues;
-import de.hs.mannheim.modUro.model.overview.ModeltypeOverview;
+import de.hs.mannheim.modUro.model.overview.ModuroModelOverview;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -33,14 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ModeltypeOverviewController controls ModelOverviewView.
+ * ModuroModelOverviewController controls ModelOverviewView.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class ModeltypeOverviewController {
+public class ModuroModelOverviewController {
 
-    //Reference to ModeltypeOverview
-    private ModeltypeOverview modeltypeOverview;
+    //Reference to ModuroModelOverview
+    private ModuroModelOverview moduroModelOverview;
 
     private ObservableList<StatisticValues> metricData;
 
@@ -54,24 +52,13 @@ public class ModeltypeOverviewController {
     private Label numberOfAbortedSimulation;
     @FXML
     private Label numberOfCompletedSimulations;
-    @FXML
-    private CheckBox completedCheckboxButton;
-    @FXML
-    private CheckBox inSteadyStateCheckButton;
 
     public void init(ModuroModel moduroModel) {
         // Has to be initialized here, otherwise MainApp.scene is null:
-        completedCheckboxButton =
-                (CheckBox) MainApp.scene.lookup("#completedCheckboxButton");
-        inSteadyStateCheckButton =
-                (CheckBox) MainApp.scene.lookup("#inSteadyStateCheckButton");
-        this.modeltypeOverview = new ModeltypeOverview(moduroModel,
-                completedCheckboxButton.isSelected(),
-                inSteadyStateCheckButton.isSelected());
-        List<StatisticValues> l = new ArrayList(modeltypeOverview.getStatisticValues().values());
+        this.moduroModelOverview = new ModuroModelOverview(moduroModel);
+        List<StatisticValues> l = new ArrayList(moduroModelOverview.getStatisticValues().values());
         l.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         metricData = FXCollections.observableArrayList(l);
-
         setLabel();
         createTableData();
     }
@@ -80,10 +67,10 @@ public class ModeltypeOverviewController {
      * Sets Data to Label.
      */
     private void setLabel() {
-        this.numberOfSimulations.setText(String.valueOf(modeltypeOverview.getNumberOfSimulations()));
-        this.numberOfSimulationInSteadyState.setText((String.valueOf(modeltypeOverview.getNumberOfSteadyStateSimulation())));
-        this.numberOfAbortedSimulation.setText((String.valueOf(modeltypeOverview.getNumberOfAbortedSimulations())));
-        this.numberOfCompletedSimulations.setText((String.valueOf(modeltypeOverview.getNumberOfCompletedSimulations())));
+        this.numberOfSimulations.setText(String.valueOf(moduroModelOverview.getNumberOfSimulations()));
+        this.numberOfSimulationInSteadyState.setText((String.valueOf(moduroModelOverview.getNumberOfSteadyStateSimulation())));
+        this.numberOfAbortedSimulation.setText((String.valueOf(moduroModelOverview.getNumberOfAbortedSimulations())));
+        this.numberOfCompletedSimulations.setText((String.valueOf(moduroModelOverview.getNumberOfCompletedSimulations())));
     }
 
     /**

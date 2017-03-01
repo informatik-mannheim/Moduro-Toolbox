@@ -39,7 +39,7 @@ public class ModeltypeOverviewTest {
     Project project;
     ModuroModel moduroModel;
 
-    ModeltypeOverview modeltypeOverview;
+    ModuroModelOverview moduroModelOverview;
     StatisticValues stats;
     DecimalFormat f = new DecimalFormat("#0.00");
 
@@ -50,12 +50,12 @@ public class ModeltypeOverviewTest {
         project = projectList.get(1);
         moduroModel = project.getModuroModelList().get(1);
 
-        modeltypeOverview = new ModeltypeOverview(moduroModel, false, false);
+        moduroModelOverview = new ModuroModelOverview(moduroModel);
     }
 
     @Test
     public void numberOfSimulationsTest() {
-        Assert.assertEquals("Modeltype should have '1' simulations and not: " + modeltypeOverview.getNumberOfSimulations(), 1, modeltypeOverview.getNumberOfSimulations());
+        Assert.assertEquals("Modeltype should have '1' simulations and not: " + moduroModelOverview.getNumberOfSimulations(), 1, moduroModelOverview.getNumberOfSimulations());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class ModeltypeOverviewTest {
         //steadystate = toTime > minTime
         //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> toTime:702.0 => inSteadyState //manuell in der Datei geänderter toTime Wert
 
-        Assert.assertEquals("Modeltype should have '1' in steady state simulations and not: " + modeltypeOverview.getNumberOfSteadyStateSimulation(), 1, modeltypeOverview.getNumberOfSteadyStateSimulation());
+        Assert.assertEquals("Modeltype should have '1' in steady state simulations and not: " + moduroModelOverview.getNumberOfSteadyStateSimulation(), 1, moduroModelOverview.getNumberOfSteadyStateSimulation());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ModeltypeOverviewTest {
         //isAborted = lastFitness <0.05 && isInSteadyState
         //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> notInSteadyState && lastFitness=0.407548176606 => isAborted     //manuell in der Datei geänderter toTime und lastFitness
 
-        Assert.assertEquals("Modeltype should have '1' aborted simulations and not: " + modeltypeOverview.getNumberOfAbortedSimulations(), 1, modeltypeOverview.getNumberOfAbortedSimulations());
+        Assert.assertEquals("Modeltype should have '1' aborted simulations and not: " + moduroModelOverview.getNumberOfAbortedSimulations(), 1, moduroModelOverview.getNumberOfAbortedSimulations());
     }
 
     @Test
@@ -84,16 +84,16 @@ public class ModeltypeOverviewTest {
         //isCompleted = toTime >= maxTime
         //PAS-IN-RA_cc3d_12_04_2014_11_03_08 -> toTime:11.0 => isCompleted
 
-        Assert.assertEquals("Modeltype should have '1' completed simulations and not: " + modeltypeOverview.getNumberOfCompletedSimulations(), 1, modeltypeOverview.getNumberOfCompletedSimulations());
+        Assert.assertEquals("Modeltype should have '1' completed simulations and not: " + moduroModelOverview.getNumberOfCompletedSimulations(), 1, moduroModelOverview.getNumberOfCompletedSimulations());
     }
 
     @Test
     @Ignore
     public void statisticValueOfFitnessPlot() {
-        String mean = f.format(modeltypeOverview.getStatisticValues().get(1).getMean());
-        String stdDev = f.format(modeltypeOverview.getStatisticValues().get(1).getStdDev());
+        String mean = f.format(moduroModelOverview.getStatisticValues().get(1).getMean());
+        String stdDev = f.format(moduroModelOverview.getStatisticValues().get(1).getStdDev());
 
-        Assert.assertEquals("Name of Metrictype should be 'FitnessPlot' and not: " + modeltypeOverview.getStatisticValues().get(1).getName(), "FitnessPlot", modeltypeOverview.getStatisticValues().get(1).getName());
+        Assert.assertEquals("Name of Metrictype should be 'FitnessPlot' and not: " + moduroModelOverview.getStatisticValues().get(1).getName(), "FitnessPlot", moduroModelOverview.getStatisticValues().get(1).getName());
         Assert.assertEquals("Mean of FitnessPlot should be '0,37' and not: " + mean, "0,38", mean);
         Assert.assertEquals("Standard Deviation of FitnessPlot should be '0,00' and not: " + stdDev, "0,00", stdDev);
     }

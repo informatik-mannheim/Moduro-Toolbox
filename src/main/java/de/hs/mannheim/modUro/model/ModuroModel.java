@@ -16,6 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.model;
 
 import de.hs.mannheim.modUro.config.FileName;
+import de.hs.mannheim.modUro.config.FilterOption;
 import de.hs.mannheim.modUro.config.RegEx;
 
 import java.io.File;
@@ -34,9 +35,11 @@ public class ModuroModel {
     private List<Simulation> simulations;
     // List of all directories that contain this model:
     private List<File> dirList;
+    private FilterOption filterOption;
 
-    public ModuroModel(List<File> dirList) {
+    public ModuroModel(List<File> dirList, FilterOption filterOption) {
         this.dirList = dirList;
+        this.filterOption = filterOption;
         this.name = createModelTypeName();
         this.simulations = createSimulationList();
     }
@@ -71,7 +74,17 @@ public class ModuroModel {
         for (File file : dirList) {
             if (file.isDirectory() && directoryContainsMetricDataFile(file)) {
                 Simulation simulation = new Simulation(file);
-                simulationList.add(simulation);
+                // Apply filter:
+                boolean inResult = true;
+                if (filterOption.completed) {
+                    inResult = inResult && simulation.isCompleted();
+                }
+                if (filterOption.steadyState) {
+                    inResult = inResult && simulation.isInSteadyState();
+                }
+                if (inResult) {
+                    simulationList.add(simulation);
+                }
             }
         }
         return simulationList;

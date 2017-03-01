@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class ModeltypeOverview {
+public class ModuroModelOverview {
 
     private ModuroModel moduroModel;
 
@@ -38,7 +38,6 @@ public class ModeltypeOverview {
     private int numberOfSteadyStateSimulation;
     private int numberOfAbortedSimulations;
     private int numberOfCompletedSimulations;
-    private boolean isCompleted, isSteadState;
     private Map<String, StatisticValues> statisticValues;
 
     /**
@@ -46,11 +45,8 @@ public class ModeltypeOverview {
      *
      * @param moduroModel
      */
-    public ModeltypeOverview(ModuroModel moduroModel, boolean isCompleted,
-                             boolean isSteadState) {
+    public ModuroModelOverview(ModuroModel moduroModel) {
         this.moduroModel = moduroModel;
-        this.isCompleted = isCompleted;
-        this.isSteadState = isSteadState;
         metricTypes = listMetricTypes();
         numberOfSimulations = moduroModel.getSimulations().size();
 
@@ -125,20 +121,9 @@ public class ModeltypeOverview {
         List<Double> mean = new ArrayList<>();
 
         for (Simulation simulation : moduroModel.getSimulations()) {
-            // Filter:
-            boolean addResults = true;
-            if (isCompleted) {
-                addResults = addResults && simulation.isCompleted();
-            }
-            if (isSteadState) {
-                addResults = addResults && simulation.isInSteadyState();
-            }
-
-            if (addResults) {
-                for (StatisticValues metricTypeItem : simulation.getMetricTypes()) {
-                    if (metricTypeItem.getName().equals(metricType.getName())) {
-                        mean.add(metricTypeItem.getMean());
-                    }
+            for (StatisticValues metricTypeItem : simulation.getMetricTypes()) {
+                if (metricTypeItem.getName().equals(metricType.getName())) {
+                    mean.add(metricTypeItem.getMean());
                 }
             }
         }

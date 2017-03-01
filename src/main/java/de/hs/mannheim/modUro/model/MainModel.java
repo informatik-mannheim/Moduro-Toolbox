@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
+import de.hs.mannheim.modUro.config.FilterOption;
 import de.hs.mannheim.modUro.model.dialog.SettingFile;
 import de.hs.mannheim.modUro.model.dialog.SettingFileWrapper;
 import javafx.scene.control.Alert;
@@ -43,10 +44,14 @@ public class MainModel {
     //List with settings loaded from the Setting.xml file.
     private List<SettingFile> settings = new ArrayList<>();
 
+    public MainModel(String settingFilePath) {
+        this(settingFilePath, new FilterOption());
+    }
+
     /**
      * Constructor for MainModel.
      */
-    public MainModel(String settingFilePath) {
+    public MainModel(String settingFilePath, FilterOption filterOption) {
         this.settingFilePath = settingFilePath;
         // this.settingURL = getClass().getResource(settingFilePath);
         this.SETTINGXML = new File(settingFilePath);
@@ -56,9 +61,7 @@ public class MainModel {
         //For all Settings in XML file create Project with its data.
         for (SettingFile settingFileItem : settings) {
             if (settingFileItem.getNode() != null) {
-                Project project = new Project(settingFileItem);
-                // projectCreator.setSettingFile(settingFileItem);
-                // projectCreator.createProject();
+                Project project = new Project(settingFileItem, filterOption);
                 projectData.add(project);
             }
         }

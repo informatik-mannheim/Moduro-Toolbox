@@ -32,14 +32,14 @@ import org.junit.Test;
  */
 public class ModeltypeOverview2Test {
 
-    private ModeltypeOverview modeltypeOverview;
+    private ModuroModelOverview moduroModelOverview;
 
     @Before
     public void setUp() {
         MainModel mainModel = new MainModel("src/test/resources/setting/Setting.xml");
         Project project = mainModel.getProjectData().get(0);
         ModuroModel moduroModel = project.getModuroModelList().get(0);
-        modeltypeOverview = new ModeltypeOverview(moduroModel, false, false);
+        moduroModelOverview = new ModuroModelOverview(moduroModel);
     }
 
     @Test
@@ -49,9 +49,9 @@ public class ModeltypeOverview2Test {
         double isMean = 0;
         double shouldStdev = 0.186456332;
         double isStdev = 0;
-        isMean = modeltypeOverview.getStatisticValues().
+        isMean = moduroModelOverview.getStatisticValues().
                 get(FitnessName.VOLUME_FITNESS.getName()).getMean();
-        isStdev = modeltypeOverview.getStatisticValues().
+        isStdev = moduroModelOverview.getStatisticValues().
                 get(FitnessName.VOLUME_FITNESS.getName()).getStdDev();
         Assert.assertEquals("Mean volume fitness should be " + shouldMean + " and not: " + isMean,
                 shouldMean, isMean, 1E-8);

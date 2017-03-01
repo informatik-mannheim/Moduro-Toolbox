@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
+import de.hs.mannheim.modUro.config.FilterOption;
 import de.hs.mannheim.modUro.config.RegEx;
 import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.model.dialog.SettingFile;
@@ -33,17 +34,20 @@ public class Project {
 
     private List<ModuroModel> moduroModelList;
     private SettingFile settingFile;
+    private FilterOption filterOption;
     private List<File> allDirs;
     private List<String> modelTypeNames;
 
     /**
      * Create a project based on a setting file.
+     *
      * @param settingFile
      */
-    public Project(SettingFile settingFile) {
+    public Project(SettingFile settingFile, FilterOption filterOption) {
         this.settingFile = settingFile;
+        this.filterOption = filterOption;
         modelTypeNames = createAllModelTypeNames();
-        moduroModelList = createModelTypeList();
+        moduroModelList = createModels();
     }
 
     /**
@@ -54,7 +58,6 @@ public class Project {
     }
 
     /**
-     *
      * @return List of nodes for this project.
      */
     public List<Node> getNodes() {
@@ -62,7 +65,6 @@ public class Project {
     }
 
     /**
-     *
      * @return A list of all models part of this project.
      */
     public List<ModuroModel> getModuroModelList() {
@@ -74,8 +76,8 @@ public class Project {
      *
      * @return
      */
-    private List<ModuroModel> createModelTypeList() {
-        ToolboxLogger.log.config("Building metrics ...");
+    private List<ModuroModel> createModels() {
+        ToolboxLogger.log.config("Building models ...");
         List<ModuroModel> moduroModelList = new ArrayList<>();
         List<File> dirList = new ArrayList<>();
 
@@ -85,9 +87,10 @@ public class Project {
                     dirList.add(file);
                 }
             }
-            // Change here:
-            ModuroModel moduroModel = new ModuroModel(dirList);
-            moduroModelList.add(moduroModel);
+            ModuroModel moduroModel = new ModuroModel(dirList, filterOption);
+            if (!moduroModel.getSimulations().isEmpty()) {
+                moduroModelList.add(moduroModel);
+            }
             dirList.clear();
         }
         ToolboxLogger.log.config("Created " + moduroModelList.size() + " models.");

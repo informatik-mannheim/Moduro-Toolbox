@@ -62,8 +62,13 @@ public class ModuroModelDiagramController extends DiagramController {
     private static String rightLastSelectedMetrictypename;
 
 
-    public void init(ModuroModel modeltype) {
-        this.moduroModelDiagram = new ModuroModelDiagram(modeltype);
+    public void init(ModuroModel moduroModel) {
+        this.moduroModelDiagram = new ModuroModelDiagram(moduroModel);
+        if (moduroModel.getSimulations().isEmpty()) {
+            // No simulations to show!
+            System.err.println("leer");
+            return;
+        }
 
         if (leftLastSelectedIndex == null || rightLastSelectedIndex == null) {
             initializeChoiceboxContent();
@@ -81,7 +86,6 @@ public class ModuroModelDiagramController extends DiagramController {
 
                 initializeChoiceboxContent();
             }
-
         }
 
         /*ChangeListerners for selected items in choicebox.*/

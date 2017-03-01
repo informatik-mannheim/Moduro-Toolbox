@@ -138,6 +138,4 @@ public class ProjectOverview {
     public List<String> getKindsOfModelTypes() {
         return kindsOfModelTypes;
     }
-
-
 }

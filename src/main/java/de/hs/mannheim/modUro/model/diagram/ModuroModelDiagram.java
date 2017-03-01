@@ -31,15 +31,12 @@ import java.util.List;
 public class ModuroModelDiagram {
 
     private ModuroModel moduroModel;
-
     private List<String> metricTypeNames;
     private List<Simulation> simulationList;
 
     public ModuroModelDiagram(ModuroModel moduroModel) {
         this.moduroModel = moduroModel;
-
         simulationList = moduroModel.getSimulations();
-
         createMetricTypeNameList();
     }
 
