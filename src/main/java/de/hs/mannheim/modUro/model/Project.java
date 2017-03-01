@@ -15,42 +15,120 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
+import de.hs.mannheim.modUro.config.RegEx;
+import de.hs.mannheim.modUro.config.ToolboxLogger;
+import de.hs.mannheim.modUro.creator.ModelTypeCreator;
+import de.hs.mannheim.modUro.model.dialog.SettingFile;
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Model class for a Project.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class Project {
 
-    private String name;                        //name of the project
-    private List<Node> nodes;                   //list of nodes for this project
-    List<ModelType> modelTypeList;
-
+    private List<ModelType> modelTypeList;
+    private SettingFile settingFile;
+    private List<File> allDirs;
+    private List<String> modelTypeNames;
 
     /**
-     * Constructor
-     *
-     * @param name
-     * @param nodes
+     * Create a project based on a setting file.
+     * @param settingFile
      */
-    public Project(String name, List<Node> nodes, List<ModelType> modelTypeList) {
-        this.name = name;
-        this.nodes = nodes;
-        this.modelTypeList = modelTypeList;
+    public Project(SettingFile settingFile) {
+        this.settingFile = settingFile;
+        modelTypeNames = createAllModelTypeNames();
+        modelTypeList = createModelTypeList();
     }
 
-    /*Getter & Setter*/
+    /**
+     * @return Name of the project.
+     */
     public String getName() {
-        return name;
+        return settingFile.getName();
     }
 
+    /**
+     *
+     * @return List of nodes for this project.
+     */
     public List<Node> getNodes() {
-        return nodes;
+        return settingFile.getNode();
     }
 
+    /**
+     *
+     * @return A list of all models part of this project.
+     */
     public List<ModelType> getModelTypeList() {
         return modelTypeList;
+    }
+
+    /**
+     * Creates List of ModelTypes.
+     *
+     * @return
+     */
+    private List<ModelType> createModelTypeList() {
+        ToolboxLogger.log.config("Building metrics ...");
+        ModelType modelType;
+        List<ModelType> modelTypeList = new ArrayList<>();
+        ModelTypeCreator modelTypeCreator = new ModelTypeCreator();
+        List<File> dirList = new ArrayList<>();
+
+        for (String name : modelTypeNames) {
+            for (File file : allDirs) {
+                if (file.getName().startsWith(name + "_")) {
+                    dirList.add(file);
+                }
+            }
+            modelTypeCreator.setFileList(dirList);
+            modelTypeCreator.createModelType();
+            modelType = modelTypeCreator.getModelType();
+            modelTypeList.add(modelType);
+            dirList.clear();
+        }
+        ToolboxLogger.log.config("Created " + modelTypeList.size() + " models.");
+        return modelTypeList;
+    }
+
+    /**
+     * Create List with modeltype name.
+     *
+     * @return
+     */
+    private List<String> createAllModelTypeNames() {
+        ToolboxLogger.log.config("Scanning simulation directories...");
+        int counter = 1;
+        int stepSize = 25;
+        List<String> modelTypeNameList = new ArrayList<>();
+        allDirs = new ArrayList<>();
+
+        for (Node node : settingFile.getNode()) {
+            File[] dirs = node.getPath().listFiles(f -> f.isDirectory());
+            for (File file : dirs) {
+                allDirs.add(file);
+                counter++;
+                String name;
+                String[] tokenValue = file.getName().split(RegEx.MODEL_TYPE_REG_EX.getName());
+                name = tokenValue[0];
+
+                if (!modelTypeNameList.contains(name) && name.length() > 0) {
+                    modelTypeNameList.add(name);
+                }
+                if (counter % stepSize == 0) {
+                    ToolboxLogger.log.config("Scanned " + counter + " files so far.");
+                }
+            }
+        }
+        ToolboxLogger.log.config("Found " + allDirs.size() + " directories and " +
+                modelTypeNameList.size() + " models.");
+        return modelTypeNameList;
     }
 }

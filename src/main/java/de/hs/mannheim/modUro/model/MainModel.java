@@ -15,7 +15,6 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.model;
 
-import de.hs.mannheim.modUro.creator.ProjectCreator;
 import de.hs.mannheim.modUro.model.dialog.SettingFile;
 import de.hs.mannheim.modUro.model.dialog.SettingFileWrapper;
 import javafx.scene.control.Alert;
@@ -23,7 +22,6 @@ import javafx.scene.control.Alert;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +34,6 @@ public class MainModel {
 
     //List of Projects
     private List<Project> projectData = new ArrayList<Project>();
-
-    //Creator for create Projects.
-    private ProjectCreator projectCreator = new ProjectCreator();
 
     //Setting.xml file with projects and its nodes.
     String settingFilePath;
@@ -61,9 +56,10 @@ public class MainModel {
         //For all Settings in XML file create Project with its data.
         for (SettingFile settingFileItem : settings) {
             if (settingFileItem.getNode() != null) {
-                projectCreator.setSettingFile(settingFileItem);
-                projectCreator.createProject();
-                projectData.add(projectCreator.getProject());
+                Project project = new Project(settingFileItem);
+                // projectCreator.setSettingFile(settingFileItem);
+                // projectCreator.createProject();
+                projectData.add(project);
             }
         }
     }
@@ -104,7 +100,4 @@ public class MainModel {
         return projectData;
     }
 
-    public ProjectCreator getProjectCreator() {
-        return projectCreator;
-    }
 }
