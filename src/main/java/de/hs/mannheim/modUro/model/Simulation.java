@@ -59,6 +59,7 @@ public class Simulation {
     private double maxTime = DataPlot.MAX_TIME.getValue();
 
     private double[][] defaultFitnessTable;
+    private CelltimesReader ctr;
 
     /**
      * Create a simulation run based on the information found
@@ -157,12 +158,7 @@ public class Simulation {
      * @return
      */
     public CelltimesReader getCellTimesReader() {
-        try {
-            String file = dir.getAbsolutePath().toString() + "/Celltimes.daz";
-            return new CelltimesReader(file, 0.5, 2.0);
-        } catch (Exception e) {
-            return null; // No cell times.
-        }
+        return ctr;
     }
 
     /**
@@ -249,7 +245,7 @@ public class Simulation {
         // And this means cell cycle times.
         try {
             String file = dir.getAbsolutePath().toString() + "/Celltimes.daz";
-            CelltimesReader ctr = new CelltimesReader(file, 0.5, 2.0);
+            ctr = new CelltimesReader(file, 0.5, 2.0);
             // TODO Q&D:
             CellCycleStat ccstats =
                     new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
