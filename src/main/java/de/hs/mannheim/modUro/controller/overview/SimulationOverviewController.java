@@ -25,10 +25,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -69,7 +68,7 @@ public class SimulationOverviewController {
     @FXML
     private Hyperlink directoryHyperlink;
     @FXML
-    private Label metricType;
+    private Button videoButton;
     @FXML
     private TableView tableContent;
     @FXML
@@ -99,8 +98,10 @@ public class SimulationOverviewController {
         this.starttime.setText(simulationOverview.getStartTime().toString());
         this.duration.setText(String.valueOf(simulationOverview.getDuration()));
         this.directoryHyperlink.setText(simulationOverview.getDirectory().getAbsolutePath());
-        if (metricType != null) {
-            this.metricType.setText(String.valueOf(simulationOverview.getMetricTypesName()));
+        if (simulationOverview.getSimulation().hasVideo()) {
+            videoButton.setText("Open Video");
+        } else {
+            videoButton.setText("Create Video");
         }
     }
 
@@ -175,49 +176,67 @@ public class SimulationOverviewController {
      * @param actionEvent
      */
     public void handleImagesToVideo(ActionEvent actionEvent) {
-        try {
-            String pathToImagesToVideoExe = "ImagesToVideo.exe";
-
+        // Open or create video?
+        if (simulationOverview.getSimulation().hasVideo()) {
+            String pathToVideoViewer = "wmplayer.exe";
             String srcDir = simulationOverview.getDirectory().getAbsolutePath();
-            String destFile = simulationOverview.getDirectory().getAbsolutePath() + "\\video";
-            String config = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                    "<SVNDirectory xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
-                    "  <version>400</version>\n" +
-                    "  <sourceDir>" + srcDir + " </sourceDir>\n" +
-                    "  <destFile>" + destFile + "</destFile>\n" +
-                    "  <useSubfolders>false</useSubfolders>\n" +
-                    "  <sortBy>0</sortBy>\n" +
-                    "  <kbitrate>-1</kbitrate>\n" +
-                    "  <fps>15</fps>\n" +
-                    "  <videocodec>1</videocodec>\n" +
-                    "  <cropleft>0</cropleft>\n" +
-                    "  <croptop>0</croptop>\n" +
-                    "  <cropwidth>0</cropwidth>\n" +
-                    "  <cropheight>0</cropheight>\n" +
-                    "  <imageExtension>png</imageExtension>\n" +
-                    "  <tempdir>C:\\temp\\</tempdir>\n" +
-                    "  <regexp>.*</regexp>\n" +
-                    "  <before>2008-11-07T00:00:00</before>\n" +
-                    "  <after>2008-11-07T23:59:59</after>\n" +
-                    "  <width>-1</width>\n" +
-                    "  <height>-1</height>\n" +
-                    "  <DeleteSourceFiles>false</DeleteSourceFiles>\n" +
-                    "  <SoftwareScale>false</SoftwareScale>\n" +
-                    "  <FlipHorizontal>false</FlipHorizontal>\n" +
-                    "  <FlipVertical>false</FlipVertical>\n" +
-                    "  <Rotate>0</Rotate>\n" +
-                    "  <CPUThreads>2</CPUThreads>\n" +
-                    "</SVNDirectory>";
-            String configFile = "C:\\temp\\ImagesToVideo-Moduro.xml";
-            PrintStream ps = new PrintStream(new File(configFile));
-            ps.println(config);
-            ps.close();
+            String videoFile = srcDir + "\\video.wmv";
+            try {
+                Process process = new ProcessBuilder(pathToVideoViewer,
+                        "/open", videoFile).start();
+            } catch (Exception e) {
+                ToolboxLogger.log.warning("Cannot play video " +
+                videoFile);
+                ToolboxLogger.log.warning("Invocation: " +
+                        pathToVideoViewer + " " + "/open " + videoFile);
+            }
+        } else {
+            try {
+                String pathToImagesToVideoExe = "ImagesToVideo.exe";
 
-            Process process = new ProcessBuilder(pathToImagesToVideoExe, "--config", configFile).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+                String srcDir = simulationOverview.getDirectory().getAbsolutePath();
+                String destFile = simulationOverview.getDirectory().getAbsolutePath() + "\\video";
+                String config = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                        "<SVNDirectory xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
+                        "  <version>400</version>\n" +
+                        "  <sourceDir>" + srcDir + " </sourceDir>\n" +
+                        "  <destFile>" + destFile + "</destFile>\n" +
+                        "  <useSubfolders>false</useSubfolders>\n" +
+                        "  <sortBy>0</sortBy>\n" +
+                        "  <kbitrate>-1</kbitrate>\n" +
+                        "  <fps>15</fps>\n" +
+                        "  <videocodec>1</videocodec>\n" +
+                        "  <cropleft>0</cropleft>\n" +
+                        "  <croptop>0</croptop>\n" +
+                        "  <cropwidth>0</cropwidth>\n" +
+                        "  <cropheight>0</cropheight>\n" +
+                        "  <imageExtension>png</imageExtension>\n" +
+                        "  <tempdir>C:\\temp\\</tempdir>\n" +
+                        "  <regexp>.*</regexp>\n" +
+                        "  <before>2008-11-07T00:00:00</before>\n" +
+                        "  <after>2008-11-07T23:59:59</after>\n" +
+                        "  <width>-1</width>\n" +
+                        "  <height>-1</height>\n" +
+                        "  <DeleteSourceFiles>false</DeleteSourceFiles>\n" +
+                        "  <SoftwareScale>false</SoftwareScale>\n" +
+                        "  <FlipHorizontal>false</FlipHorizontal>\n" +
+                        "  <FlipVertical>false</FlipVertical>\n" +
+                        "  <Rotate>0</Rotate>\n" +
+                        "  <CPUThreads>2</CPUThreads>\n" +
+                        "</SVNDirectory>";
+                String configFile = "C:\\temp\\ImagesToVideo-Moduro.xml";
+                PrintStream ps = new PrintStream(new File(configFile));
+                ps.println(config);
+                ps.close();
+
+                Process process = new ProcessBuilder(pathToImagesToVideoExe, "--config", configFile).start();
+                simulationOverview.getSimulation().refresh();
+                videoButton.setText("Open Video");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

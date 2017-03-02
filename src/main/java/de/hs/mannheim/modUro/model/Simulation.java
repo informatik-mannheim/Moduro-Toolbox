@@ -53,6 +53,7 @@ public class Simulation {
 
     private List<StatisticValues> metricTypes;    //list of the metric types, which this simulation have
     private List<File> images;              //Filepath of Images
+    private boolean hasVideo = false;
 
     // Data for Plotting
     private double minTime = DataPlot.MIN_TIME.getValue();
@@ -77,6 +78,7 @@ public class Simulation {
         metricTypes = createDataSeriesList();
         this.metricTypes.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         this.images = createImages();
+        this.hasVideo = createVideo();
     }
 
     /*Getter and Setter*/
@@ -150,6 +152,18 @@ public class Simulation {
 
     public List<File> getImages() {
         return images;
+    }
+
+    public boolean hasVideo() {
+        return hasVideo;
+    }
+
+    /**
+     * Refresh this simulation. For instance, the a video might
+     * have been generated in the meantime.
+     */
+    public void refresh() {
+        hasVideo = createVideo();
     }
 
     /**
@@ -306,5 +320,11 @@ public class Simulation {
         }
 
         return imagePath;
+    }
+
+    private boolean createVideo() {
+        File[] files =
+                dir.listFiles((file, name) -> name.endsWith("video.wmv"));
+        return files.length == 1;
     }
 }

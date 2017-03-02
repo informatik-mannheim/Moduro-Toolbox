@@ -29,10 +29,9 @@
             <Label text="Duration:" GridPane.rowIndex="7" />
             <Label fx:id="duration" GridPane.columnIndex="2" GridPane.rowIndex="7" />
             <Label text="Directory" GridPane.rowIndex="8" />
-            <Label text="Metric Types:" GridPane.rowIndex="9" />
-            <Label fx:id="metricTypes" GridPane.columnIndex="2" GridPane.rowIndex="9" />
             <Hyperlink fx:id="directoryHyperlink" onAction="#handleHyperlinkOnlicked" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-            <Button mnemonicParsing="false" onAction="#handleImagesToVideo" text="ImagesToVideo" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+            <Label text="Video:" GridPane.rowIndex="10" />
+            <Button fx:id="videoButton" mnemonicParsing="false" onAction="#handleImagesToVideo" text="Create Video" GridPane.columnIndex="2" GridPane.rowIndex="10" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="24.0" />
