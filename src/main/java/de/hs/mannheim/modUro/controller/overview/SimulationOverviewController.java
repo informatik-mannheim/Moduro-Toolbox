@@ -178,17 +178,16 @@ public class SimulationOverviewController {
     public void handleImagesToVideo(ActionEvent actionEvent) {
         // Open or create video?
         if (simulationOverview.getSimulation().hasVideo()) {
-            String pathToVideoViewer = "wmplayer.exe";
+            String pathToVideoViewer = "vlc.exe";
             String srcDir = simulationOverview.getDirectory().getAbsolutePath();
             String videoFile = srcDir + "\\video.wmv";
             try {
-                Process process = new ProcessBuilder(pathToVideoViewer,
-                        "/open", videoFile).start();
+                Process process = new ProcessBuilder(pathToVideoViewer, videoFile).start();
             } catch (Exception e) {
                 ToolboxLogger.log.warning("Cannot play video " +
                 videoFile);
                 ToolboxLogger.log.warning("Invocation: " +
-                        pathToVideoViewer + " " + "/open " + videoFile);
+                        pathToVideoViewer + " " + videoFile);
             }
         } else {
             try {
