@@ -53,7 +53,7 @@ public class BoxAndWhiskerPlotModel {
                 List<StatisticValues> metricType = simulationItem.getMetricTypes();
                 double mean = 0.0;
                 for (StatisticValues metricTypeItem : metricType) {
-                    if (metricTypeItem.getName().contains(FitnessName.TOTAL_FITNESS.getName())) {
+                    if (metricTypeItem.getName().equals(FitnessName.TOTAL_FITNESS.getName())) {
                         mean = metricTypeItem.getMean();
                     }
                 }

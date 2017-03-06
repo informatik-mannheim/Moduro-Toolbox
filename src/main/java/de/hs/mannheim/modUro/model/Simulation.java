@@ -254,6 +254,8 @@ public class Simulation {
         TimeSeries total = calcTotalFitness(dataSeriesList);
         if (total != null) {
             dataSeriesList.add(total);
+            TimeSeries totalNorm = calcNormTotalFitness(total);
+            dataSeriesList.add(totalNorm);
         }
         // Now calc other metrices:
         // And this means cell cycle times.
@@ -285,7 +287,7 @@ public class Simulation {
         if (vol == null || arr == null) {
             return null; // No total fitness possible!
         }
-        String name = TOTAL_FITNESS.getName();
+        String name = TOTAL_FITNESS.getName() + " (orig.)";
         int size = Math.min(vol.getData().length, arr.getData().length);
         double[][] metricData = new double[size][2];
         for (int i = 0; i < metricData.length; i++) {
@@ -294,6 +296,36 @@ public class Simulation {
                     arr.getData()[i][1]) / 2;
         }
         return new TimeSeries(name, metricData);
+    }
+
+    private TimeSeries calcNormTotalFitness(TimeSeries fitness) {
+        String name = TOTAL_FITNESS.getName();
+        double maxTime = fitness.getMaxTime();
+        // TODO use properties that can be configured.
+        if (maxTime < 720.0) {
+            // Apparently, the simulation was aborted.
+            // How many time points up to 720.0 are missing?
+            int m = fitness.size();
+            int missingPoints = 1440 - m;
+            // Create bigger data array for all 1440 = 2 * 720 points ...
+            double[][] newMetricData = new double[m + missingPoints][2];
+            // and copy the values:
+            for (int i = 0; i < m; i++) {
+                newMetricData[i][0] = fitness.getData()[i][0];
+                newMetricData[i][1] = fitness.getData()[i][1];
+            }
+            // double fit = 0.0;
+            double fit = fitness.getData()[m - 1][1];
+            // Now initialize the new data points:
+            for (int i = 0; i < missingPoints; i++) {
+                newMetricData[m + i][0] = maxTime + (double) (i + 1) / 2;
+                newMetricData[m + i][1] = fit; // Unknown (bad) fitness.
+            }
+            return new TimeSeries(name, newMetricData);
+        } else {
+            // Just return the fitness as it is:
+            return new TimeSeries(name, fitness.getData());
+        }
     }
 
     /**
