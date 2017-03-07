@@ -4,3 +4,7 @@
 .git
 out
 .idea
+target
+toolbox-log.*
+moduro-toolbox-settings.xml
+ImagesToVideo.exe
