@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<root>
+<moduro>
+    <parameter>
+        <!--
+        Define how missing fitness values for aborted simulations
+        should be treated.
+        Values are: LAST or ZERO
+        LAST: set missing vlaues to the last fitness value.
+        ZERO: set missing values to 0.
+        -->
+        <totalfitnesstype>LAST</totalfitnesstype>
+        <!-- Time in days when steady state should be reached. -->
+        <steadystatetime>40</steadystatetime>
+        <!-- Time in days when a completed simulations stops. -->
+        <endtime>700</endtime>
+        <!-- Percentage of the preview pictures -->
+        <firstimage>0.2</firstimage>
+        <secondimage>0.5</secondimage>
+        <thirdimage>0.95</thirdimage>
+    </parameter>
     <project>
         <name>Project1</name>
         <node>
@@ -18,4 +36,4 @@
             <path>src/test/resources/Simulationdata/Projekt2/node1</path>
         </node>
     </project>
-</root>
+</moduro>

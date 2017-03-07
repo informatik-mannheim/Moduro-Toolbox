@@ -19,21 +19,33 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * SettingFileWrapper for XML Output of SettingFiles.
+ * SettingFileMarshaller for XML Output of SettingFiles.
+ * Warning: Method names are related to the JAXB conventions.
+ * Do not change the names.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-@XmlRootElement(name = "root")
-public class SettingFileWrapper {
+@XmlRootElement(name = "moduro")
+public class SettingFileMarshaller {
 
-    private List<SettingFile> project;
+    private ParameterSetting params;
+    private List<ProjectSetting> project;
+
+    public ParameterSetting getParameter() {
+        return params;
+    }
+
+    public void setParameter(ParameterSetting parameter) {
+        this.params= parameter;
+    }
 
     /**
      * Gets List of SettingFiles.
      *
      * @return
      */
-    public List<SettingFile> getProject() {
+    public List<ProjectSetting> getProject() {
         return project;
     }
 
@@ -42,7 +54,7 @@ public class SettingFileWrapper {
      *
      * @param project
      */
-    public void setProject(List<SettingFile> project) {
+    public void setProject(List<ProjectSetting> project) {
         this.project = project;
     }
 }

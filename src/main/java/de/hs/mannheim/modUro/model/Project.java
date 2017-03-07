@@ -18,7 +18,7 @@ package de.hs.mannheim.modUro.model;
 import de.hs.mannheim.modUro.config.FilterOption;
 import de.hs.mannheim.modUro.config.RegEx;
 import de.hs.mannheim.modUro.config.ToolboxLogger;
-import de.hs.mannheim.modUro.model.dialog.SettingFile;
+import de.hs.mannheim.modUro.model.dialog.ProjectSetting;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.List;
 public class Project {
 
     private List<ModuroModel> moduroModelList;
-    private SettingFile settingFile;
+    private ProjectSetting projectSetting;
     private FilterOption filterOption;
     private List<File> allDirs;
     private List<String> modelTypeNames;
@@ -41,10 +41,10 @@ public class Project {
     /**
      * Create a project based on a setting file.
      *
-     * @param settingFile
+     * @param projectSetting
      */
-    public Project(SettingFile settingFile, FilterOption filterOption) {
-        this.settingFile = settingFile;
+    public Project(ProjectSetting projectSetting, FilterOption filterOption) {
+        this.projectSetting = projectSetting;
         this.filterOption = filterOption;
         modelTypeNames = createAllModelTypeNames();
         moduroModelList = createModels();
@@ -54,14 +54,14 @@ public class Project {
      * @return Name of the project.
      */
     public String getName() {
-        return settingFile.getName();
+        return projectSetting.getName();
     }
 
     /**
      * @return List of nodes for this project.
      */
     public List<Node> getNodes() {
-        return settingFile.getNode();
+        return projectSetting.getNode();
     }
 
     /**
@@ -109,7 +109,7 @@ public class Project {
         List<String> modelTypeNameList = new ArrayList<>();
         allDirs = new ArrayList<>();
 
-        for (Node node : settingFile.getNode()) {
+        for (Node node : projectSetting.getNode()) {
             File[] dirs = node.getPath().listFiles(f -> f.isDirectory());
             for (File file : dirs) {
                 allDirs.add(file);

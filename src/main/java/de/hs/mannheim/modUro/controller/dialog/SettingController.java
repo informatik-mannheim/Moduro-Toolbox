@@ -15,7 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.controller.dialog;
 
-import de.hs.mannheim.modUro.model.dialog.SettingFile;
+import de.hs.mannheim.modUro.model.dialog.ProjectSetting;
 import de.hs.mannheim.modUro.model.dialog.SettingModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -37,9 +37,9 @@ public class SettingController {
     private SettingModel settingModel;
 
     @FXML
-    private TreeTableView<SettingFile> treeTable;
+    private TreeTableView<ProjectSetting> treeTable;
 
-    ObservableList<SettingFile> setting;
+    ObservableList<ProjectSetting> setting;
 
     @FXML
     private void initialize() {
@@ -55,11 +55,11 @@ public class SettingController {
      */
     private void createTable() {
 
-        TreeItem<SettingFile> root = new TreeItem<>(new SettingFile());
-        TreeItem<SettingFile> treeItem;
+        TreeItem<ProjectSetting> root = new TreeItem<>(new ProjectSetting());
+        TreeItem<ProjectSetting> treeItem;
 
-        for (SettingFile settingFileItem : setting) {
-            treeItem = new TreeItem<>(settingFileItem);
+        for (ProjectSetting projectSettingItem : setting) {
+            treeItem = new TreeItem<>(projectSettingItem);
             root.getChildren().add(treeItem);
         }
 
@@ -68,19 +68,19 @@ public class SettingController {
         root.setExpanded(true);
         treeTable.setShowRoot(false);
 
-        TreeTableColumn<SettingFile, String> columnProject = new TreeTableColumn<SettingFile, String>("ProjectName");
-        columnProject.setCellValueFactory(new TreeItemPropertyValueFactory<SettingFile, String>("name"));
+        TreeTableColumn<ProjectSetting, String> columnProject = new TreeTableColumn<ProjectSetting, String>("ProjectName");
+        columnProject.setCellValueFactory(new TreeItemPropertyValueFactory<ProjectSetting, String>("name"));
 
-        TreeTableColumn<SettingFile, String> columnNode = new TreeTableColumn<SettingFile, String>("Node");
-        columnNode.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<SettingFile, String>, ObservableValue<String>>() {
+        TreeTableColumn<ProjectSetting, String> columnNode = new TreeTableColumn<ProjectSetting, String>("Node");
+        columnNode.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<ProjectSetting, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<SettingFile, String> param) {
+            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<ProjectSetting, String> param) {
                 return new SimpleStringProperty(param.getValue().getValue().getNode().get(0).getName());
             }
         });
 
-        TreeTableColumn<SettingFile, String> columnPath = new TreeTableColumn<SettingFile, String>("Path");
-        columnPath.setCellValueFactory(new TreeItemPropertyValueFactory<SettingFile, String>("path"));
+        TreeTableColumn<ProjectSetting, String> columnPath = new TreeTableColumn<ProjectSetting, String>("Path");
+        columnPath.setCellValueFactory(new TreeItemPropertyValueFactory<ProjectSetting, String>("path"));
 
 
         treeTable.getColumns().addAll(columnProject, columnNode, columnPath);

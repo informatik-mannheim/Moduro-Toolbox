@@ -3,7 +3,25 @@
 Template. Please rename to moduro-toolbox-settings.xml and
 adjust content.
 -->
-<root>
+<moduro>
+    <parameter>
+        <!--
+        Define how missing fitness values for aborted simulations
+        should be treated.
+        Values are: LAST or ZERO
+        LAST: set missing values to the last fitness value.
+        ZERO: set missing values to 0.
+        -->
+        <totalfitnesstype>LAST</totalfitnesstype>
+        <!-- Time in days when steady state should be reached. -->
+        <steadystatetime>40</steadystatetime>
+        <!-- Time in days when a completed simulations stops. -->
+        <endtime>720</endtime>
+        <!-- Percentage of the preview pictures -->
+        <firstimage>0.2</firstimage>
+        <secondimage>0.5</secondimage>
+        <thirdimage>1.0</thirdimage>
+    </parameter>
     <project>
         <name>A project</name>
         <node>
@@ -22,4 +40,4 @@ adjust content.
             <path>c:\Users\Markus\CC3DWorkspace\</path>
         </node>
     </project>
-</root>
+</moduro>

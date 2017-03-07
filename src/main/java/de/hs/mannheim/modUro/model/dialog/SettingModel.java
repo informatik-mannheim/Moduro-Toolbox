@@ -18,7 +18,6 @@ package de.hs.mannheim.modUro.model.dialog;
 import javafx.scene.control.Alert;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,27 +30,28 @@ public class SettingModel {
     // TODO: absolute path name!
     private final File SETTINGXML = new File("C:\\Users\\m.pathmanathan\\Desktop\\ImplConfig\\Setting.xml");
 
-    private List<SettingFile> settings;
+    private List<ProjectSetting> settings;
 
     public SettingModel() {
         settings = new ArrayList<>();
 
-        loadNodeDataFromFile();
+        // loadNodeDataFromFile();
     }
 
     /**
      * Loads setting data from the specified file.
      */
+    /*
     private void loadNodeDataFromFile() {
         try {
-            JAXBContext context = JAXBContext.newInstance(SettingFileWrapper.class);
+            JAXBContext context = JAXBContext.newInstance(SettingFileMarshaller.class);
             Unmarshaller um = context.createUnmarshaller();
 
             // Reading XML from the file and unmarshalling.
-            SettingFileWrapper wrapper = (SettingFileWrapper) um.unmarshal(SETTINGXML);
+            SettingFileMarshaller wrapper = (SettingFileMarshaller) um.unmarshal(SETTINGXML);
 
             settings.clear();
-            settings.addAll(wrapper.getProject());
+            settings.addAll(wrapper.getProjects());
 
             // Save the file path to the registry.
             //setPersonFilePath(file);
@@ -65,7 +65,8 @@ public class SettingModel {
             alert.showAndWait();
         }
     }
-    public List<SettingFile> getSettings() {
+    */
+    public List<ProjectSetting> getSettings() {
         return settings;
     }
 
@@ -74,12 +75,12 @@ public class SettingModel {
      */
     private void saveNodeDataToFile() {
         try {
-            JAXBContext context = JAXBContext.newInstance(SettingFileWrapper.class);
+            JAXBContext context = JAXBContext.newInstance(SettingFileMarshaller.class);
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Wrapping our setting data.
-            SettingFileWrapper wrapper = new SettingFileWrapper();
+            SettingFileMarshaller wrapper = new SettingFileMarshaller();
             wrapper.setProject(settings);
 
             // Marshalling and saving XML to the file.

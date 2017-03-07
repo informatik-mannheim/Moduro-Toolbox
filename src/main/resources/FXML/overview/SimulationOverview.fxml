@@ -18,7 +18,7 @@
             <Label fx:id="simulationModel" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label text="Seed:" GridPane.rowIndex="2" />
             <Label fx:id="simulationSeed" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <Label text="in SteadyState:" GridPane.rowIndex="3" />
+            <Label text="Steady State:" GridPane.rowIndex="3" />
             <Label fx:id="isInSteadyState" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Label text="Completed:" GridPane.rowIndex="4" />
             <Label fx:id="isCompleted" GridPane.columnIndex="2" GridPane.rowIndex="4" />

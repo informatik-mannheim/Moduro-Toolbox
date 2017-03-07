@@ -13,27 +13,35 @@ Copyright 2016 the original author or authors.
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package de.hs.mannheim.modUro.config;
+package de.hs.mannheim.modUro.model.dialog;
+
+import de.hs.mannheim.modUro.model.Node;
+
+import java.util.List;
 
 /**
- * Configuration for Reading Images.
- * Percentage of Image, which should be read.
+ * Bean class for project settings.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public enum ImageReader {
+public class ProjectSetting {
 
-    FIRST_IMAGE(0.2),
-    SECOND_IMAGE(0.5),
-    THIRD_IMAGE(0.95);
+    private String name;
+    private List<Node> node;
 
-    private final double percentage;
-
-    ImageReader(double percentage) {
-        this.percentage = percentage;
+    public String getName() {
+        return name;
     }
 
-    public double getPercentage() {
-        return percentage;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Node> getNode() {
+        return node;
+    }
+
+    public void setNode(List<Node> node) {
+        this.node = node;
     }
 }

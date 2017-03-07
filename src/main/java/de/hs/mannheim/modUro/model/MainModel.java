@@ -16,8 +16,9 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.model;
 
 import de.hs.mannheim.modUro.config.FilterOption;
-import de.hs.mannheim.modUro.model.dialog.SettingFile;
-import de.hs.mannheim.modUro.model.dialog.SettingFileWrapper;
+import de.hs.mannheim.modUro.config.ToolboxParameter;
+import de.hs.mannheim.modUro.model.dialog.ProjectSetting;
+import de.hs.mannheim.modUro.model.dialog.SettingFileMarshaller;
 import javafx.scene.control.Alert;
 
 import javax.xml.bind.JAXBContext;
@@ -39,10 +40,10 @@ public class MainModel {
     //Setting.xml file with projects and its nodes.
     String settingFilePath;
     // private final URL settingURL;
-    private final File SETTINGXML;
+    private final File settingsXMLFile;
 
-    //List with settings loaded from the Setting.xml file.
-    private List<SettingFile> settings = new ArrayList<>();
+    //List with project settings loaded from the xml file.
+    private List<ProjectSetting> projectSettings = new ArrayList<>();
 
     public MainModel(String settingFilePath) {
         this(settingFilePath, new FilterOption());
@@ -54,14 +55,14 @@ public class MainModel {
     public MainModel(String settingFilePath, FilterOption filterOption) {
         this.settingFilePath = settingFilePath;
         // this.settingURL = getClass().getResource(settingFilePath);
-        this.SETTINGXML = new File(settingFilePath);
+        this.settingsXMLFile = new File(settingFilePath);
 
-        loadNodeDataFromFile(); // Load Setting File with Project and its nodes.
+        loadXMLSettingsFile(); // Load Setting File with Project and its nodes.
 
         //For all Settings in XML file create Project with its data.
-        for (SettingFile settingFileItem : settings) {
-            if (settingFileItem.getNode() != null) {
-                Project project = new Project(settingFileItem, filterOption);
+        for (ProjectSetting projectSettingItem : projectSettings) {
+            if (projectSettingItem.getNode() != null) {
+                Project project = new Project(projectSettingItem, filterOption);
                 projectData.add(project);
             }
         }
@@ -70,16 +71,17 @@ public class MainModel {
     /**
      * Loads node data from the specified xml file.
      */
-    private void loadNodeDataFromFile() {
+    private void loadXMLSettingsFile() {
         try {
-            JAXBContext context = JAXBContext.newInstance(SettingFileWrapper.class);
+            JAXBContext context = JAXBContext.newInstance(SettingFileMarshaller.class);
             Unmarshaller um = context.createUnmarshaller();
 
             // Reading XML from the file and unmarshalling.
-            SettingFileWrapper wrapper = (SettingFileWrapper) um.unmarshal(SETTINGXML);
+            SettingFileMarshaller wrapper = (SettingFileMarshaller) um.unmarshal(settingsXMLFile);
 
-            settings.clear();
-            settings.addAll(wrapper.getProject());
+            ToolboxParameter.params = wrapper.getParameter();
+            projectSettings.clear();
+            projectSettings.addAll(wrapper.getProject());
 
             // Save the file path to the registry.
             //setPersonFilePath(file);
@@ -87,9 +89,8 @@ public class MainModel {
         } catch (Exception e) { // catches ANY exception
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
-            alert.setHeaderText("Could not load data");
-            alert.setContentText("Could not load data from file:\n" + SETTINGXML.getPath());
-
+            alert.setHeaderText("Could not load settings file.");
+            alert.setContentText("Could not load settings file:\n" + settingsXMLFile.getPath());
             alert.showAndWait();
         }
     }
@@ -102,5 +103,4 @@ public class MainModel {
     public List<Project> getProjectData() {
         return projectData;
     }
-
 }

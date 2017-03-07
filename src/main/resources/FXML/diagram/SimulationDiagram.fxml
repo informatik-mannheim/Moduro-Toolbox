@@ -30,13 +30,13 @@
       <children>
         <FlowPane hgap="10.0" prefHeight="200.0" prefWidth="200.0" vgap="10.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
           <children>
-            <Label text="Metrictype:" />
+            <Label text="Series:" />
             <ChoiceBox fx:id="leftMetricType" prefWidth="-1.0" />
           </children>
         </FlowPane>
         <FlowPane hgap="10.0" prefHeight="200.0" prefWidth="200.0" vgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
           <children>
-            <Label text="Metrictype:" />
+            <Label text="Series:" />
             <ChoiceBox fx:id="rightMetricType" prefWidth="-1.0" />
           </children>
         </FlowPane>

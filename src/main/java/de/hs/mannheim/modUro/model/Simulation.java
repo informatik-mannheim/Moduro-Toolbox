@@ -21,10 +21,7 @@ import static de.hs.mannheim.modUro.config.FitnessName.ARRANGEMENT_FITNESS;
 import static de.hs.mannheim.modUro.config.FitnessName.TOTAL_FITNESS;
 import static de.hs.mannheim.modUro.config.FitnessName.VOLUME_FITNESS;
 
-import de.hs.mannheim.modUro.config.DataPlot;
-import de.hs.mannheim.modUro.config.ImageReader;
-import de.hs.mannheim.modUro.config.RegEx;
-import de.hs.mannheim.modUro.config.ToolboxLogger;
+import de.hs.mannheim.modUro.config.*;
 import de.hs.mannheim.modUro.reader.CellCycleStat;
 import de.hs.mannheim.modUro.reader.CelltimesReader;
 
@@ -55,9 +52,8 @@ public class Simulation {
     private List<File> images;              //Filepath of Images
     private boolean hasVideo = false;
 
-    // Data for Plotting
-    private double minTime = DataPlot.MIN_TIME.getValue();
-    private double maxTime = DataPlot.MAX_TIME.getValue();
+    private double minTime = ToolboxParameter.params.getSteadystatetime();
+    private double maxTime = ToolboxParameter.params.getEndtime();
 
     private double[][] defaultFitnessTable;
     private CelltimesReader ctr;
@@ -301,12 +297,12 @@ public class Simulation {
     private TimeSeries calcNormTotalFitness(TimeSeries fitness) {
         String name = TOTAL_FITNESS.getName();
         double maxTime = fitness.getMaxTime();
-        // TODO use properties that can be configured.
-        if (maxTime < 720.0) {
+        double endTime = ToolboxParameter.params.getEndtime();
+        if (maxTime < endTime) {
             // Apparently, the simulation was aborted.
             // How many time points up to 720.0 are missing?
             int m = fitness.size();
-            int missingPoints = 1440 - m;
+            int missingPoints = (2 * (int) endTime) - m;
             // Create bigger data array for all 1440 = 2 * 720 points ...
             double[][] newMetricData = new double[m + missingPoints][2];
             // and copy the values:
@@ -314,8 +310,12 @@ public class Simulation {
                 newMetricData[i][0] = fitness.getData()[i][0];
                 newMetricData[i][1] = fitness.getData()[i][1];
             }
-            // double fit = 0.0;
-            double fit = fitness.getData()[m - 1][1];
+            double fit;
+            if (ToolboxParameter.params.getTotalfitnesstype().equals("LAST")) {
+                fit = fitness.getData()[m - 1][1];
+            } else {
+                fit = 0;
+            }
             // Now initialize the new data points:
             for (int i = 0; i < missingPoints; i++) {
                 newMetricData[m + i][0] = maxTime + (double) (i + 1) / 2;
@@ -341,13 +341,13 @@ public class Simulation {
         if (images.length != 0) {
             int count = images.length;
 
-            double firstImage = count * (ImageReader.FIRST_IMAGE.getPercentage());
+            double firstImage = count * (ToolboxParameter.params.getFirstImage());
             imagePath.add(0, images[((int) firstImage)]);
 
-            double secondImage = count * (ImageReader.SECOND_IMAGE.getPercentage());
+            double secondImage = count * (ToolboxParameter.params.getSecondImage());
             imagePath.add(1, images[((int) secondImage)]);
 
-            double thirdImage = count * (ImageReader.THIRD_IMAGE.getPercentage());
+            double thirdImage = count * (ToolboxParameter.params.getThirdImage());
             imagePath.add(2, images[((int) thirdImage)]);
         }
 
