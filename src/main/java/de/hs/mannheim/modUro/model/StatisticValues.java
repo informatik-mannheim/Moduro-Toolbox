@@ -62,6 +62,10 @@ public class StatisticValues {
         this.max = stats.getMax();
     }
 
+    public int size() {
+        return (int) stats.getN();
+    }
+
     public String getName() {
         return name;
     }

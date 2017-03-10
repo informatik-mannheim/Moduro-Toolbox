@@ -55,10 +55,6 @@ public class TimeSeries extends StatisticValues {
         return metricData[metricData.length - 1][0];
     }
 
-    public int size() {
-        return metricData.length;
-    }
-
     private static double[] extractColumn(double[][] data, int idx) {
         double[] a = new double[data.length];
         for (int i = 0; i < data.length; i++) {

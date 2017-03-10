@@ -104,7 +104,8 @@ public class BoxAndWhiskerPlotController {
             StatisticValues stat = stats.get(model);
             BoxAndWhiskerItem item = new BoxAndWhiskerItem(stat.getMean(), stat.getSecondPercentile(), stat.getFirstPercentile(), stat.getLastPercentile(), stat.getMin(), stat.getMax(), stat.getMin(), stat.getMax(), new ArrayList<>());
             // Second parameter is the row key (?), using always the same works:
-            dataset.add(item, "", model);
+            int n = stat.size();
+            dataset.add(item, "", model + " (n=" + n + ")");
         }
         return dataset;
     }

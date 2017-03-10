@@ -6,11 +6,11 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane maxHeight="2000.0" maxWidth="2000.0" minHeight="-Infinity" prefHeight="-1.0" prefWidth="-1.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hs.mannheim.modUro.controller.overview.SimulationOverviewController">
+<ScrollPane prefHeight="600" prefWidth="500" minHeight="500" maxHeight="Infinity" maxWidth="Infinity"  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hs.mannheim.modUro.controller.overview.SimulationOverviewController">
   <content>
-    <VBox maxHeight="-1.0" maxWidth="-1.0" spacing="10.0">
+    <VBox spacing="10.0">
       <children>
-        <GridPane hgap="10.0" maxHeight="-1.0" maxWidth="-1.0" prefHeight="200.0" vgap="10.0">
+        <GridPane prefHeight="200.0" prefWidth="1000"  vgap="10.0" hgap="10.0">
           <children>
             <Label text="Simulation-ID:" />
             <Label fx:id="simulationID" GridPane.columnIndex="2" />
@@ -33,9 +33,6 @@
             <Label text="Video:" GridPane.rowIndex="10" />
             <Button fx:id="videoButton" mnemonicParsing="false" onAction="#handleImagesToVideo" text="Create Video" GridPane.columnIndex="2" GridPane.rowIndex="10" />
           </children>
-          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="24.0" />
-          </columnConstraints>
           <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
@@ -49,26 +46,21 @@
             <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
           </rowConstraints>
         </GridPane>
-        <TableView fx:id="tableContent" prefHeight="-1.0" prefWidth="-1.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" VBox.vgrow="ALWAYS" />
-        <GridPane>
+        <GridPane prefHeight="200.0" prefWidth="600" maxWidth="800">
           <children>
-            <ImageView fx:id="firstImage" fitHeight="250.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <ImageView fx:id="secondImage" fitHeight="250.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            <ImageView fx:id="thirdImage" fitHeight="250.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <ImageView fx:id="firstImage" fitHeight="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <ImageView fx:id="secondImage" fitHeight="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <ImageView fx:id="thirdImage" fitHeight="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="0" />
           </children>
           <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
           </columnConstraints>
-          <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-          </rowConstraints>
         </GridPane>
+        <TableView fx:id="tableContent" prefWidth="400"/>
       </children>
       <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
