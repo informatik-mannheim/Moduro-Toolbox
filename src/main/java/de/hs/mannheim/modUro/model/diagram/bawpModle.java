@@ -26,19 +26,19 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * Class for BoxAndWhiskerPlotModel.
+ * Class for bawpModle.
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  * @auhor Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class BoxAndWhiskerPlotModel {
+public class bawpModle {
 
     private Project project;
 
     private List<String> modelTypeName;
     private Map<String, StatisticValues> statisticValues;
 
-    public BoxAndWhiskerPlotModel(Project project) {
+    public bawpModle(Project project) {
         this.project = project;
         modelTypeName = listModelTypeName();
         statisticValues = new HashMap<>();

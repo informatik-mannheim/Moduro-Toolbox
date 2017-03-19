@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class JCellcycletimeDiagram extends JPanel {
+public class JCellcycletimeDiagram extends Diagram {
 
     public JFreeChart chart;
 
@@ -42,9 +42,11 @@ public class JCellcycletimeDiagram extends JPanel {
                                  List<CellCycletimeEntry> cycletimesList) {
         XYDataset dataset = createDataset(cellTypes, cycletimesList);
         chart = createChart(dataset, cellTypes);
-        add(new ChartPanel(chart));
     }
 
+    public JFreeChart getJFreeChart() {
+        return chart;
+    }
 
     private XYDataset createDataset(List<String> cellTypes, List<CellCycletimeEntry> cycletimesList) {
 

@@ -36,16 +36,18 @@ import java.util.stream.DoubleStream;
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class JCellCountDiagram extends JPanel {
+public class JCellCountDiagram extends Diagram {
 
     public JFreeChart chart;
 
     public JCellCountDiagram(List<String> cellTypes, List<CellCountEntry> cellcountList) {
         XYDataset dataset = createDataset(cellTypes, cellcountList);
         chart = createChart(dataset, cellTypes);
-        add(new ChartPanel(chart));
     }
 
+    public JFreeChart getJFreeChart() {
+        return chart;
+    }
 
     private XYDataset createDataset(List<String> cellTypes, List<CellCountEntry> cellcountList) {
 

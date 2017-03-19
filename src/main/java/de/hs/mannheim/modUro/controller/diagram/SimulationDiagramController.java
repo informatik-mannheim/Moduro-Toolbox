@@ -42,9 +42,8 @@ import java.util.List;
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class SimulationDiagramController extends DiagramController {
+public class SimulationDiagramController {
 
-    //Reference to BoxAndWhiskerPlotModel
     private SimulationDiagram simulationDiagram;
 
     @FXML
@@ -87,7 +86,6 @@ public class SimulationDiagramController extends DiagramController {
 
         }
 
-
         /*ChangeListerners for selected items in choicebox.*/
         leftMetricType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -95,7 +93,6 @@ public class SimulationDiagramController extends DiagramController {
                 setLeftChartContent(newValue.intValue());
                 leftLastSelectedIndex = newValue.intValue();
                 leftLastSelectedMetrictypename = choiceBoxMetrictypeNames().get(leftLastSelectedIndex);
-
             }
         });
 
@@ -225,8 +222,6 @@ public class SimulationDiagramController extends DiagramController {
                 // TODO Q&D:
                 CellCycleStat stat =
                         new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
-                System.out.println(stat);
-
                 JCellcycletimeDiagram ctd =
                         new JCellcycletimeDiagram(ctr.getCellTypes(), ctr.getCycletimes());
                 ChartViewer viewer = new ChartViewer(ctd.chart);

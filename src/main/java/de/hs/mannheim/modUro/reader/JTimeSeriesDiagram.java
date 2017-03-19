@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class JTimeSeriesDiagram {
+public class JTimeSeriesDiagram extends Diagram {
 
     public JFreeChart chart;
 
@@ -49,6 +49,14 @@ public class JTimeSeriesDiagram {
 
     public JFreeChart getJFreeChart() {
         return chart;
+    }
+
+    public String exportToTikz() {
+        return "% Tikz-Export not implemented.";
+    }
+
+    public String exportToWSV() {
+        return "# White-space separated values export not implemented.";
     }
 
     private JFreeChart createChart(XYDataset dataset, String name) {

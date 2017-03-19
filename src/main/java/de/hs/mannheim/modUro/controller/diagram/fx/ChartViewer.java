@@ -273,7 +273,7 @@ public class ChartViewer extends Control implements Skinnable,
 
         MenuItem tikzItem = new MenuItem("Tikz ...");
         tikzItem.setOnAction((ActionEvent e) -> {
-            handleExportToTikz(e.getSource());
+            handleExportToTikz();
         });
         export.getItems().add(tikzItem);
 
@@ -366,7 +366,7 @@ public class ChartViewer extends Control implements Skinnable,
     /**
      * A handler for the export to Tikz option in the context menu.
      */
-    private void handleExportToTikz(Object source) {
+    private void handleExportToTikz() {
         //TODO implementation is dependent of diagram content, not generic.
         Map<String, StatisticValues> stats = controller.stats;
         List<String> sortedModels = new ArrayList<>(stats.keySet());
