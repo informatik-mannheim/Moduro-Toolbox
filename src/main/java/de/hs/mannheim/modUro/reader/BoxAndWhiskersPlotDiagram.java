@@ -15,8 +15,9 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.reader;
 
+import de.hs.mannheim.modUro.diagram.Diagram;
 import de.hs.mannheim.modUro.model.StatisticValues;
-import de.hs.mannheim.modUro.model.diagram.bawpModle;
+import de.hs.mannheim.modUro.model.diagram.BoxAndWhiskerPlotModel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
@@ -31,16 +32,18 @@ import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class BoxAndWhiskersDiagram extends Diagram {
+public class BoxAndWhiskersPlotDiagram extends Diagram {
 
     public JFreeChart chart;
-    private bawpModle bwpModel;
+    private BoxAndWhiskerPlotModel bwpModel;
 
-    public BoxAndWhiskersDiagram(bawpModle bwpModel) {
+    public BoxAndWhiskersPlotDiagram(BoxAndWhiskerPlotModel bwpModel) {
         this.bwpModel = bwpModel;
         boxWhiskerPlot();
     }
@@ -50,7 +53,52 @@ public class BoxAndWhiskersDiagram extends Diagram {
     }
 
     public String exportToTikz() {
-        return "% Tikz-Export not implemented.";
+        Map<String, StatisticValues> stats = bwpModel.getStatisticValues();
+        List<String> sortedModels = new ArrayList<>(stats.keySet());
+        //sortedModels.sort(String::compareTo);
+        sortedModels.sort((s1, s2) -> s2.compareTo(s1));
+        String ytickslabels = "yticklabels={" +
+                sortedModels.stream().map(Object::toString)
+                        .collect(Collectors.joining(", ")) +
+                "}";
+        List<String> yticksl = new ArrayList<>();
+        for (int i = 2; i <= sortedModels.size() + 1; i++) {
+            yticksl.add(i + "");
+        }
+        String ytick = "ytick={" +
+                yticksl.stream().map(Object::toString)
+                        .collect(Collectors.joining(", ")) +
+                "}";
+        String enn = "enn"; // ok.map(m = > m._1.toString + " = " + m._2.toString).mkString(", ")
+        String s = "% " + enn + "\n";
+        s = s + "\\begin{tikzpicture}\n" +
+                " \\begin{axis}[\n" +
+                " " + ytick + ",\n" +
+                " " + ytickslabels + ",\n " +
+                " height=.3*\\textheight,\n" +
+                " xmin=0, xmax=1.0, width=.9*\\textwidth,\n" +
+                " xtick={0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1},\n" +
+                " xticklabels={0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1}\n" +
+                " ]\n";
+
+        int pos = 2;
+        for (String m : sortedModels) {
+            s = s +
+                    " \\addplot+[boxplot prepared={draw position=" + pos + ",\n" +
+                    "  lower whisker=" + stats.get(m).getMin() +
+                    ", lower quartile=" + stats.get(m).getFirstPercentile() + ",\n" +
+                    "  median=" + stats.get(m).getSecondPercentile() + ", upper quartile=" +
+                    stats.get(m).getLastPercentile() + ",\n" +
+                    "  upper whisker=" + stats.get(m).getMax() + ",\n" +
+                    "  every box/.style={draw=black},\n" +
+                    "  every whisker/.style={black},\n" +
+                    "  every median/.style={black}}]\n" +
+                    " coordinates {};\n";
+            pos++;
+        }
+        s = s + " \\end{axis}\n" +
+                "\\end{tikzpicture}\n";
+        return s;
     }
 
     public String exportToWSV() {

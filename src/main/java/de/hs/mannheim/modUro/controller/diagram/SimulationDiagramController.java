@@ -17,9 +17,9 @@ package de.hs.mannheim.modUro.controller.diagram;
 
 import de.hs.mannheim.modUro.config.FitnessName;
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
+import de.hs.mannheim.modUro.diagram.Diagram;
 import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.Simulation;
-import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.SimulationDiagram;
 import de.hs.mannheim.modUro.reader.*;
 import javafx.beans.value.ChangeListener;
@@ -29,10 +29,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.BorderPane;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -210,7 +206,7 @@ public class SimulationDiagramController {
             if (ctr != null) {
                 JCellCountDiagram ccd =
                         new JCellCountDiagram(ctr.getCellTypes(), ctr.getNumberOfCells());
-                ChartViewer viewer = new ChartViewer(ccd.chart);
+                ChartViewer viewer = new ChartViewer(ccd);
                 pane.setCenter(viewer);
             } else {
                 // Cell count not available.
@@ -224,15 +220,15 @@ public class SimulationDiagramController {
                         new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
                 JCellcycletimeDiagram ctd =
                         new JCellcycletimeDiagram(ctr.getCellTypes(), ctr.getCycletimes());
-                ChartViewer viewer = new ChartViewer(ctd.chart);
+                ChartViewer viewer = new ChartViewer(ctd);
                 pane.setCenter(viewer);
             } else {
                 // Cell count not available.
             }
         } else {
             TimeSeries timeSeries = simulationDiagram.getTimeSeries().get(selectedItemIndex);
-            JFreeChart chart = new JTimeSeriesDiagram(timeSeries).getJFreeChart();
-            ChartViewer viewer = new ChartViewer(chart);
+            Diagram diagram = new JTimeSeriesDiagram(timeSeries);
+            ChartViewer viewer = new ChartViewer(diagram);
             pane.setCenter(viewer);
         }
         pane.layout();

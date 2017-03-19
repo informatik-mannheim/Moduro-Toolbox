@@ -1,4 +1,4 @@
-package de.hs.mannheim.modUro.reader;
+package de.hs.mannheim.modUro.diagram;
 
 import org.jfree.chart.JFreeChart;
 

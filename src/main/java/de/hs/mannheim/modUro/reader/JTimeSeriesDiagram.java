@@ -15,6 +15,7 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.reader;
 
+import de.hs.mannheim.modUro.diagram.Diagram;
 import de.hs.mannheim.modUro.model.TimeSeries;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;

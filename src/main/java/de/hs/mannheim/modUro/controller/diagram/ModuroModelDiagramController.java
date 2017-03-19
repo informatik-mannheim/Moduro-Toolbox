@@ -21,6 +21,7 @@ import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.diagram.ModuroModelDiagram;
+import de.hs.mannheim.modUro.diagram.Diagram;
 import de.hs.mannheim.modUro.reader.JTimeSeriesDiagram;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,7 +30,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.BorderPane;
-import org.jfree.chart.JFreeChart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,9 +183,9 @@ public class ModuroModelDiagramController {
             TimeSeries metricTypeItem = simulation.getTimeSeriesByName(selectedItem);
             list.add(metricTypeItem);
         }
-        JFreeChart chart = new JTimeSeriesDiagram(list.get(0).getName(), list).getJFreeChart();
-        chart.removeLegend();
-        ChartViewer viewer = new ChartViewer(chart);
+        Diagram diagram = new JTimeSeriesDiagram(list.get(0).getName(), list);
+        diagram.getJFreeChart().removeLegend();
+        ChartViewer viewer = new ChartViewer(diagram);
         if (left) {
             leftPane.setCenter(viewer);
             leftPane.layout();

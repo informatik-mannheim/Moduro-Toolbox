@@ -16,8 +16,8 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.reader;
 
 import de.hs.mannheim.modUro.config.CellTypeColor;
+import de.hs.mannheim.modUro.diagram.Diagram;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.XYPlot;
@@ -27,11 +27,8 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.HorizontalAlignment;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)

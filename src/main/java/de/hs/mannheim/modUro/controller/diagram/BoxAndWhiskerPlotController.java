@@ -18,8 +18,8 @@ package de.hs.mannheim.modUro.controller.diagram;
 import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.Project;
 import de.hs.mannheim.modUro.model.StatisticValues;
-import de.hs.mannheim.modUro.model.diagram.bawpModle;
-import de.hs.mannheim.modUro.reader.BoxAndWhiskersDiagram;
+import de.hs.mannheim.modUro.model.diagram.BoxAndWhiskerPlotModel;
+import de.hs.mannheim.modUro.reader.BoxAndWhiskersPlotDiagram;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 
@@ -32,7 +32,7 @@ import java.util.*;
  */
 public class BoxAndWhiskerPlotController {
 
-    private bawpModle bawpModle;
+    private BoxAndWhiskerPlotModel bawpModle;
 
     @FXML
     private BorderPane boxWhiskerPane;
@@ -41,9 +41,9 @@ public class BoxAndWhiskerPlotController {
     public Map<String, StatisticValues> stats;
 
     public void init(Project project) {
-        this.bawpModle = new bawpModle(project);
-        BoxAndWhiskersDiagram bwd = new BoxAndWhiskersDiagram(bawpModle);
-        ChartViewer viewer = new ChartViewer(bwd.getJFreeChart());
+        this.bawpModle = new BoxAndWhiskerPlotModel(project);
+        BoxAndWhiskersPlotDiagram bwd = new BoxAndWhiskersPlotDiagram(bawpModle);
+        ChartViewer viewer = new ChartViewer(bwd);
         boxWhiskerPane.setCenter(viewer);
     }
 }
