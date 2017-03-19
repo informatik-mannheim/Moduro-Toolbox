@@ -270,6 +270,12 @@ public class ChartViewer extends Control implements Skinnable,
         });
         export.getItems().add(tikzItem);
 
+        MenuItem wsvItem = new MenuItem("File  ...");
+        wsvItem.setOnAction((ActionEvent e) -> {
+            handleExportToWSV();
+        });
+        export.getItems().add(wsvItem);
+
         if (ExportUtils.isOrsonPDFAvailable()) {
             MenuItem pdfItem = new MenuItem("PDF ...");
             pdfItem.setOnAction((ActionEvent e) -> {
@@ -361,6 +367,15 @@ public class ChartViewer extends Control implements Skinnable,
      */
     private void handleExportToTikz() {
         String s = diagram.exportToTikz();
+        System.out.println(s);
+        ToolboxLogger.log.info(s);
+    }
+
+    /**
+     * A handler for the export to Tikz option in the context menu.
+     */
+    private void handleExportToWSV() {
+        String s = diagram.exportToWSV();
         System.out.println(s);
         ToolboxLogger.log.info(s);
     }

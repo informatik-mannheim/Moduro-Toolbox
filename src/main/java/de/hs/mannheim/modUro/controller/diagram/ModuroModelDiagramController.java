@@ -22,7 +22,7 @@ import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.diagram.ModuroModelDiagram;
 import de.hs.mannheim.modUro.diagram.Diagram;
-import de.hs.mannheim.modUro.reader.JTimeSeriesDiagram;
+import de.hs.mannheim.modUro.diagram.JTimeSeriesDiagram;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;

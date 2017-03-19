@@ -13,10 +13,11 @@ Copyright 2016 the original author or authors.
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package de.hs.mannheim.modUro.reader;
+package de.hs.mannheim.modUro.diagram;
 
 import de.hs.mannheim.modUro.config.CellTypeColor;
 import de.hs.mannheim.modUro.diagram.Diagram;
+import de.hs.mannheim.modUro.reader.CellCountEntry;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;

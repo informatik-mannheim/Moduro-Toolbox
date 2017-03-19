@@ -13,7 +13,7 @@ Copyright 2016 the original author or authors.
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package de.hs.mannheim.modUro.reader;
+package de.hs.mannheim.modUro.diagram;
 
 import de.hs.mannheim.modUro.diagram.Diagram;
 import de.hs.mannheim.modUro.model.TimeSeries;
@@ -36,14 +36,20 @@ import java.util.List;
  */
 public class JTimeSeriesDiagram extends Diagram {
 
-    public JFreeChart chart;
+    private JFreeChart chart;
+    private List<TimeSeries> timeSeriesList;
+    private TimeSeries timeSeries;
+    private String name;
 
     public JTimeSeriesDiagram(TimeSeries timeSeries) {
+        this.timeSeries = timeSeries;
         XYDataset dataset = createDataset(timeSeries);
         chart = createChart(dataset, timeSeries.getName());
     }
 
     public JTimeSeriesDiagram(String name, List<TimeSeries> timeSeriesList) {
+        this.name = name;
+        this.timeSeriesList = timeSeriesList;
         XYDataset dataset = createDatasetList(timeSeriesList);
         chart = createChart(dataset, name);
     }
@@ -57,7 +63,19 @@ public class JTimeSeriesDiagram extends Diagram {
     }
 
     public String exportToWSV() {
-        return "# White-space separated values export not implemented.";
+        StringBuffer sb = new StringBuffer();
+        if (timeSeries != null) {
+            sb.append("# time\t" + name);
+            for (int i = 0; i < timeSeries.getTimeSeriesSize(); i++) {
+                sb.append("\n" + timeSeries.getTimeSeries()[i] + "\t");
+                for (int j = 0; j < timeSeries.getNumberOfDataSeries(); j++) {
+                    sb.append(timeSeries.getData()[i] + "\t");
+                }
+            }
+        } else {
+            sb.append("# time\t" + name);
+        }
+        return sb.toString();
     }
 
     private JFreeChart createChart(XYDataset dataset, String name) {
