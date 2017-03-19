@@ -47,7 +47,7 @@ public class TimeSeriesTest {
         project = projectList.get(0);
         moduroModel = project.getModuroModelList().get(0);
         simulation = moduroModel.getSimulations().get(0);
-        timeSeries = (TimeSeries) simulation.getMetricTypes().get(4);
+        timeSeries = (TimeSeries) simulation.getAllTimeSeries().get(4);
     }
 
     @Test
@@ -57,22 +57,19 @@ public class TimeSeriesTest {
 
     @Test
     public void metricData() {
-        double[][] metricData = new double[][]{
-                {0.5, 3.5},
-                {1.0, 0.5,},
-                {1.5, 0.5}
-        };
-
-        Assert.assertArrayEquals("Metric data does not equals.", metricData, timeSeries.getData());
+        double[] tSeries = new double[]{0.5, 1.0, 1.5};
+        double[] dSeries = new double[]{3.5, 0.5, 0.5};
+        Assert.assertArrayEquals("Metric data does not equals.", tSeries, timeSeries.getTimeSeries(), DELTA);
+        Assert.assertArrayEquals("Metric data does not equals.", dSeries, timeSeries.getData(),DELTA);
     }
 
     @Test
     public void meanOfSimulation() {
-        Assert.assertEquals("Mean of simulation should be '1.5' and not: " + timeSeries.getMean(), 1.5, timeSeries.getMean(), DELTA);
+        Assert.assertEquals("Mean of simulation should be '1.5' and not: " + timeSeries.getStats().getMean(), 1.5, timeSeries.getStats().getMean(), DELTA);
     }
 
     @Test
     public void stdDevOfSimulation() {
-        Assert.assertEquals("Standard deviation of simulation should be '1.7320508075688772' and not: " + timeSeries.getStdDev(), 1.7320508075688772, timeSeries.getStdDev(), DELTA);
+        Assert.assertEquals("Standard deviation of simulation should be '1.7320508075688772' and not: " + timeSeries.getStats().getStdDev(), 1.7320508075688772, timeSeries.getStats().getStdDev(), DELTA);
     }
 }

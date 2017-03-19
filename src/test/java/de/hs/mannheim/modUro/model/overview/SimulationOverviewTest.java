@@ -156,10 +156,10 @@ public class SimulationOverviewTest {
         double isAvg = 0;
         double shouldStdev = 0.268832719; // According to excel.
         double isStdev = 0;
-        for (StatisticValues sim : simulation.getMetricTypes()) {
+        for (TimeSeries sim : simulation.getAllTimeSeries()) {
             if (sim.getName().contains(FitnessName.VOLUME_FITNESS.getName())) {
-                isAvg = sim.getMean();
-                isStdev = sim.getStdDev();
+                isAvg = sim.getStats().getMean();
+                isStdev = sim.getStats().getStdDev();
             }
         }
         Assert.assertEquals("Mean volume fitness should be " + shouldAvg + " and not: " + isAvg,

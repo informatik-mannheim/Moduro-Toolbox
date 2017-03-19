@@ -21,10 +21,7 @@ import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.Simulation;
 import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.SimulationDiagram;
-import de.hs.mannheim.modUro.reader.CellCycleStat;
-import de.hs.mannheim.modUro.reader.CelltimesReader;
-import de.hs.mannheim.modUro.reader.JCellCountDiagram;
-import de.hs.mannheim.modUro.reader.JCellcycletimeDiagram;
+import de.hs.mannheim.modUro.reader.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -165,7 +162,7 @@ public class SimulationDiagramController extends DiagramController {
 
     private List<String> choiceBoxMetrictypeNames() {
         List<String> name = new ArrayList<>();
-        for (StatisticValues metricTypeItem : simulationDiagram.getTimeSeries()) {
+        for (TimeSeries metricTypeItem : simulationDiagram.getTimeSeries()) {
             name.add(metricTypeItem.getName());
         }
         // Here we add - for now - the two generic diagram types:
@@ -209,7 +206,7 @@ public class SimulationDiagramController extends DiagramController {
 
     private void setChartContent(int selectedItemIndex, BorderPane pane) {
         // Very quick and dirty: TODO
-        // New diagrams obtain size and size+1.
+        // New diagrams obtain getTimeSeriesSize and getTimeSeriesSize+1.
         if (selectedItemIndex == simulationDiagram.getTimeSeries().size()) {
             // This means cell count.
             CelltimesReader ctr = simulation.getCellTimesReader();
@@ -238,34 +235,11 @@ public class SimulationDiagramController extends DiagramController {
                 // Cell count not available.
             }
         } else {
-            double[][] data = ((TimeSeries) simulationDiagram.getTimeSeries().get(selectedItemIndex)).getData();
-            XYDataset dataset = createDataset(simulationDiagram.getSimulationName(), data);
-            JFreeChart chart = createChart(dataset, simulationDiagram.getTimeSeries().get(selectedItemIndex).getName());
+            TimeSeries timeSeries = simulationDiagram.getTimeSeries().get(selectedItemIndex);
+            JFreeChart chart = new JTimeSeriesDiagram(timeSeries).getJFreeChart();
             ChartViewer viewer = new ChartViewer(chart);
             pane.setCenter(viewer);
         }
         pane.layout();
-    }
-
-    /**
-     * Creates Dataset.
-     *
-     * @return
-     */
-    private static XYDataset createDataset(String simulationName, double[][] fitnessArray) {
-
-        XYSeries xySerie = new XYSeries(simulationName);
-        double x;
-        double y;
-
-        for (int i = 0; i < fitnessArray.length; i++) {
-            x = fitnessArray[i][0];
-            y = fitnessArray[i][1];
-            xySerie.add(x, y);
-        }
-
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(xySerie);
-        return dataset;
     }
 }

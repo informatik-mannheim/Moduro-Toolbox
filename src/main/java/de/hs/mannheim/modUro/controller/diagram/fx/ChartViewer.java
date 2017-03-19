@@ -42,9 +42,11 @@ package de.hs.mannheim.modUro.controller.diagram.fx;
 
 import de.hs.mannheim.modUro.config.ToolboxLogger;
 import de.hs.mannheim.modUro.controller.diagram.BoxAndWhiskerPlotController;
+import de.hs.mannheim.modUro.controller.diagram.SimulationDiagramController;
 import de.hs.mannheim.modUro.controller.diagram.fx.interaction.ChartMouseEventFX;
 import de.hs.mannheim.modUro.controller.diagram.fx.interaction.ChartMouseListenerFX;
 import de.hs.mannheim.modUro.model.StatisticValues;
+import de.hs.mannheim.modUro.reader.JCellCountDiagram;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
@@ -211,7 +213,7 @@ public class ChartViewer extends Control implements Skinnable,
     }
 
     /**
-     * Sets the size and location of the zoom rectangle and makes it visible
+     * Sets the getTimeSeriesSize and location of the zoom rectangle and makes it visible
      * if it wasn't already visible.  The work is delegated to the control's
      * current skin.
      *
@@ -257,13 +259,13 @@ public class ChartViewer extends Control implements Skinnable,
 
         Menu export = new Menu("Export As");
 
-        MenuItem pngItem = new MenuItem("PNG...");
+        MenuItem pngItem = new MenuItem("PNG ...");
         pngItem.setOnAction((ActionEvent e) -> {
             handleExportToPNG();
         });
         export.getItems().add(pngItem);
 
-        MenuItem jpegItem = new MenuItem("JPEG...");
+        MenuItem jpegItem = new MenuItem("JPEG ...");
         jpegItem.setOnAction((ActionEvent e) -> {
             handleExportToJPEG();
         });
@@ -271,12 +273,12 @@ public class ChartViewer extends Control implements Skinnable,
 
         MenuItem tikzItem = new MenuItem("Tikz ...");
         tikzItem.setOnAction((ActionEvent e) -> {
-            handleExportToTikz();
+            handleExportToTikz(e.getSource());
         });
         export.getItems().add(tikzItem);
 
         if (ExportUtils.isOrsonPDFAvailable()) {
-            MenuItem pdfItem = new MenuItem("PDF...");
+            MenuItem pdfItem = new MenuItem("PDF ...");
             pdfItem.setOnAction((ActionEvent e) -> {
                 handleExportToPDF();
             });
@@ -364,7 +366,7 @@ public class ChartViewer extends Control implements Skinnable,
     /**
      * A handler for the export to Tikz option in the context menu.
      */
-    private void handleExportToTikz() {
+    private void handleExportToTikz(Object source) {
         //TODO implementation is dependent of diagram content, not generic.
         Map<String, StatisticValues> stats = controller.stats;
         List<String> sortedModels = new ArrayList<>(stats.keySet());

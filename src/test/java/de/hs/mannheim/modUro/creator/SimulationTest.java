@@ -98,7 +98,7 @@ public class SimulationTest {
 
     @Test
     public void countMetricTypeOfSimulation() {
-        Assert.assertEquals("Simulation should have 8 MetricTypes and not: " + simulation.getMetricTypes().size(), 8, simulation.getMetricTypes().size());
+        Assert.assertEquals("Simulation should have 8 MetricTypes and not: " + simulation.getAllTimeSeries().size(), 8, simulation.getAllTimeSeries().size());
     }
 
     @Test

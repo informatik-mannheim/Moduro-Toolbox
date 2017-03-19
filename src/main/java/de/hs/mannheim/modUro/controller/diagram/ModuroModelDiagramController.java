@@ -20,8 +20,8 @@ import de.hs.mannheim.modUro.controller.diagram.fx.ChartViewer;
 import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.Simulation;
-import de.hs.mannheim.modUro.model.StatisticValues;
 import de.hs.mannheim.modUro.model.diagram.ModuroModelDiagram;
+import de.hs.mannheim.modUro.reader.JTimeSeriesDiagram;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,10 +30,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.BorderPane;
 import org.jfree.chart.JFreeChart;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +39,7 @@ import java.util.List;
  *
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  */
-public class ModuroModelDiagramController extends DiagramController {
+public class ModuroModelDiagramController {
 
     //Reference to ModelDiagram
     private ModuroModelDiagram moduroModelDiagram;
@@ -75,8 +73,8 @@ public class ModuroModelDiagramController extends DiagramController {
         } else {
             if (simulationContainsMetricType()) {
                 setChoiceBoxContent();
-                setLeftChartContent(moduroModelDiagram.getMetricTypeNames().get(leftLastSelectedIndex));
-                setRightChartContent(moduroModelDiagram.getMetricTypeNames().get(rightLastSelectedIndex));
+                setChartContent(moduroModelDiagram.getMetricTypeNames().get(leftLastSelectedIndex), true);
+                setChartContent(moduroModelDiagram.getMetricTypeNames().get(rightLastSelectedIndex), false);
             } else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -92,7 +90,7 @@ public class ModuroModelDiagramController extends DiagramController {
         leftMetricType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                setLeftChartContent(moduroModelDiagram.getMetricTypeNames().get(newValue.intValue()));
+                setChartContent(moduroModelDiagram.getMetricTypeNames().get(newValue.intValue()), true);
                 leftLastSelectedIndex = newValue.intValue();
                 leftLastSelectedMetrictypename = moduroModelDiagram.getMetricTypeNames().get(leftLastSelectedIndex);
 
@@ -102,7 +100,7 @@ public class ModuroModelDiagramController extends DiagramController {
         rightMetricType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                setRightChartContent(moduroModelDiagram.getMetricTypeNames().get(newValue.intValue()));
+                setChartContent(moduroModelDiagram.getMetricTypeNames().get(newValue.intValue()), false);
                 rightLastSelectedIndex = newValue.intValue();
                 rightLastSelectedMetrictypename = moduroModelDiagram.getMetricTypeNames().get(rightLastSelectedIndex);
             }
@@ -156,8 +154,8 @@ public class ModuroModelDiagramController extends DiagramController {
         leftLastSelectedMetrictypename = name.get(leftLastSelectedIndex);
         rightLastSelectedMetrictypename = name.get(rightLastSelectedIndex);
 
-        setLeftChartContent(name.get(left));
-        setRightChartContent(name.get(right));
+        setChartContent(name.get(left), true);
+        setChartContent(name.get(right), false);
     }
 
     /**
@@ -174,63 +172,26 @@ public class ModuroModelDiagramController extends DiagramController {
     }
 
     /**
-     * Sets left Chartcontent.
-     *
-     * @param selectedItem
-     */
-    private void setLeftChartContent(String selectedItem) {
-        XYDataset dataset = createDataset(moduroModelDiagram.getSimulationList(), selectedItem);
-        JFreeChart chart = createChart(dataset, selectedItem);
-        chart.removeLegend();
-
-        ChartViewer viewer = new ChartViewer(chart);
-        leftPane.setCenter(viewer);
-        leftPane.layout();
-    }
-
-    /**
      * Sets right Chartcontent.
      *
      * @param selectedItem
      */
-    private void setRightChartContent(String selectedItem) {
-        XYDataset dataset = createDataset(moduroModelDiagram.getSimulationList(), selectedItem);
-        JFreeChart chart = createChart(dataset, selectedItem);
-        chart.removeLegend();
+    private void setChartContent(String selectedItem, boolean left) {
 
-        ChartViewer viewer = new ChartViewer(chart);
-        rightPane.setCenter(viewer);
-        rightPane.layout();
-    }
-
-    /**
-     * Creates Dataset.
-     *
-     * @return
-     */
-    private static XYDataset createDataset(List<Simulation> simulationList, String selectedItem) {
-
-        XYSeriesCollection dataset = new XYSeriesCollection();
-
-        for (Simulation simualtionItem : simulationList) {
-            XYSeries xySerie = new XYSeries(simualtionItem.getSimulationName());
-
-            for (StatisticValues metricTypeItem : simualtionItem.getMetricTypes()) {
-                if (metricTypeItem.getName().equals(selectedItem)) {
-                    double x;
-                    double y;
-                    double[][] fitnessArray =
-                            ((TimeSeries) metricTypeItem).getData();
-
-                    for (int i = 0; i < fitnessArray.length; i++) {
-                        x = fitnessArray[i][0];
-                        y = fitnessArray[i][1];
-                        xySerie.add(x, y);
-                    }
-                }
-            }
-            dataset.addSeries(xySerie);
+        List<TimeSeries> list = new ArrayList<>();
+        for (Simulation simulation : moduroModelDiagram.getSimulationList()) {
+            TimeSeries metricTypeItem = simulation.getTimeSeriesByName(selectedItem);
+            list.add(metricTypeItem);
         }
-        return dataset;
+        JFreeChart chart = new JTimeSeriesDiagram(list.get(0).getName(), list).getJFreeChart();
+        chart.removeLegend();
+        ChartViewer viewer = new ChartViewer(chart);
+        if (left) {
+            leftPane.setCenter(viewer);
+            leftPane.layout();
+        } else {
+            rightPane.setCenter(viewer);
+            rightPane.layout();
+        }
     }
 }

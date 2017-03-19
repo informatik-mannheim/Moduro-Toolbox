@@ -38,18 +38,16 @@ public class StatisticValues {
 
     private DescriptiveStatistics stats = new DescriptiveStatistics();
 
-    public StatisticValues(String name) {
-        this.name = name;
-    }
-
     public StatisticValues(String name, double[] array) {
-        this(name);
+        this.name = name;
         init(array);
     }
 
-    protected void init(double[] array) {
+    private void init(double[] array) {
         for (int i = 0; i < array.length; i++) {
-            stats.addValue(array[i]);
+            if (!Double.isNaN(array[i])) {
+                stats.addValue(array[i]);
+            }
         }
 
         this.mean = stats.getMean();

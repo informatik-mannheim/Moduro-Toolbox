@@ -27,7 +27,6 @@ import de.hs.mannheim.modUro.controller.overview.ProjectOverviewController;
 import de.hs.mannheim.modUro.controller.overview.SimulationOverviewController;
 import de.hs.mannheim.modUro.fx.ModuroTreeItem;
 import de.hs.mannheim.modUro.model.*;
-import de.hs.mannheim.modUro.model.overview.ModuroModelOverview;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -236,10 +235,8 @@ public class MainController {
                 // Only add item if there are simulations:
                 if (!moduroModelItem.getSimulations().isEmpty()) {
                     // TODO Model item: add total fitness as info
-                    ModuroModelOverview moduroModelOverview =
-                            new ModuroModelOverview(moduroModelItem);
-                    StatisticValues sv = moduroModelOverview.getStatisticValues().
-                            get(FitnessName.TOTAL_FITNESS.getName());
+                    StatisticValues sv =
+                            moduroModelItem.getStatsByName(FitnessName.TOTAL_FITNESS.getName());
                     double meanFitness = sv == null ? Double.NaN : sv.getMean();
                     String meanFitnessS = String.format("%.2f", meanFitness);
                     String modelLabel = moduroModelItem.getName() + " (" + meanFitnessS + ")";

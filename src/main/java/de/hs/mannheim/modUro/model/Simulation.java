@@ -31,7 +31,9 @@ import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Model class for a Simulation.
@@ -48,14 +50,15 @@ public class Simulation {
     private long seed;
     private LocalDateTime startTime;
 
-    private List<StatisticValues> metricTypes;    //list of the metric types, which this simulation have
+    private Map<String, TimeSeries> timesSeries;
+    private List<TimeSeries> sortedTimeSeries;
     private List<File> images;              //Filepath of Images
     private boolean hasVideo = false;
 
     private double minTime = ToolboxParameter.params.getSteadystatetime();
     private double maxTime = ToolboxParameter.params.getEndtime();
 
-    private double[][] defaultFitnessTable;
+    private TimeSeries defaultFitnessTable;
     private CelltimesReader ctr;
 
     /**
@@ -71,8 +74,9 @@ public class Simulation {
         // The name is retrieved from the directory. I.e. the simulation
         // should exists alone.
         this.modelType = createModelTypeName();
-        metricTypes = createDataSeriesList();
-        this.metricTypes.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
+        timesSeries = createDataSeriesList();
+        this.sortedTimeSeries = new ArrayList(timesSeries.values());
+        this.sortedTimeSeries.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         this.images = createImages();
         this.hasVideo = createVideo();
     }
@@ -94,8 +98,12 @@ public class Simulation {
         return modelType;
     }
 
-    public List<StatisticValues> getMetricTypes() {
-        return metricTypes;
+    public TimeSeries getTimeSeriesByName(String name) {
+        return timesSeries.get(name);
+    }
+
+    public List<TimeSeries> getAllTimeSeries() {
+        return sortedTimeSeries;
     }
 
     /**
@@ -104,7 +112,7 @@ public class Simulation {
      * @return
      */
     public double getDuration() {
-        return defaultFitnessTable[defaultFitnessTable.length - 1][0];
+        return defaultFitnessTable.getMaxTime();
     }
 
     public LocalDateTime getStartTime() {
@@ -117,8 +125,7 @@ public class Simulation {
      * @return
      */
     public boolean isCompleted() {
-        double toTime = defaultFitnessTable[defaultFitnessTable.length - 1][0];
-        return toTime >= maxTime;
+        return getDuration() >= maxTime;
     }
 
     /**
@@ -127,7 +134,8 @@ public class Simulation {
      * @return
      */
     public boolean isAborted() {
-        double lastFitness = defaultFitnessTable[defaultFitnessTable.length - 1][1];
+        double lastFitness = defaultFitnessTable.
+                getData()[defaultFitnessTable.getTimeSeriesSize() - 1];
         // return lastFitness < 0.05;
         return lastFitness < 0.05 && isInSteadyState();
     }
@@ -138,8 +146,7 @@ public class Simulation {
      * @return
      */
     public boolean isInSteadyState() {
-        double toTime = defaultFitnessTable[defaultFitnessTable.length - 1][0];
-        return toTime >= minTime;
+        return getDuration() >= minTime;
     }
 
     public File getDir() {
@@ -224,7 +231,7 @@ public class Simulation {
      *
      * @return
      */
-    private List<StatisticValues> createDataSeriesList() {
+    private Map<String, TimeSeries> createDataSeriesList() {
         // This is how fitness files are detected:
         File[] txtFiles = dir.listFiles(
                 (parent, name) ->
@@ -232,14 +239,14 @@ public class Simulation {
                                 !name.equals(PARAMETER_DUMP.getName()) &&
                                 !name.equals("FitnessPlot.dat")) // TODO
         );
-        List<StatisticValues> dataSeriesList = new ArrayList<>();
+        Map<String, TimeSeries> dataSeriesList = new HashMap<>();
 
         for (File file : txtFiles) {
             TimeSeries timeSeries = new TimeSeries(file);
-            dataSeriesList.add(timeSeries);
+            dataSeriesList.put(timeSeries.getName(), timeSeries);
             if ((timeSeries.getName() + ".dat").
                     equals(DEFAULT_FITNESS_FILE.getName())) {
-                defaultFitnessTable = timeSeries.getData();
+                defaultFitnessTable = timeSeries;
             }
         }
         if (defaultFitnessTable == null) {
@@ -247,11 +254,11 @@ public class Simulation {
                     DEFAULT_FITNESS_FILE.getName());
         }
         // Now calculate the total fitness:
-        TimeSeries total = calcTotalFitness(dataSeriesList);
+        TimeSeries total = calcTotalFitness(new ArrayList(dataSeriesList.values()));
         if (total != null) {
-            dataSeriesList.add(total);
+            dataSeriesList.put(total.getName(), total);
             TimeSeries totalNorm = calcNormTotalFitness(total);
-            dataSeriesList.add(totalNorm);
+            dataSeriesList.put(totalNorm.getName(), totalNorm);
         }
         // Now calc other metrices:
         // And this means cell cycle times.
@@ -262,7 +269,7 @@ public class Simulation {
             CellCycleStat ccstats =
                     new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
             for (String cellType : ccstats.getCellTypes()) {
-                dataSeriesList.add(ccstats.getStatValues(cellType));
+                dataSeriesList.put(cellType, ccstats.getTimeSeries(cellType));
             }
         } catch (Exception e) {
             // No cell times.
@@ -270,14 +277,14 @@ public class Simulation {
         return dataSeriesList;
     }
 
-    private TimeSeries calcTotalFitness(List<StatisticValues> dataSeriesList) {
+    private TimeSeries calcTotalFitness(List<TimeSeries> dataSeriesList) {
         TimeSeries vol = null, arr = null;
-        for (StatisticValues data : dataSeriesList) {
+        for (TimeSeries data : dataSeriesList) {
             if (data.getName().equals(VOLUME_FITNESS.getName())) {
-                vol = (TimeSeries) data;
+                vol = data;
             }
             if (data.getName().equals(ARRANGEMENT_FITNESS.getName())) {
-                arr = (TimeSeries) data;
+                arr = data;
             }
         }
         if (vol == null || arr == null) {
@@ -285,13 +292,13 @@ public class Simulation {
         }
         String name = TOTAL_FITNESS.getName() + " (orig.)";
         int size = Math.min(vol.getData().length, arr.getData().length);
-        double[][] metricData = new double[size][2];
-        for (int i = 0; i < metricData.length; i++) {
-            metricData[i][0] = vol.getData()[i][0];
-            metricData[i][1] = (vol.getData()[i][1] +
-                    arr.getData()[i][1]) / 2;
+        double[] timeSeries = new double[size];
+        double[] dataSeries = new double[size];
+        for (int i = 0; i < timeSeries.length; i++) {
+            timeSeries[i] = vol.getTimeSeries()[i];
+            dataSeries[i] = (vol.getData()[i] + arr.getData()[i]) / 2;
         }
-        return new TimeSeries(name, metricData);
+        return new TimeSeries(name, timeSeries, dataSeries);
     }
 
     private TimeSeries calcNormTotalFitness(TimeSeries fitness) {
@@ -301,30 +308,31 @@ public class Simulation {
         if (maxTime < endTime) {
             // Apparently, the simulation was aborted.
             // How many time points up to 720.0 are missing?
-            int m = fitness.size();
+            int m = fitness.getTimeSeriesSize();
             int missingPoints = (2 * (int) endTime) - m;
             // Create bigger data array for all 1440 = 2 * 720 points ...
-            double[][] newMetricData = new double[m + missingPoints][2];
+            double[] newTimeSeries = new double[m + missingPoints];
+            double[] newDataSeries = new double[m + missingPoints];
             // and copy the values:
             for (int i = 0; i < m; i++) {
-                newMetricData[i][0] = fitness.getData()[i][0];
-                newMetricData[i][1] = fitness.getData()[i][1];
+                newTimeSeries[i] = fitness.getTimeSeries()[i];
+                newDataSeries[i] = fitness.getData()[i];
             }
             double fit;
             if (ToolboxParameter.params.getTotalfitnesstype().equals("LAST")) {
-                fit = fitness.getData()[m - 1][1];
+                fit = fitness.getData()[m - 1];
             } else {
                 fit = 0;
             }
             // Now initialize the new data points:
             for (int i = 0; i < missingPoints; i++) {
-                newMetricData[m + i][0] = maxTime + (double) (i + 1) / 2;
-                newMetricData[m + i][1] = fit; // Unknown (bad) fitness.
+                newTimeSeries[m + i] = maxTime + (double) (i + 1) / 2;
+                newDataSeries[m + i] = fit; // Unknown (bad) fitness.
             }
-            return new TimeSeries(name, newMetricData);
+            return new TimeSeries(name, newTimeSeries, newDataSeries);
         } else {
             // Just return the fitness as it is:
-            return new TimeSeries(name, fitness.getData());
+            return new TimeSeries(name, fitness.getTimeSeries(), fitness.getData());
         }
     }
 

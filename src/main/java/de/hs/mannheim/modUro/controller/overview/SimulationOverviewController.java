@@ -128,7 +128,7 @@ public class SimulationOverviewController {
      * Creates table content.
      */
     private void createTableContent() {
-        ObservableList<StatisticValues> metricData =
+        ObservableList<TimeSeries> metricData =
                 FXCollections.observableArrayList(simulationOverview.getMetricTypes());
 
         TableColumn column1 = new TableColumn("Data Series");

@@ -21,7 +21,10 @@ import de.hs.mannheim.modUro.config.RegEx;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * A moduro model.
@@ -36,12 +39,25 @@ public class ModuroModel {
     // List of all directories that contain this model:
     private List<File> dirList;
     private FilterOption filterOption;
+    // private Map<String, TimeSeries> timeSeries = new HashMap<>();
+    private Map<String, StatisticValues> statisticValues = new HashMap<>();
+
+    private List<String> metricTypes;
+    private int numberOfSteadyStateSimulation;
+    private int numberOfAbortedSimulations;
+    private int numberOfCompletedSimulations;
 
     public ModuroModel(List<File> dirList, FilterOption filterOption) {
         this.dirList = dirList;
         this.filterOption = filterOption;
         this.name = createModelTypeName();
         this.simulations = createSimulationList();
+        metricTypes = listMetricTypes();
+
+        countSteadyStateSimulation();
+        countCompletedSimulations();
+        countAbortedSimulations();
+        calculateStatisticValues();
     }
 
     public String getName() {
@@ -51,6 +67,41 @@ public class ModuroModel {
     public List<Simulation> getSimulations() {
         return simulations;
     }
+
+    /*
+    public Map<String, TimeSeries> getTimeSeries() {
+        return timeSeries;
+    }
+
+    public List<TimeSeries> getAllTimeSeries() {
+        return new ArrayList(timeSeries.values());
+    }
+    */
+
+    public List<StatisticValues> getStats() {
+        return new ArrayList(statisticValues.values());
+    }
+
+    public StatisticValues getStatsByName(String name) {
+        return statisticValues.get(name);
+    }
+
+    public int getNumberOfSimulations() {
+        return getSimulations().size();
+    }
+
+    public int getNumberOfSteadyStateSimulation() {
+        return numberOfSteadyStateSimulation;
+    }
+
+    public int getNumberOfAbortedSimulations() {
+        return numberOfAbortedSimulations;
+    }
+
+    public int getNumberOfCompletedSimulations() {
+        return numberOfCompletedSimulations;
+    }
+
 
     /**
      * Creates name of Modeltype.
@@ -115,5 +166,82 @@ public class ModuroModel {
             }
         }
         return containsFitnessPlot;
+    }
+
+    /**
+     * Lists distinct names of metric type.
+     *
+     * @return
+     */
+    private List<String> listMetricTypes() {
+        List<String> metricTypes = new ArrayList<>();
+        for (Simulation simulationItem : getSimulations()) {
+            for (TimeSeries metricTypeItem : simulationItem.getAllTimeSeries()) {
+                if (!metricTypes.contains(metricTypeItem.getName())) {
+                    metricTypes.add(metricTypeItem.getName());
+                }
+            }
+        }
+        metricTypes.sort((e1, e2) -> e1.compareTo(e2));
+        return metricTypes;
+    }
+
+    /**
+     * Counts number of completed simulations.
+     */
+    private void countCompletedSimulations() {
+        int count = 0;
+        for (Simulation simulationItem : getSimulations()) {
+            if (simulationItem.isCompleted()) {
+                count++;
+            }
+        }
+        this.numberOfCompletedSimulations = count;
+    }
+
+    /**
+     * Counts number of aborted simulations.
+     */
+    private void countAbortedSimulations() {
+        int count = 0;
+        for (Simulation simulationItem : getSimulations()) {
+            if (simulationItem.isInSteadyState()) {
+                count++;
+            }
+        }
+        this.numberOfSteadyStateSimulation = count;
+    }
+
+    /**
+     * Counts number of simulations in steady state.
+     */
+    private void countSteadyStateSimulation() {
+        int count = 0;
+        for (Simulation simulationItem : getSimulations()) {
+            if (simulationItem.isAborted()) {
+                count++;
+            }
+        }
+        this.numberOfAbortedSimulations = count;
+    }
+
+    /**
+     * Calculates statisticValues for each TimeSeries for LineDiagram.
+     */
+    private void calculateStatisticValues() {
+
+        for (String name : metricTypes) {
+            List<Double> l = new ArrayList<>();
+            for (Simulation simulation : simulations) {
+                TimeSeries timeSeries = simulation.getTimeSeriesByName(name);
+                if (timeSeries != null) {
+                    l.add(timeSeries.getStats().getMean());
+                }
+            }
+            Double[] L = l.toArray(new Double[0]);
+            double[] array = Stream.of(L).mapToDouble(Double::doubleValue).toArray();
+            StatisticValues statValue = new StatisticValues(name, array);
+            statisticValues.put(name, statValue);
+        }
     }
 }

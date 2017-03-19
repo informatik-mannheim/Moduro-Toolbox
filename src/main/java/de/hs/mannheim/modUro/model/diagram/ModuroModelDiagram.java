@@ -18,7 +18,6 @@ package de.hs.mannheim.modUro.model.diagram;
 import de.hs.mannheim.modUro.model.TimeSeries;
 import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.Simulation;
-import de.hs.mannheim.modUro.model.StatisticValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +46,9 @@ public class ModuroModelDiagram {
         metricTypeNames = new ArrayList<>();
 
         for (Simulation simulationItem : moduroModel.getSimulations()) {
-            for (StatisticValues sv : simulationItem.getMetricTypes()) {
-                if (sv instanceof TimeSeries) {
-                    TimeSeries timeSeries = (TimeSeries) sv;
-                    if (!metricTypeNames.contains(timeSeries.getName())) {
-                        metricTypeNames.add(timeSeries.getName());
-                    }
+            for (TimeSeries timeSeries : simulationItem.getAllTimeSeries()) {
+                if (!metricTypeNames.contains(timeSeries.getName())) {
+                    metricTypeNames.add(timeSeries.getName());
                 }
             }
         }

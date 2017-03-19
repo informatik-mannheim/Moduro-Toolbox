@@ -1,7 +1,9 @@
 package de.hs.mannheim.modUro.reader;
 
 import de.hs.mannheim.modUro.model.StatisticValues;
+import de.hs.mannheim.modUro.model.TimeSeries;
 
+import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,24 +13,33 @@ import java.util.Map;
  */
 public class CellCycleStat {
 
-    private Map<String, StatisticValues> m = new HashMap<>();
+    private Map<String, TimeSeries> m = new HashMap<>();
     private List<String> cellTypes;
 
     public CellCycleStat(List<String> cellTypes,
                          List<CellCycletimeEntry> cycletimesList) {
         this.cellTypes = cellTypes;
-        for (String celltype : cellTypes) {
-            double[] means = cycletimesList.stream().
-                    filter(e -> e.meanValues.containsKey(celltype)).
-                    map(e -> e.meanValues.get(celltype)).
-                    filter(e -> !Double.isNaN(e)).
-                    mapToDouble(Double::doubleValue).toArray();
-            StatisticValues stat = new StatisticValues(celltype, means);
-            m.put(celltype, stat);
+
+        for (String cellType : cellTypes) {
+            double[] timeSeries = new double[cycletimesList.size()];
+            double[] dataSeries = new double[cycletimesList.size()];
+            int i = 0;
+            for (CellCycletimeEntry e : cycletimesList) {
+                double x = e.time;
+                double y = Double.NaN;
+                if (e.meanValues.containsKey(cellType)) {
+                    y = e.meanValues.get(cellType);
+                }
+                timeSeries[i] = x;
+                dataSeries[i] = y;
+                i++;
+            }
+            TimeSeries ts = new TimeSeries(cellType, timeSeries, dataSeries);
+            m.put(cellType, ts);
         }
     }
 
-    public StatisticValues getStatValues(String celltype) {
+    public TimeSeries getTimeSeries(String celltype) {
         return m.get(celltype);
     }
 

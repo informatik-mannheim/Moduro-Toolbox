@@ -59,7 +59,6 @@ public class CelltimesReaderTest {
         assertEquals(5.0, e1.meanValues.get("2: S"), 0.001);
         CellCycletimeEntry e2 = l.get(2);
         assertEquals(4.5, e2.meanValues.get("3: B"), 0.001);
-
     }
 
     @Test

@@ -16,6 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.reader;
 
 import de.hs.mannheim.modUro.config.ToolboxLogger;
+import de.hs.mannheim.modUro.model.TimeSeries;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

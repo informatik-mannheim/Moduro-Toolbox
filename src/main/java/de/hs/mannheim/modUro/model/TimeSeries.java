@@ -28,39 +28,82 @@ import java.util.List;
  * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class TimeSeries extends StatisticValues {
+public class TimeSeries {
 
-    //Input file of a metric type txt file
-    private File file;
+    private File file; // Input file of a metric type txt file.
+    private String name;
+    private double[] timeSeries;
+    private List<double[]> dataSeries = new ArrayList<>();
+    private List<StatisticValues> stats = new ArrayList<>();
 
-    private double[][] metricData;
+    public TimeSeries(String name) {
+        this.name = name;
+    }
 
+    /**
+     * Reads a single times series from a file.
+     *
+     * @param file
+     */
     public TimeSeries(File file) {
-        super(getName(file));
+        this.name = getFileName(file);
         this.file = file;
-        metricData = readMetricDataFromFile();
-        init(extractColumn(metricData, 1));
+        readDataFromFile();
     }
 
-    public TimeSeries(String name, double[][] metricData) {
-        super(name, extractColumn(metricData, 1));
-        this.metricData = metricData;
+    public TimeSeries(String name, double[] timeSeries, double[] dataSeries) {
+        this.name = name;
+        this.timeSeries = timeSeries;
+        addDataSeries(name, dataSeries);
     }
 
-    public double[][] getData() {
-        return metricData;
+    public String getName() {
+        return name;
+    }
+
+    public double[] getTimeSeries() {
+        return timeSeries;
     }
 
     public double getMaxTime() {
-        return metricData[metricData.length - 1][0];
+        return timeSeries[timeSeries.length - 1];
     }
 
-    private static double[] extractColumn(double[][] data, int idx) {
-        double[] a = new double[data.length];
-        for (int i = 0; i < data.length; i++) {
-            a[i] = data[i][idx];
-        }
-        return a;
+    public double[] getData() {
+        return getData(0);
+    }
+
+    public double[] getData(int idx) {
+        return dataSeries.get(idx);
+    }
+
+    public StatisticValues getStats() {
+        return stats.get(0);
+    }
+
+    public StatisticValues getStats(int idx) {
+        return stats.get(idx);
+    }
+
+    public int getTimeSeriesSize() {
+        return timeSeries.length;
+    }
+
+    public int getNumberOfDataSeries() {
+        return dataSeries.size();
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    // Required for TableColumn in SimulationOverviewController.
+    public String getMeanAsString() {
+        return getStats().getMeanAsString();
+    }
+
+    public String getStdDevAsString() {
+        return getStats().getStdDevAsString();
     }
 
     /**
@@ -68,7 +111,7 @@ public class TimeSeries extends StatisticValues {
      *
      * @return
      */
-    private static String getName(File file) {
+    private String getFileName(File file) {
         String name = null;
         int pos = file.getName().lastIndexOf(".");  //searches the pos of last index of "."
         if (pos != -1) {
@@ -80,9 +123,7 @@ public class TimeSeries extends StatisticValues {
     /**
      * Reads and parse TimeSeries data from file.
      */
-    private double[][] readMetricDataFromFile() {
-        //initialize matrix length with line length of file
-        double[][] metricData = new double[1][2];
+    private void readDataFromFile() {
         String line;
         int row = 0;
 
@@ -100,15 +141,18 @@ public class TimeSeries extends StatisticValues {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        metricData = new double[row][2];
+        timeSeries = new double[row];
+        double[] data = new double[row];
         for (int i = 0; i < row; i++) {
-            metricData[i][0] = times.get(i);
-            metricData[i][1] = fitness.get(i);
+            timeSeries[i] = times.get(i);
+            data[i] = fitness.get(i);
         }
-        return metricData;
+        addDataSeries(getName(), data);
     }
 
-    public File getFile() {
-        return file;
+    private void addDataSeries(String name, double[] data) {
+        dataSeries.add(data);
+        StatisticValues sv = new StatisticValues(name, data);
+        stats.add(sv);
     }
 }

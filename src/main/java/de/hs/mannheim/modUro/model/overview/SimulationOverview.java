@@ -16,7 +16,7 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.model.overview;
 
 import de.hs.mannheim.modUro.model.Simulation;
-import de.hs.mannheim.modUro.model.StatisticValues;
+import de.hs.mannheim.modUro.model.TimeSeries;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -43,7 +43,7 @@ public class SimulationOverview {
     private double duration;
     private File directory;
     private List<String> metricTypesName;
-    private List<StatisticValues> metricTypes;
+    private List<TimeSeries> metricTypes;
     private List<File> images;
 
     /**
@@ -63,8 +63,8 @@ public class SimulationOverview {
         this.startTime = simulation.getStartTime();
         this.duration = simulation.getDuration();
         this.directory = simulation.getDir();
-        this.metricTypesName = selectNameOfMetricType(simulation.getMetricTypes());
-        this.metricTypes = simulation.getMetricTypes();
+        this.metricTypesName = selectNameOfMetricType(simulation.getAllTimeSeries());
+        this.metricTypes = simulation.getAllTimeSeries();
         this.images = simulation.getImages();
     }
 
@@ -74,10 +74,10 @@ public class SimulationOverview {
      * @param metricType
      * @return
      */
-    private List<String> selectNameOfMetricType(List<StatisticValues> metricType) {
+    private List<String> selectNameOfMetricType(List<TimeSeries> metricType) {
         List<String> metricTypeNameList = new ArrayList<>();
 
-        for (StatisticValues metricTypeItem : metricType) {
+        for (TimeSeries metricTypeItem : metricType) {
             metricTypeNameList.add(metricTypeItem.getName());
         }
         return metricTypeNameList;
@@ -132,7 +132,7 @@ public class SimulationOverview {
         return isInSteadyState;
     }
 
-    public List<StatisticValues> getMetricTypes() {
+    public List<TimeSeries> getMetricTypes() {
         return metricTypes;
     }
 

@@ -17,7 +17,6 @@ package de.hs.mannheim.modUro.controller.overview;
 
 import de.hs.mannheim.modUro.model.ModuroModel;
 import de.hs.mannheim.modUro.model.StatisticValues;
-import de.hs.mannheim.modUro.model.overview.ModuroModelOverview;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,7 +26,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,9 +35,7 @@ import java.util.List;
  */
 public class ModuroModelOverviewController {
 
-    //Reference to ModuroModelOverview
-    private ModuroModelOverview moduroModelOverview;
-
+    private ModuroModel moduroModel;
     private ObservableList<StatisticValues> metricData;
 
     @FXML
@@ -54,9 +50,9 @@ public class ModuroModelOverviewController {
     private Label numberOfCompletedSimulations;
 
     public void init(ModuroModel moduroModel) {
+        this.moduroModel = moduroModel;
         // Has to be initialized here, otherwise MainApp.scene is null:
-        this.moduroModelOverview = new ModuroModelOverview(moduroModel);
-        List<StatisticValues> l = new ArrayList(moduroModelOverview.getStatisticValues().values());
+        List<StatisticValues> l = moduroModel.getStats();
         l.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
         metricData = FXCollections.observableArrayList(l);
         setLabel();
@@ -67,17 +63,16 @@ public class ModuroModelOverviewController {
      * Sets Data to Label.
      */
     private void setLabel() {
-        this.numberOfSimulations.setText(String.valueOf(moduroModelOverview.getNumberOfSimulations()));
-        this.numberOfSimulationInSteadyState.setText((String.valueOf(moduroModelOverview.getNumberOfSteadyStateSimulation())));
-        this.numberOfAbortedSimulation.setText((String.valueOf(moduroModelOverview.getNumberOfAbortedSimulations())));
-        this.numberOfCompletedSimulations.setText((String.valueOf(moduroModelOverview.getNumberOfCompletedSimulations())));
+        this.numberOfSimulations.setText(String.valueOf(moduroModel.getNumberOfSimulations()));
+        this.numberOfSimulationInSteadyState.setText((String.valueOf(moduroModel.getNumberOfSteadyStateSimulation())));
+        this.numberOfAbortedSimulation.setText((String.valueOf(moduroModel.getNumberOfAbortedSimulations())));
+        this.numberOfCompletedSimulations.setText((String.valueOf(moduroModel.getNumberOfCompletedSimulations())));
     }
 
     /**
      * Creates Table Data.
      */
     private void createTableData() {
-
         TableColumn column1 = new TableColumn("Data Series");
         column1.setCellValueFactory(new PropertyValueFactory<StatisticValues, String>("name"));
 

@@ -35,7 +35,7 @@ public class SimulationDiagram {
 
     public SimulationDiagram(Simulation simulation) {
         this.simulation = simulation;
-        timeSeries = simulation.getMetricTypes().stream().
+        timeSeries = simulation.getAllTimeSeries().stream().
                 filter(e -> e instanceof TimeSeries).
                 map(e -> (TimeSeries) e).collect(Collectors.toList());
         timeSeries.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));

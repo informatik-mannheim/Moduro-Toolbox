@@ -50,11 +50,11 @@ public class BoxAndWhiskerPlotModel {
         for (ModuroModel moduroModelItem : project.getModuroModelList()) {
             List<Double> meanOfSimulations = new ArrayList<>();
             for (Simulation simulationItem : moduroModelItem.getSimulations()) {
-                List<StatisticValues> metricType = simulationItem.getMetricTypes();
+                List<TimeSeries> metricType = simulationItem.getAllTimeSeries();
                 double mean = 0.0;
-                for (StatisticValues metricTypeItem : metricType) {
+                for (TimeSeries metricTypeItem : metricType) {
                     if (metricTypeItem.getName().equals(FitnessName.TOTAL_FITNESS.getName())) {
-                        mean = metricTypeItem.getMean();
+                        mean = metricTypeItem.getStats().getMean();
                     }
                 }
                 meanOfSimulations.add(mean);
