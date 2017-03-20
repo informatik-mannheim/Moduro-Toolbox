@@ -47,7 +47,7 @@ public class TimeSeriesTest {
         project = projectList.get(0);
         moduroModel = project.getModuroModelList().get(0);
         simulation = moduroModel.getSimulations().get(0);
-        timeSeries = (TimeSeries) simulation.getAllTimeSeries().get(4);
+        timeSeries = simulation.getTimeSeriesByName("FitnessArrangement");
     }
 
     @Test

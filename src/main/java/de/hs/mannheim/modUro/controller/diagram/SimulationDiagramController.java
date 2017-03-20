@@ -161,9 +161,11 @@ public class SimulationDiagramController {
         for (TimeSeries metricTypeItem : simulationDiagram.getTimeSeries()) {
             name.add(metricTypeItem.getName());
         }
+        /*
         // Here we add - for now - the two generic diagram types:
         name.add("Cell count");
         name.add("Cell cycle times");
+        */
 
         return name;
     }
@@ -201,14 +203,14 @@ public class SimulationDiagramController {
     }
 
     private void setChartContent(int selectedItemIndex, BorderPane pane) {
+        /*
         // Very quick and dirty: TODO
         // New diagrams obtain getTimePointsSize and getTimePointsSize+1.
         if (selectedItemIndex == simulationDiagram.getTimeSeries().size()) {
             // This means cell count.
-            CelltimesReader ctr = simulation.getCellTimesReader();
-            if (ctr != null) {
-                JCellCountDiagram ccd =
-                        new JCellCountDiagram(ctr.getCellTypes(), ctr.getNumberOfCells());
+            TimeSeries timeSeries = simulation.getTimeSeriesByName("Cell count");
+            if (timeSeries != null) {
+                JCellCountDiagram ccd = new JCellCountDiagram(timeSeries);
                 ChartViewer viewer = new ChartViewer(ccd);
                 pane.setCenter(viewer);
             } else {
@@ -229,11 +231,19 @@ public class SimulationDiagramController {
                 // Cell count not available.
             }
         } else {
-            TimeSeries timeSeries = simulationDiagram.getTimeSeries().get(selectedItemIndex);
-            Diagram diagram = new JTimeSeriesDiagram(timeSeries);
-            ChartViewer viewer = new ChartViewer(diagram);
-            pane.setCenter(viewer);
+        */
+        TimeSeries timeSeries = simulationDiagram.getTimeSeries().get(selectedItemIndex);
+        Diagram diagram = null;
+        switch (timeSeries.getName()) {
+            case "Cell count":
+                diagram = new JCellCountDiagram(timeSeries);
+                break;
+            default:
+                diagram = new JTimeSeriesDiagram(timeSeries, true);
         }
+        ChartViewer viewer = new ChartViewer(diagram);
+        pane.setCenter(viewer);
+        // }
         pane.layout();
     }
 }

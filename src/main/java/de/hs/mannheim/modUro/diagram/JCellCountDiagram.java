@@ -16,67 +16,29 @@ Copyright 2016 the original author or authors.
 package de.hs.mannheim.modUro.diagram;
 
 import de.hs.mannheim.modUro.config.CellTypeColor;
-import de.hs.mannheim.modUro.diagram.Diagram;
-import de.hs.mannheim.modUro.reader.CellCountEntry;
+import de.hs.mannheim.modUro.model.TimeSeries;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.HorizontalAlignment;
 
 import java.awt.*;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
-public class JCellCountDiagram extends Diagram {
+public class JCellCountDiagram extends JTimeSeriesDiagram {
 
-    public JFreeChart chart;
-
-    public JCellCountDiagram(List<String> cellTypes, List<CellCountEntry> cellcountList) {
-        XYDataset dataset = createDataset(cellTypes, cellcountList);
-        chart = createChart(dataset, cellTypes);
+    public JCellCountDiagram(TimeSeries timeSeries) {
+        super(timeSeries, false);
     }
 
-    public JFreeChart getJFreeChart() {
-        return chart;
-    }
-
-    private XYDataset createDataset(List<String> cellTypes, List<CellCountEntry> cellcountList) {
-
-        XYSeriesCollection dataset = new XYSeriesCollection();
-
-        XYSeries xySerieSum = new XYSeries("total");
-        for (String cellType : cellTypes) {
-            XYSeries xySerie = new XYSeries(cellType);
-            for (CellCountEntry e : cellcountList) {
-                double x = e.time;
-                double y = 0;
-                if (e.count.containsKey(cellType)) {
-                    y = (double) e.count.get(cellType);
-                }
-                xySerie.add(x, y);
-            }
-            dataset.addSeries(xySerie);
-        }
-        for (CellCountEntry e : cellcountList) {
-            double x = e.time;
-            double y = e.count.values().stream().mapToDouble(i -> i.intValue()).sum();
-            if (y != Double.NaN) {
-                xySerieSum.add(x, y);
-            }
-        }
-        dataset.addSeries(xySerieSum);
-        return dataset;
-    }
-
-    protected JFreeChart createChart(XYDataset dataset, List<String> cellTypes) {
-        String title = "Cell count";
+    protected JFreeChart createChart(XYDataset dataset, String name) {
+        String title = name;
 
         JFreeChart xyLineChart = ChartFactory.createXYLineChart(
                 title,    // title
@@ -99,13 +61,15 @@ public class JCellCountDiagram extends Diagram {
         // plot.getRangeAxis().setRange(0.0, 1.01);
         plot.getRangeAxis().setLabelFont(new Font(fontName, Font.BOLD, 14));
         plot.getRangeAxis().setTickLabelFont(new Font(fontName, Font.PLAIN, 12));
+        plot.setBackgroundPaint(Color.white);
+        plot.setRangeGridlinePaint(Color.gray);
         xyLineChart.getLegend().setItemFont(new Font(fontName, Font.PLAIN, 14));
         xyLineChart.getLegend().setFrame(BlockBorder.NONE);
         xyLineChart.getLegend().setHorizontalAlignment(HorizontalAlignment.CENTER);
         XYItemRenderer r = plot.getRenderer();
         // set the default stroke for all series
         int i = 0;
-        for (String celltype : cellTypes) {
+        for (String celltype : getTimeSeries().getDataSeriesNames()) {
             r.setSeriesPaint(i, CellTypeColor.getColor(celltype));
             i++;
         }

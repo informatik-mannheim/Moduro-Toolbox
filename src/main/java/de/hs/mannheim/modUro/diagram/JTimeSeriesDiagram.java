@@ -41,6 +41,7 @@ public class JTimeSeriesDiagram extends Diagram {
     private List<TimeSeries> timeSeriesList;
     private TimeSeries timeSeries;
     private String name;
+    private boolean isMetric;
 
     /**
      * Creates an diagram that uses one time series, i.e. x-axis
@@ -49,7 +50,7 @@ public class JTimeSeriesDiagram extends Diagram {
      *
      * @param timeSeries
      */
-    public JTimeSeriesDiagram(TimeSeries timeSeries) {
+    public JTimeSeriesDiagram(TimeSeries timeSeries, boolean isMetric) {
         this.timeSeries = timeSeries;
         XYDataset dataset = createDataset(timeSeries);
         chart = createChart(dataset, timeSeries.getName());
@@ -104,7 +105,11 @@ public class JTimeSeriesDiagram extends Diagram {
         return sb.toString();
     }
 
-    private JFreeChart createChart(XYDataset dataset, String name) {
+    protected TimeSeries getTimeSeries() {
+        return timeSeries;
+    }
+
+    protected JFreeChart createChart(XYDataset dataset, String name) {
         String title = name;
 
         JFreeChart xyLineChart = ChartFactory.createXYLineChart(
@@ -125,9 +130,13 @@ public class JTimeSeriesDiagram extends Diagram {
         plot.getDomainAxis().setLabelFont(new Font(fontName, Font.BOLD, 14));
         plot.getDomainAxis().setTickLabelFont(new Font(fontName, Font.PLAIN, 12));
         plot.getRangeAxis().setLowerMargin(0.0);
-        plot.getRangeAxis().setRange(0.0, 1.01);
+        if (isMetric) {
+            plot.getRangeAxis().setRange(0.0, 1.01);
+        }
         plot.getRangeAxis().setLabelFont(new Font(fontName, Font.BOLD, 14));
         plot.getRangeAxis().setTickLabelFont(new Font(fontName, Font.PLAIN, 12));
+        plot.setBackgroundPaint(Color.white);
+        plot.setRangeGridlinePaint(Color.gray);
         xyLineChart.getLegend().setItemFont(new Font(fontName, Font.PLAIN, 14));
         xyLineChart.getLegend().setFrame(BlockBorder.NONE);
         xyLineChart.getLegend().setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -138,7 +147,7 @@ public class JTimeSeriesDiagram extends Diagram {
             renderer.setDrawSeriesLineAsPath(true);
             // set the default stroke for all series
             renderer.setAutoPopulateSeriesStroke(false);
-            renderer.setSeriesPaint(0, Color.RED);
+            renderer.setSeriesPaint(0, Color.blue);
             renderer.setSeriesPaint(1, new Color(24, 123, 58));
             renderer.setSeriesPaint(2, new Color(149, 201, 136));
             renderer.setSeriesPaint(3, new Color(1, 62, 29));
@@ -153,7 +162,7 @@ public class JTimeSeriesDiagram extends Diagram {
     private XYDataset createDataset(TimeSeries timeSeries) {
         XYSeriesCollection dataset = new XYSeriesCollection();
         for (String dataName : timeSeries.getDataSeriesNames()) {
-            XYSeries xySerie = new XYSeries(timeSeries.getName());
+            XYSeries xySerie = new XYSeries(dataName);
             for (int i = 0; i < timeSeries.getTimePointsSize(); i++) {
                 double x = timeSeries.getTimeSeries()[i];
                 double y = timeSeries.getData(dataName)[i];

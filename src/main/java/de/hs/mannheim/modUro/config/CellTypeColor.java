@@ -38,7 +38,7 @@ public class CellTypeColor {
                 color = new Color(0, 128, 0); // Dark green.
                 break;
             case "5: U":
-                color = Color.WHITE;
+                color = Color.GRAY;
                 break;
             default:
                 color = Color.BLACK;

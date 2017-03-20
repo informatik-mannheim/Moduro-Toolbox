@@ -37,6 +37,10 @@ public class TimeSeries {
     private Map<String, StatisticValues> stats = new HashMap<>();
     private String defaultDataSeries;
 
+    public TimeSeries(String name) {
+        this.name = name;
+    }
+
     /**
      * Creates a single time series from a file. A file's entry
      * is x y (separated by a white space).
@@ -59,8 +63,16 @@ public class TimeSeries {
     public TimeSeries(String name, double[] timeSeries,
                       String dataName, double[] dataSeries) {
         this.name = name;
-        this.timeSeries = timeSeries;
+        setTimeSeries(timeSeries);
         addDataSeries(dataName, dataSeries);
+    }
+
+    public void setTimeSeries(double[] timeSeries) {
+        if (defaultDataSeries != null) {
+            throw new RuntimeException("Time points already set and in use. " +
+            "Cannot set it again.");
+        }
+        this.timeSeries = timeSeries;
     }
 
     /**
@@ -170,6 +182,12 @@ public class TimeSeries {
         return name;
     }
 
+    public void setDefaultDataSeries(String dataName) {
+        if (dataSeries.containsKey(dataName)) {
+            defaultDataSeries = dataName;
+        }
+    }
+
     /**
      * Reads and parse TimeSeries data from file.
      */
@@ -191,12 +209,13 @@ public class TimeSeries {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        timeSeries = new double[row];
+        double[] timePoints = new double[row];
         double[] data = new double[row];
         for (int i = 0; i < row; i++) {
-            timeSeries[i] = times.get(i);
+            timePoints[i] = times.get(i);
             data[i] = fitness.get(i);
         }
+        setTimeSeries(timePoints);
         addDataSeries(getName(), data);
     }
 }

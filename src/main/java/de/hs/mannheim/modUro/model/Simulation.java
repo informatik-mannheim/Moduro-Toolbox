@@ -268,6 +268,12 @@ public class Simulation {
             // TODO Q&D:
             CellCycleStat ccstats =
                     new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
+
+            CellCountTimeSeries cellCountTimeSeries =
+                    new CellCountTimeSeries(ctr.getCellTypes(), ctr.getNumberOfCells());
+            cellCountTimeSeries.setDefaultDataSeries("total");
+            dataSeriesList.put(cellCountTimeSeries.getName(), cellCountTimeSeries);
+
             for (String cellType : ccstats.getCellTypes()) {
                 dataSeriesList.put(cellType, ccstats.getTimeSeries(cellType));
             }
