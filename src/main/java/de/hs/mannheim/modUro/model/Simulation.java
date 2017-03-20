@@ -59,7 +59,6 @@ public class Simulation {
     private double maxTime = ToolboxParameter.params.getEndtime();
 
     private TimeSeries defaultFitnessTable;
-    private CelltimesReader ctr;
 
     /**
      * Create a simulation run based on the information found
@@ -74,10 +73,10 @@ public class Simulation {
         // The name is retrieved from the directory. I.e. the simulation
         // should exists alone.
         this.modelType = createModelTypeName();
-        timesSeries = createDataSeriesList();
+        this.timesSeries = createDataSeriesList();
         this.sortedTimeSeries = new ArrayList(timesSeries.values());
         this.sortedTimeSeries.sort((e1, e2) -> e1.getName().compareTo(e2.getName()));
-        this.images = createImages();
+        // this.images = createImages();
         this.hasVideo = createVideo();
     }
 
@@ -153,7 +152,15 @@ public class Simulation {
         return dir;
     }
 
+    /**
+     * Lazy loading of images.
+     *
+     * @return
+     */
     public List<File> getImages() {
+        if (images == null) {
+            images = createImages();
+        }
         return images;
     }
 
@@ -167,15 +174,6 @@ public class Simulation {
      */
     public void refresh() {
         hasVideo = createVideo();
-    }
-
-    /**
-     * Quick and dirty. TODO
-     *
-     * @return
-     */
-    public CelltimesReader getCellTimesReader() {
-        return ctr;
     }
 
     /**
@@ -220,14 +218,16 @@ public class Simulation {
                 }
             }
             in.close();
-
-            //}catch( IOException ioException ) {}
         } catch (Exception exception) {
+            ToolboxLogger.log.warning("Error while parsing " +
+                    parameterDumpFile.getName());
         }
     }
 
     /**
      * Creates List of Metrictypes of the simulation.
+     * TODO Split this method and just load default fitness table.
+     * The remaining data is loaded on demand (lazy).
      *
      * @return
      */
@@ -264,7 +264,7 @@ public class Simulation {
         // And this means cell cycle times.
         try {
             String file = dir.getAbsolutePath().toString() + "/Celltimes.daz";
-            ctr = new CelltimesReader(file, 0.5, 2.0);
+            CelltimesReader ctr = new CelltimesReader(file, 0.5, 2.0);
             // TODO Q&D:
             CellCycleStat ccstats =
                     new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());

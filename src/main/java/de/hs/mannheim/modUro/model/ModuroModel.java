@@ -18,6 +18,7 @@ package de.hs.mannheim.modUro.model;
 import de.hs.mannheim.modUro.config.FileName;
 import de.hs.mannheim.modUro.config.FilterOption;
 import de.hs.mannheim.modUro.config.RegEx;
+import de.hs.mannheim.modUro.config.ToolboxLogger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,10 +40,7 @@ public class ModuroModel {
     // List of all directories that contain this model:
     private List<File> dirList;
     private FilterOption filterOption;
-    // private Map<String, TimeSeries> timeSeries = new HashMap<>();
     private Map<String, StatisticValues> statisticValues = new HashMap<>();
-
-    private List<String> metricTypes;
     private int numberOfSteadyStateSimulation;
     private int numberOfAbortedSimulations;
     private int numberOfCompletedSimulations;
@@ -51,13 +49,13 @@ public class ModuroModel {
         this.dirList = dirList;
         this.filterOption = filterOption;
         this.name = createModelTypeName();
+        ToolboxLogger.log.config("Create model " + name);
         this.simulations = createSimulationList();
-        metricTypes = listMetricTypes();
-
         countSteadyStateSimulation();
         countCompletedSimulations();
         countAbortedSimulations();
         calculateStatisticValues();
+        ToolboxLogger.log.config("Creating model " + name + " done.");
     }
 
     public String getName() {
@@ -229,7 +227,7 @@ public class ModuroModel {
      * Calculates statisticValues for each TimeSeries for LineDiagram.
      */
     private void calculateStatisticValues() {
-
+        List<String> metricTypes = listMetricTypes();
         for (String name : metricTypes) {
             List<Double> l = new ArrayList<>();
             for (Simulation simulation : simulations) {

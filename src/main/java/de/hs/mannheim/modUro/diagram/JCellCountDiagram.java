@@ -26,7 +26,6 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.HorizontalAlignment;
 
 import java.awt.*;
-import java.util.Set;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)

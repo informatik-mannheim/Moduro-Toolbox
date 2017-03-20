@@ -95,6 +95,8 @@ public class MainController {
      */
     @FXML
     private void initialize() {
+        ToolboxLogger.log.info("Launching Moduro Toolbox " +
+                MainApp.VERSION);
         // Current filter settings:
         FilterOption filterOption =
                 new FilterOption(inSteadyStateCheckButton.isSelected(),
@@ -141,6 +143,7 @@ public class MainController {
                         }
                     }
                 });
+        ToolboxLogger.log.info("Running...");
     }
 
     /**
