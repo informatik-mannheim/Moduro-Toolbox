@@ -71,6 +71,7 @@ import java.util.List;
  * JFreeChart.</p>
  *
  * @since 1.0.18
+ * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class ChartViewer extends Control implements Skinnable,
         ChartMouseListenerFX {
@@ -206,7 +207,7 @@ public class ChartViewer extends Control implements Skinnable,
     }
 
     /**
-     * Sets the getTimeSeriesSize and location of the zoom rectangle and makes it visible
+     * Sets the getTimePointsSize and location of the zoom rectangle and makes it visible
      * if it wasn't already visible.  The work is delegated to the control's
      * current skin.
      *

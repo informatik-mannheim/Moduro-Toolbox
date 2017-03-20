@@ -202,7 +202,7 @@ public class SimulationDiagramController {
 
     private void setChartContent(int selectedItemIndex, BorderPane pane) {
         // Very quick and dirty: TODO
-        // New diagrams obtain getTimeSeriesSize and getTimeSeriesSize+1.
+        // New diagrams obtain getTimePointsSize and getTimePointsSize+1.
         if (selectedItemIndex == simulationDiagram.getTimeSeries().size()) {
             // This means cell count.
             CelltimesReader ctr = simulation.getCellTimesReader();

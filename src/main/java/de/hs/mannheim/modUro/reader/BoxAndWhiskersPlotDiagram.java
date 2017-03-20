@@ -36,13 +36,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * A diagram that shows a Box and Whisker plot.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class BoxAndWhiskersPlotDiagram extends Diagram {
 
-    public JFreeChart chart;
+    private JFreeChart chart;
     private BoxAndWhiskerPlotModel bwpModel;
 
+    /**
+     * Create the diagram.
+     * @param bwpModel Related model.
+     */
     public BoxAndWhiskersPlotDiagram(BoxAndWhiskerPlotModel bwpModel) {
         this.bwpModel = bwpModel;
         boxWhiskerPlot();
@@ -52,6 +57,11 @@ public class BoxAndWhiskersPlotDiagram extends Diagram {
         return chart;
     }
 
+    /**
+     * Create a Tikz snippet that will render a Box and Whisker diagram
+     * in Tikz.
+     * @return
+     */
     public String exportToTikz() {
         Map<String, StatisticValues> stats = bwpModel.getStatisticValues();
         List<String> sortedModels = new ArrayList<>(stats.keySet());

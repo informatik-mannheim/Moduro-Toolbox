@@ -135,7 +135,7 @@ public class Simulation {
      */
     public boolean isAborted() {
         double lastFitness = defaultFitnessTable.
-                getData()[defaultFitnessTable.getTimeSeriesSize() - 1];
+                getData()[defaultFitnessTable.getTimePointsSize() - 1];
         // return lastFitness < 0.05;
         return lastFitness < 0.05 && isInSteadyState();
     }
@@ -298,7 +298,7 @@ public class Simulation {
             timeSeries[i] = vol.getTimeSeries()[i];
             dataSeries[i] = (vol.getData()[i] + arr.getData()[i]) / 2;
         }
-        return new TimeSeries(name, timeSeries, dataSeries);
+        return new TimeSeries(name, timeSeries, name, dataSeries);
     }
 
     private TimeSeries calcNormTotalFitness(TimeSeries fitness) {
@@ -308,7 +308,7 @@ public class Simulation {
         if (maxTime < endTime) {
             // Apparently, the simulation was aborted.
             // How many time points up to 720.0 are missing?
-            int m = fitness.getTimeSeriesSize();
+            int m = fitness.getTimePointsSize();
             int missingPoints = (2 * (int) endTime) - m;
             // Create bigger data array for all 1440 = 2 * 720 points ...
             double[] newTimeSeries = new double[m + missingPoints];
@@ -329,10 +329,11 @@ public class Simulation {
                 newTimeSeries[m + i] = maxTime + (double) (i + 1) / 2;
                 newDataSeries[m + i] = fit; // Unknown (bad) fitness.
             }
-            return new TimeSeries(name, newTimeSeries, newDataSeries);
+            return new TimeSeries(name, newTimeSeries, name, newDataSeries);
         } else {
             // Just return the fitness as it is:
-            return new TimeSeries(name, fitness.getTimeSeries(), fitness.getData());
+            return new TimeSeries(name, fitness.getTimeSeries(),
+                    name, fitness.getData());
         }
     }
 

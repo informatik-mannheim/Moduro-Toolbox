@@ -15,7 +15,6 @@ Copyright 2016 the original author or authors.
 */
 package de.hs.mannheim.modUro.diagram;
 
-import de.hs.mannheim.modUro.diagram.Diagram;
 import de.hs.mannheim.modUro.model.TimeSeries;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -32,6 +31,8 @@ import java.awt.*;
 import java.util.List;
 
 /**
+ * Creates a XY diagram where the x-axis represents the time.
+ *
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class JTimeSeriesDiagram extends Diagram {
@@ -41,12 +42,26 @@ public class JTimeSeriesDiagram extends Diagram {
     private TimeSeries timeSeries;
     private String name;
 
+    /**
+     * Creates an diagram that uses one time series, i.e. x-axis
+     * is the time, and one to many series on the y-axis.
+     * The name of the diagram is taken from the time series.
+     *
+     * @param timeSeries
+     */
     public JTimeSeriesDiagram(TimeSeries timeSeries) {
         this.timeSeries = timeSeries;
         XYDataset dataset = createDataset(timeSeries);
         chart = createChart(dataset, timeSeries.getName());
     }
 
+    /**
+     * Creates an diagram that uses one or more time series, i.e. x-axis
+     * is the time, and y-axis shows a union of all time series added.
+     *
+     * @param name           Name of the diagram.
+     * @param timeSeriesList
+     */
     public JTimeSeriesDiagram(String name, List<TimeSeries> timeSeriesList) {
         this.name = name;
         this.timeSeriesList = timeSeriesList;
@@ -62,14 +77,25 @@ public class JTimeSeriesDiagram extends Diagram {
         return "% Tikz-Export not implemented.";
     }
 
+    /**
+     * Creates a string which lists all the values of the diagram
+     * separated by white spaces.
+     *
+     * @return
+     */
     public String exportToWSV() {
         StringBuffer sb = new StringBuffer();
-        if (timeSeries != null) {
-            sb.append("# time\t" + name);
-            for (int i = 0; i < timeSeries.getTimeSeriesSize(); i++) {
+        if (timeSeries != null) { // Just one time series.
+            sb.append("# Time series: " + timeSeries.getName());
+            sb.append("\n# Fields:");
+            sb.append("\n# time\t");
+            for (String dataName : timeSeries.getDataSeriesNames()) {
+                sb.append(dataName + "\t");
+            }
+            for (int i = 0; i < timeSeries.getTimePointsSize(); i++) {
                 sb.append("\n" + timeSeries.getTimeSeries()[i] + "\t");
-                for (int j = 0; j < timeSeries.getNumberOfDataSeries(); j++) {
-                    sb.append(timeSeries.getData()[i] + "\t");
+                for (String dataName : timeSeries.getDataSeriesNames()) {
+                    sb.append(timeSeries.getData(dataName)[i] + "\t");
                 }
             }
         } else {
@@ -126,11 +152,11 @@ public class JTimeSeriesDiagram extends Diagram {
 
     private XYDataset createDataset(TimeSeries timeSeries) {
         XYSeriesCollection dataset = new XYSeriesCollection();
-        for (int s = 0; s < timeSeries.getNumberOfDataSeries(); s++) {
+        for (String dataName : timeSeries.getDataSeriesNames()) {
             XYSeries xySerie = new XYSeries(timeSeries.getName());
-            for (int i = 0; i < timeSeries.getTimeSeriesSize(); i++) {
+            for (int i = 0; i < timeSeries.getTimePointsSize(); i++) {
                 double x = timeSeries.getTimeSeries()[i];
-                double y = timeSeries.getData(s)[i];
+                double y = timeSeries.getData(dataName)[i];
                 xySerie.add(x, y);
             }
             dataset.addSeries(xySerie);
@@ -143,7 +169,7 @@ public class JTimeSeriesDiagram extends Diagram {
         int n = 1;
         for (TimeSeries timeSeries : timeSeriesList) {
             XYSeries xySerie = new XYSeries(n++ + "");
-            for (int i = 0; i < timeSeries.getTimeSeriesSize(); i++) {
+            for (int i = 0; i < timeSeries.getTimePointsSize(); i++) {
                 double x = timeSeries.getTimeSeries()[i];
                 double y = timeSeries.getData()[i];
                 xySerie.add(x, y);

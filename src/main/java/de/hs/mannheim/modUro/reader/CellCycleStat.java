@@ -34,7 +34,8 @@ public class CellCycleStat {
                 dataSeries[i] = y;
                 i++;
             }
-            TimeSeries ts = new TimeSeries(cellType, timeSeries, dataSeries);
+            TimeSeries ts = new TimeSeries(cellType, timeSeries,
+                    cellType, dataSeries);
             m.put(cellType, ts);
         }
     }
@@ -43,7 +44,9 @@ public class CellCycleStat {
         return m.get(celltype);
     }
 
-    public List<String> getCellTypes() { return cellTypes; }
+    public List<String> getCellTypes() {
+        return cellTypes;
+    }
 
     public String toString() {
         String s = "";

@@ -19,13 +19,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
- * Model class for a TimeSeries.
+ * A time series is a data where one to many series of data
+ * can be stored for a time value. It is similar to a XY plot.
+ * Each data series has associated descriptive statistics (mean etc.).
  *
- * @author Mathuraa Pathmanathan (mathuraa@hotmail.de)
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  */
 public class TimeSeries {
@@ -33,15 +33,13 @@ public class TimeSeries {
     private File file; // Input file of a metric type txt file.
     private String name;
     private double[] timeSeries;
-    private List<double[]> dataSeries = new ArrayList<>();
-    private List<StatisticValues> stats = new ArrayList<>();
-
-    public TimeSeries(String name) {
-        this.name = name;
-    }
+    private Map<String, double[]> dataSeries = new HashMap<>();
+    private Map<String, StatisticValues> stats = new HashMap<>();
+    private String defaultDataSeries;
 
     /**
-     * Reads a single times series from a file.
+     * Creates a single time series from a file. A file's entry
+     * is x y (separated by a white space).
      *
      * @param file
      */
@@ -51,44 +49,96 @@ public class TimeSeries {
         readDataFromFile();
     }
 
-    public TimeSeries(String name, double[] timeSeries, double[] dataSeries) {
+    /**
+     * Creates a time series with exactly one data series.
+     *
+     * @param name       Name of the time series.
+     * @param timeSeries Time points.
+     * @param dataSeries Data points (one for each time points).
+     */
+    public TimeSeries(String name, double[] timeSeries,
+                      String dataName, double[] dataSeries) {
         this.name = name;
         this.timeSeries = timeSeries;
-        addDataSeries(name, dataSeries);
+        addDataSeries(dataName, dataSeries);
+    }
+
+    /**
+     * Add a new data series.
+     *
+     * @param dataName Name of the data series.
+     * @param data     Data itself.
+     */
+    public void addDataSeries(String dataName, double[] data) {
+        if (dataSeries.containsKey(dataName)) {
+            throw new RuntimeException("Data series name " + dataName +
+                    " already exists. Data series cannot be added.");
+        }
+        if (dataSeries.isEmpty()) {
+            defaultDataSeries = dataName;
+        } else {
+            if (data.length != getTimePointsSize()) {
+                throw new RuntimeException("New data series has different size" +
+                        " and cannot be added. Is: " + data.length +
+                        ", should " + getTimePointsSize());
+            }
+        }
+        dataSeries.put(dataName, data);
+        StatisticValues sv = new StatisticValues(name, data);
+        stats.put(dataName, sv);
     }
 
     public String getName() {
         return name;
     }
 
+    public Set<String> getDataSeriesNames() {
+        return dataSeries.keySet();
+    }
+
+    /**
+     * @return Time points.
+     */
     public double[] getTimeSeries() {
         return timeSeries;
     }
 
+    /**
+     * @return The last time point.
+     */
     public double getMaxTime() {
         return timeSeries[timeSeries.length - 1];
     }
 
+    /**
+     * @return The first data series.
+     */
     public double[] getData() {
-        return getData(0);
+        return getData(defaultDataSeries);
     }
 
-    public double[] getData(int idx) {
-        return dataSeries.get(idx);
+    public double[] getData(String dataName) {
+        return dataSeries.get(dataName);
     }
 
     public StatisticValues getStats() {
-        return stats.get(0);
+        return getStats(defaultDataSeries);
     }
 
-    public StatisticValues getStats(int idx) {
-        return stats.get(idx);
+    public StatisticValues getStats(String dataName) {
+        return stats.get(dataName);
     }
 
-    public int getTimeSeriesSize() {
+    /**
+     * @return Number of time points.
+     */
+    public int getTimePointsSize() {
         return timeSeries.length;
     }
 
+    /**
+     * @return Number of data series (1 to n).
+     */
     public int getNumberOfDataSeries() {
         return dataSeries.size();
     }
@@ -148,11 +198,5 @@ public class TimeSeries {
             data[i] = fitness.get(i);
         }
         addDataSeries(getName(), data);
-    }
-
-    private void addDataSeries(String name, double[] data) {
-        dataSeries.add(data);
-        StatisticValues sv = new StatisticValues(name, data);
-        stats.add(sv);
     }
 }
