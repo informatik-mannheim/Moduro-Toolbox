@@ -126,7 +126,7 @@ public class Project {
                 }
             }
         }
-        ToolboxLogger.log.config("Found " + allDirs.size() + " directories and " +
+        ToolboxLogger.log.info("Found " + allDirs.size() + " directories and " +
                 modelTypeNameList.size() + " models.");
         return modelTypeNameList;
     }

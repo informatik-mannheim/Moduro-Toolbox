@@ -32,7 +32,7 @@ import java.util.*;
  */
 public class BoxAndWhiskerPlotController {
 
-    private BoxAndWhiskerPlotModel bawpModle;
+    private BoxAndWhiskerPlotModel bawpModel;
 
     @FXML
     private BorderPane boxWhiskerPane;
@@ -41,8 +41,8 @@ public class BoxAndWhiskerPlotController {
     public Map<String, StatisticValues> stats;
 
     public void init(Project project) {
-        this.bawpModle = new BoxAndWhiskerPlotModel(project);
-        BoxAndWhiskersPlotDiagram bwd = new BoxAndWhiskersPlotDiagram(bawpModle);
+        this.bawpModel = new BoxAndWhiskerPlotModel(project);
+        BoxAndWhiskersPlotDiagram bwd = new BoxAndWhiskersPlotDiagram(bawpModel);
         ChartViewer viewer = new ChartViewer(bwd);
         boxWhiskerPane.setCenter(viewer);
     }

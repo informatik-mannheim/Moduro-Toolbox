@@ -85,7 +85,7 @@ public class BoxAndWhiskersPlotDiagram extends Diagram {
                 " \\begin{axis}[\n" +
                 " " + ytick + ",\n" +
                 " " + ytickslabels + ",\n " +
-                " height=.3*\\textheight,\n" +
+                " height=.5*\\textheight,\n" +
                 " xmin=0, xmax=1.0, width=.9*\\textwidth,\n" +
                 " xtick={0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1},\n" +
                 " xticklabels={0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1}\n" +
@@ -111,8 +111,21 @@ public class BoxAndWhiskersPlotDiagram extends Diagram {
         return s;
     }
 
+    @Override
     public String exportToWSV() {
-        return "# White-space separated values export not implemented.";
+        Map<String, StatisticValues> stats = bwpModel.getStatisticValues();
+        List<String> sortedModels = new ArrayList<>(stats.keySet());
+        sortedModels.sort((s1, s2) -> s2.compareTo(s1));
+        String s = "\n# Model Data (Mean fitness) ...";
+        for (String m : sortedModels) {
+            double[] data = stats.get(m).getData();
+            s += "\n" + m;
+            for (double v : data) {
+                s += " " + v;
+            }
+        }
+        s += "\n";
+        return s;
     }
 
     /**

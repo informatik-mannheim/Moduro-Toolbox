@@ -203,35 +203,6 @@ public class SimulationDiagramController {
     }
 
     private void setChartContent(int selectedItemIndex, BorderPane pane) {
-        /*
-        // Very quick and dirty: TODO
-        // New diagrams obtain getTimePointsSize and getTimePointsSize+1.
-        if (selectedItemIndex == simulationDiagram.getTimeSeries().size()) {
-            // This means cell count.
-            TimeSeries timeSeries = simulation.getTimeSeriesByName("Cell count");
-            if (timeSeries != null) {
-                JCellCountDiagram ccd = new JCellCountDiagram(timeSeries);
-                ChartViewer viewer = new ChartViewer(ccd);
-                pane.setCenter(viewer);
-            } else {
-                // Cell count not available.
-            }
-        } else if (selectedItemIndex == simulationDiagram.getTimeSeries().size() + 1) {
-            // And this means cell cycle times.
-            CelltimesReader ctr = simulation.getCellTimesReader();
-            if (ctr != null) {
-                // TODO Q&D:
-                CellCycleStat stat =
-                        new CellCycleStat(ctr.getCellTypes(), ctr.getCycletimes());
-                JCellcycletimeDiagram ctd =
-                        new JCellcycletimeDiagram(ctr.getCellTypes(), ctr.getCycletimes());
-                ChartViewer viewer = new ChartViewer(ctd);
-                pane.setCenter(viewer);
-            } else {
-                // Cell count not available.
-            }
-        } else {
-        */
         TimeSeries timeSeries = simulationDiagram.getTimeSeries().get(selectedItemIndex);
         Diagram diagram = null;
         switch (timeSeries.getName()) {
@@ -239,7 +210,7 @@ public class SimulationDiagramController {
                 diagram = new JCellCountDiagram(timeSeries);
                 break;
             default:
-                diagram = new JTimeSeriesDiagram(timeSeries, true);
+                diagram = new JTimeSeriesDiagram(timeSeries);
         }
         ChartViewer viewer = new ChartViewer(diagram);
         pane.setCenter(viewer);

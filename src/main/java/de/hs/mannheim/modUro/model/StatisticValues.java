@@ -60,6 +60,10 @@ public class StatisticValues {
         this.max = stats.getMax();
     }
 
+    public double[] getData() {
+        return stats.getValues();
+    }
+
     public int size() {
         return (int) stats.getN();
     }

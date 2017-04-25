@@ -41,7 +41,7 @@ public class JTimeSeriesDiagram extends Diagram {
     private List<TimeSeries> timeSeriesList;
     private TimeSeries timeSeries;
     private String name;
-    private boolean isMetric;
+    private boolean isMetric = false;
 
     /**
      * Creates an diagram that uses one time series, i.e. x-axis
@@ -50,8 +50,9 @@ public class JTimeSeriesDiagram extends Diagram {
      *
      * @param timeSeries
      */
-    public JTimeSeriesDiagram(TimeSeries timeSeries, boolean isMetric) {
+    public JTimeSeriesDiagram(TimeSeries timeSeries) {
         this.timeSeries = timeSeries;
+        this.isMetric = timeSeries.isMetric();
         XYDataset dataset = createDataset(timeSeries);
         chart = createChart(dataset, timeSeries.getName());
     }
@@ -66,6 +67,9 @@ public class JTimeSeriesDiagram extends Diagram {
     public JTimeSeriesDiagram(String name, List<TimeSeries> timeSeriesList) {
         this.name = name;
         this.timeSeriesList = timeSeriesList;
+        if (!timeSeriesList.isEmpty()) {
+            this.isMetric = timeSeriesList.get(0).isMetric();
+        }
         XYDataset dataset = createDatasetList(timeSeriesList);
         chart = createChart(dataset, name);
     }
@@ -85,22 +89,23 @@ public class JTimeSeriesDiagram extends Diagram {
      * @return
      */
     public String exportToWSV() {
+        String SEP = " ";
         StringBuffer sb = new StringBuffer();
         if (timeSeries != null) { // Just one time series.
-            sb.append("# Time series: " + timeSeries.getName());
-            sb.append("\n# Fields:");
-            sb.append("\n# time\t");
+            sb.append("\n% Time series: " + timeSeries.getName());
+            sb.append("\n% Fields:");
+            sb.append("\ntime" + SEP);
             for (String dataName : timeSeries.getDataSeriesNames()) {
-                sb.append(dataName + "\t");
+                sb.append(dataName + SEP);
             }
             for (int i = 0; i < timeSeries.getTimePointsSize(); i++) {
-                sb.append("\n" + timeSeries.getTimeSeries()[i] + "\t");
+                sb.append("\n" + timeSeries.getTimeSeries()[i] + SEP);
                 for (String dataName : timeSeries.getDataSeriesNames()) {
-                    sb.append(timeSeries.getData(dataName)[i] + "\t");
+                    sb.append(timeSeries.getData(dataName)[i] + SEP);
                 }
             }
         } else {
-            sb.append("# time\t" + name);
+            sb.append("% time" + SEP + name);
         }
         return sb.toString();
     }

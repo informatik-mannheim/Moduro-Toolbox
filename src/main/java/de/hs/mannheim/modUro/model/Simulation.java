@@ -243,6 +243,7 @@ public class Simulation {
 
         for (File file : txtFiles) {
             TimeSeries timeSeries = new TimeSeries(file);
+            timeSeries.setMetric(true);
             dataSeriesList.put(timeSeries.getName(), timeSeries);
             if ((timeSeries.getName() + ".dat").
                     equals(DEFAULT_FITNESS_FILE.getName())) {
@@ -304,7 +305,9 @@ public class Simulation {
             timeSeries[i] = vol.getTimeSeries()[i];
             dataSeries[i] = (vol.getData()[i] + arr.getData()[i]) / 2;
         }
-        return new TimeSeries(name, timeSeries, name, dataSeries);
+        TimeSeries ts = new TimeSeries(name, timeSeries, name, dataSeries);
+        ts.setMetric(true);
+        return ts;
     }
 
     private TimeSeries calcNormTotalFitness(TimeSeries fitness) {
@@ -335,11 +338,15 @@ public class Simulation {
                 newTimeSeries[m + i] = maxTime + (double) (i + 1) / 2;
                 newDataSeries[m + i] = fit; // Unknown (bad) fitness.
             }
-            return new TimeSeries(name, newTimeSeries, name, newDataSeries);
+            TimeSeries ts = new TimeSeries(name, newTimeSeries, name, newDataSeries);
+            ts.setMetric(true);
+            return  ts;
         } else {
             // Just return the fitness as it is:
-            return new TimeSeries(name, fitness.getTimeSeries(),
+            TimeSeries ts = new TimeSeries(name, fitness.getTimeSeries(),
                     name, fitness.getData());
+            ts.setMetric(true);
+            return  ts;
         }
     }
 

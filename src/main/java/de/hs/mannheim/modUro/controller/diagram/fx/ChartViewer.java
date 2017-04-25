@@ -271,7 +271,7 @@ public class ChartViewer extends Control implements Skinnable,
         });
         export.getItems().add(tikzItem);
 
-        MenuItem wsvItem = new MenuItem("File  ...");
+        MenuItem wsvItem = new MenuItem("Text  ...");
         wsvItem.setOnAction((ActionEvent e) -> {
             handleExportToWSV();
         });
@@ -377,7 +377,6 @@ public class ChartViewer extends Control implements Skinnable,
      */
     private void handleExportToWSV() {
         String s = diagram.exportToWSV();
-        System.out.println(s);
         ToolboxLogger.log.info(s);
     }
 

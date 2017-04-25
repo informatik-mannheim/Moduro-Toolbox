@@ -32,6 +32,7 @@ public class TimeSeries {
 
     private File file; // Input file of a metric type txt file.
     private String name;
+    private boolean isMetric;
     private double[] timeSeries;
     private Map<String, double[]> dataSeries = new HashMap<>();
     private Map<String, StatisticValues> stats = new HashMap<>();
@@ -98,6 +99,14 @@ public class TimeSeries {
         dataSeries.put(dataName, data);
         StatisticValues sv = new StatisticValues(name, data);
         stats.put(dataName, sv);
+    }
+
+    public boolean isMetric() {
+        return isMetric;
+    }
+
+    public void setMetric(boolean value) {
+        isMetric = value;
     }
 
     public String getName() {

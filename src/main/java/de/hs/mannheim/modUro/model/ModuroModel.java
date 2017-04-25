@@ -66,16 +66,6 @@ public class ModuroModel {
         return simulations;
     }
 
-    /*
-    public Map<String, TimeSeries> getTimeSeries() {
-        return timeSeries;
-    }
-
-    public List<TimeSeries> getAllTimeSeries() {
-        return new ArrayList(timeSeries.values());
-    }
-    */
-
     public List<StatisticValues> getStats() {
         return new ArrayList(statisticValues.values());
     }

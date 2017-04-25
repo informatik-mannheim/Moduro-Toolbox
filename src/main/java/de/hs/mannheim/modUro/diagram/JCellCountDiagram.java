@@ -33,7 +33,7 @@ import java.awt.*;
 public class JCellCountDiagram extends JTimeSeriesDiagram {
 
     public JCellCountDiagram(TimeSeries timeSeries) {
-        super(timeSeries, false);
+        super(timeSeries);
     }
 
     protected JFreeChart createChart(XYDataset dataset, String name) {
