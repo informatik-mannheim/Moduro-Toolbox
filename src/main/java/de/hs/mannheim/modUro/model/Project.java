@@ -18,6 +18,7 @@ package de.hs.mannheim.modUro.model;
 import de.hs.mannheim.modUro.config.FilterOption;
 import de.hs.mannheim.modUro.config.RegEx;
 import de.hs.mannheim.modUro.config.ToolboxLogger;
+import de.hs.mannheim.modUro.config.ToolboxParameter;
 import de.hs.mannheim.modUro.model.dialog.ProjectSetting;
 
 import java.io.File;
@@ -83,7 +84,9 @@ public class Project {
 
         for (String name : modelTypeNames) {
             for (File file : allDirs) {
-                if (file.getName().startsWith(name + "_")) {
+                String sep = ToolboxParameter.params.getDirnameseparator();
+                String fileName = file.getName().split(sep)[0];
+                if (fileName.equals(name)) {
                     dirList.add(file);
                 }
             }

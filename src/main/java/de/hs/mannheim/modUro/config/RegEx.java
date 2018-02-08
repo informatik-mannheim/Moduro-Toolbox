@@ -24,7 +24,7 @@ public enum RegEx {
 
     //RegEx for parse de.hs.mannheim.modUro.model type in dir; e.x. CM-IN-RA_cc3d_01_15_2015_15_21_21 --> CM-IN-RA
     //MODEL_TYPE_REG_EX("(([A-Z]{2,4}-?){2,})");
-    MODEL_TYPE_REG_EX("_");
+    MODEL_TYPE_REG_EX(ToolboxParameter.params.getDirnameseparator());
 
     private final String name;
 

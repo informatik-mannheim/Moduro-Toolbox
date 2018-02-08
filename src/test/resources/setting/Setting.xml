@@ -17,6 +17,12 @@
         <firstimage>0.2</firstimage>
         <secondimage>0.5</secondimage>
         <thirdimage>0.95</thirdimage>
+        <!--
+          Charactor used to extract a model name from a directory.
+          This is an regular expression (for Java).
+          \_ means an underscore. Other separators are: \. (dot)
+          -->
+        <dirnameseparator>\_</dirnameseparator>
     </parameter>
     <project>
         <name>Project1</name>

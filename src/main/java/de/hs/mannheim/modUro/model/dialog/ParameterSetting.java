@@ -13,6 +13,7 @@ public class ParameterSetting {
     private double firstImagePerc = 0.2;
     private double secondImagePerc = 0.5;
     private double thirdImagePerc = 0.95;
+    private String dirNameSeparator = "\\.";
 
     public ParameterSetting() {
     }
@@ -63,5 +64,13 @@ public class ParameterSetting {
 
     public void setThirdImage(double percentage) {
         this.thirdImagePerc = percentage;
+    }
+
+    public String getDirnameseparator() {
+        return dirNameSeparator;
+    }
+
+    public void setDirnameseparator(String dirNameSeparator) {
+        this.dirNameSeparator = dirNameSeparator;
     }
 }

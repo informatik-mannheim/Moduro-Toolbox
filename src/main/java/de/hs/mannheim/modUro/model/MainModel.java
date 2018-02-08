@@ -87,6 +87,7 @@ public class MainModel {
             //setPersonFilePath(file);
 
         } catch (Exception e) { // catches ANY exception
+            e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText("Could not load settings file.");
